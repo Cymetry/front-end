@@ -1,6 +1,6 @@
 class Constants {
 
-  static ProjectTitle = 'Cymetry';
+  static ProjectTitle = 'Umath';
 };
 
-export default Constants
+export default Constants;

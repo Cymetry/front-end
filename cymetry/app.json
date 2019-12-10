@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "cymetry",
-    "slug": "cymetry",
+    "name": "umath",
+    "slug": "umath",
     "privacy": "public",
     "sdkVersion": "34.0.0",
     "platforms": [
@@ -25,10 +25,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.code.cymetry"
+      "bundleIdentifier": "com.umath.umath"
     },
     "android": {
-      "package": "com.code.cymetry"
+      "package": "com.umath.umath"
     }
   }
 }

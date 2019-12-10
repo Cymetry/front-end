@@ -1,6 +1,8 @@
+import { StyleSheet } from "react-native";
+
 import Variables from "../variables";
 
-export default {
+export default StyleSheet.create({
   classic: {
     fontSize: Variables.smallFontSize,
     paddingVertical: 5,
@@ -11,4 +13,4 @@ export default {
     overflow: 'hidden',
     backgroundColor: Variables.blue,
   },
-};
+});

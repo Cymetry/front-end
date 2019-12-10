@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 import { Button } from 'react-native-elements';
+import { withNavigation } from 'react-navigation';
 
+import ROUTES from '../../../../platform/constants/routes';
 import Styles from '../../../../../assets/styles';
-
 import LocalStyles from './styles';
 
-const AuthReminder = () => (
+const AuthReminder = memo(({ navigation }) => (
   <View style={Styles.card.classic}>
     <Text style={{ ...Styles.text.center, ...Styles.text.normalSize }}>
       Begin your personalised{"\n"}
@@ -14,9 +15,14 @@ const AuthReminder = () => (
     </Text>
     
     <View style={LocalStyles.button}>
-      <Button title="Sign in" type="clear" titleStyle={{ color: 'white' }} />
+      <Button
+        title="Sign in"
+        type="clear"
+        titleStyle={LocalStyles.buttonTitle}
+        onPress={() => navigation.navigate(ROUTES.AUTH)} 
+      />
     </View>
   </View>
-);
+));
 
-export default AuthReminder;
+export default withNavigation(AuthReminder);

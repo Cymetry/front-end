@@ -6,15 +6,27 @@ import Variables from "../../../../../assets/styles/variables";
 const LocalStyles = StyleSheet.create({
   container: {
     ...Styles.card.classic,
-    marginTop: 30,
+    marginBottom: 30,
     paddingVertical: 0,
     paddingHorizontal: 0,
   },
 
-  title: {
-    height: 60,
-    lineHeight: 60,
+  listItem: {
+    ...Styles.list.item,
+    borderTopWidth: 1,
+    borderTopColor: Variables.gray,
+    borderBottomWidth: 0,
+  },
+
+  nameText: {
+    color: Variables.blue,
     fontSize: Variables.normalFontSize,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+
+  descriptionText: {
+    fontSize: Variables.smallFontSize,
     textAlign: 'center',
   },
 });

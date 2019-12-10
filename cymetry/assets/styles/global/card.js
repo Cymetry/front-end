@@ -1,11 +1,12 @@
-export default {
+import { StyleSheet } from "react-native";
+
+export default StyleSheet.create({
   classic: {
-    flex: 1,
     flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
     backgroundColor: 'white',
     paddingVertical: 40,
     paddingHorizontal: 20,
   },
-};
+});

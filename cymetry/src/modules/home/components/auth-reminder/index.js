@@ -8,7 +8,7 @@ import Styles from '../../../../../assets/styles';
 import LocalStyles from './styles';
 
 const AuthReminder = memo(({ navigation }) => (
-  <View style={Styles.card.classic}>
+  <View style={LocalStyles.container}>
     <Text style={{ ...Styles.text.center, ...Styles.text.normalSize }}>
       Begin your personalised{"\n"}
       mathematics learning today!

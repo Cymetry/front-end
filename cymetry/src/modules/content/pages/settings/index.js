@@ -38,8 +38,6 @@ const list = [
 
 class Settings extends PureComponent {
 
-  static navigationOptions = createTabNavigationOptions('Settings', 'Settings', 'settings');
-
   render() {
     const { navigation } = this.props;
 

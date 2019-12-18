@@ -1,21 +1,21 @@
 import { StyleSheet } from "react-native";
 
 import Styles from "../../../../../assets/styles";
+import Variables from "../../../../../assets/styles/variables";
 
 const LocalStyles = StyleSheet.create({
   container: {
     ...Styles.card.classic,
     marginBottom: 30,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
 
-  button: {
-    width: 150,
-    marginTop: 40,
-    ...Styles.button.classic,
-  },
-
-  buttonTitle: {
-    color: 'white',
+  title: {
+    height: 60,
+    lineHeight: 60,
+    fontSize: Variables.normalFontSize,
+    textAlign: 'center',
   },
 });
 

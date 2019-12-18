@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
-import Styles from "../../../../../assets/styles";
-import Variables from "../../../../../assets/styles/variables";
+import Styles from "../../../../../../../assets/styles";
+import Variables from "../../../../../../../assets/styles/variables";
 
 const LocalStyles = StyleSheet.create({
   container: {

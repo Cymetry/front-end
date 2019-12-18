@@ -7,37 +7,18 @@ import LocalStyles from './styles';
 import Styles from '../../../../../assets/styles';
 import ROUTES from '../../../../platform/constants/routes';
 
-const list = [
-  {
-    name: 'Maths HL',
-    avatar_url: '',
-  },
-  {
-    name: 'Maths SL',
-    avatar_url: '',
-  },
-  {
-    name: 'Maths Studies',
-    avatar_url: '',
-  },
-  {
-    name: 'Further Maths',
-    avatar_url: '',
-  },
-];
-
-const IB = memo(({ navigation }) => (
+const Program = memo(({ data, navigation }) => (
   <View style={LocalStyles.container}>
     <Text style={LocalStyles.title}>
-      International Baccalaureate (IB)
+      {data.name}
     </Text>
     <View style={Styles.list.container}>
-      {list.map(item => <ListItem
-        key={item.name}
+      {data.curriculums.map(item => <ListItem
+        key={item.id}
         title={item.name}
         containerStyle={Styles.list.item}
-        leftAvatar={{ uri: item.avatar_url }}
-        onPress={() => navigation.navigate(ROUTES.CONTENT, { name: item.name })}
+        leftAvatar={{ uri: '' }}
+        onPress={() => navigation.navigate(ROUTES.CONTENT, item)}
         roundAvatar
         chevron
       />)}
@@ -45,4 +26,4 @@ const IB = memo(({ navigation }) => (
   </View>
 ));
 
-export default withNavigation(IB);
+export default withNavigation(Program);

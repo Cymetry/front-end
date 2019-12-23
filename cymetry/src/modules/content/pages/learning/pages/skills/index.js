@@ -37,7 +37,7 @@ class Sub extends PureComponent {
               title={`${item.name} ${item.complete ? '(complete)' : ''}`}
               containerStyle={LocalStyles.listItem}
               leftAvatar={{ uri: '' }}
-              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILL, item)}
+              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILL_ITEM, item)}
               roundAvatar
               chevron
             />)}

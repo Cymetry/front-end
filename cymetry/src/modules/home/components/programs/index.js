@@ -7,18 +7,18 @@ import LocalStyles from './styles';
 import Styles from '../../../../../assets/styles';
 import ROUTES from '../../../../platform/constants/routes';
 
-const Program = memo(({ data, navigation }) => (
+const Programs = memo(({ data, navigation }) => (
   <View style={LocalStyles.container}>
     <Text style={LocalStyles.title}>
-      {data.name}
+      Programs
     </Text>
     <View style={Styles.list.container}>
-      {data.curriculums.map(item => <ListItem
+      {data.map(item => <ListItem
         key={item.id}
         title={item.name}
         containerStyle={Styles.list.item}
         leftAvatar={{ uri: '' }}
-        onPress={() => navigation.navigate(ROUTES.CONTENT, item)}
+        onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING, item)}
         roundAvatar
         chevron
       />)}
@@ -26,4 +26,4 @@ const Program = memo(({ data, navigation }) => (
   </View>
 ));
 
-export default withNavigation(Program);
+export default withNavigation(Programs);

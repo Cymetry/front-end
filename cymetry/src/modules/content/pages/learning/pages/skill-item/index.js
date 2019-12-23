@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { View } from "react-native";
 import { ListItem } from "react-native-elements";
 
+import SkillLearningController from '../../../../../../platform/api/skillLearning';
 import { createTabNavigationOptions } from '../../../../../../platform/services/navigation';
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from './styles';
@@ -17,7 +18,7 @@ const list = [
   },
   {
     name: '1 Cross Product',
-    avatar_url: '',
+    avatar_url:  '',
   },
   {
     name: '1 Perpindicular Vectors',
@@ -33,7 +34,16 @@ class Skill extends PureComponent {
 
   static navigationOptions = createTabNavigationOptions('Skill', 'Skill', 'sunny');
 
+  async componentDidMount() {
+    const { navigation } = this.props;
+    const { id } = navigation.state.params;
+    
+    const result = await SkillLearningController.Start(id);
+    console.log(result);
+  }
+
   render() {
+    const { navigation } = this.props;
 
     return (
       <View style={Styles.page}>

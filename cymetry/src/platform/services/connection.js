@@ -30,7 +30,9 @@ class Connection {
       console.error('Something is wrong with permission or authentication');
     };
 
-    return response.ok ? response.json() : {};
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.indexOf("application/json") !== -1) return response.ok ? response.json() : {};
+    else return response.ok ? response.text() : '';
   }
 
   static stringifyUrlEncoded = obj => {

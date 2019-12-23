@@ -5,8 +5,9 @@ const ROUTES = {
   CONTENT: 'content',
   
   CONTENT_LEARNING: 'content/learning',
-  CONTENT_LEARNING_SUB: 'content/learning/sub',
-  CONTENT_LEARNING_SKILL: 'content/learning/skill',
+  CONTENT_LEARNING_TOPICS: 'content/learning/topics',
+  CONTENT_LEARNING_SKILLS: 'content/learning/skills',
+  CONTENT_LEARNING_SKILL_ITEM: 'content/learning/skill-item',
   
   CONTENT_SETTINGS: 'content/settings',
   CONTENT_SETTINGS_CURRICULUM: 'content/settings/curriculum',

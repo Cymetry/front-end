@@ -13,4 +13,9 @@ export default StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: Variables.blue,
   },
+
+  disabled: {
+    opacity: .5,
+    backgroundColor: '#999',
+  }
 });

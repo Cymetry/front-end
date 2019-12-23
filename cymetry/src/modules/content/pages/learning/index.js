@@ -5,46 +5,45 @@ import { createStackNavigator } from "react-navigation-stack";
 import { withNavigation } from "react-navigation";
 
 import { createTabNavigationOptions } from '../../../../platform/services/navigation';
-import Sub from "./pages/sub";
-import Skill from "./pages/skill";
+import Topics from "./pages/topics";
+import Skills from "./pages/skills";
+import SkillItem from "./pages/skill-item";
 import ROUTES from "../../../../platform/constants/routes";
-import TopicController from '../../../../platform/api/topic';
+import CurriculumController from '../../../../platform/api/curriculum';
 import Styles from "../../../../../assets/styles";
 import LocalStyles from './styles';
   
 class Learning extends PureComponent {
 
   state = {
-    topics: [],
+    curriculums: [],
   };
 
   componentDidMount() {
     const { navigation } = this.props;
-    const parentNavigation = navigation.dangerouslyGetParent();
-
-    const { id } = parentNavigation.state.params;
-    this.fetchTopics(id);
+    const { id } = navigation.state.params;
+    this.fetchCurriculums(id);
   }
 
-  fetchTopics = async id => {
-    const result = await TopicController.List(id);
-    result && result.length && this.setState({ topics: result });
+  fetchCurriculums = async id => {
+    const result = await CurriculumController.List(id);
+    result && result.length && this.setState({ curriculums: result });
   }
 
   render() {
-    const { topics } = this.state;
+    const { curriculums } = this.state;
     const { navigation } = this.props;
 
     return (
       <View style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
-            {topics.map(item => <ListItem
+            {curriculums.map(item => <ListItem
               key={item.id}
-              title={`${item.name} (${item.complete}/${item.total})`}
+              title={item.name}
               containerStyle={LocalStyles.listItem}
               leftAvatar={{ uri: '' }}
-              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SUB, item)}
+              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_TOPICS, item)}
               roundAvatar
               chevron
             />)}
@@ -57,8 +56,9 @@ class Learning extends PureComponent {
 
 export default createStackNavigator({
   [ROUTES.CONTENT_LEARNING]: withNavigation(Learning),
-  [ROUTES.CONTENT_LEARNING_SUB]: withNavigation(Sub),
-  [ROUTES.CONTENT_LEARNING_SKILL]: withNavigation(Skill),
+  [ROUTES.CONTENT_LEARNING_TOPICS]: withNavigation(Topics),
+  [ROUTES.CONTENT_LEARNING_SKILLS]: withNavigation(Skills),
+  [ROUTES.CONTENT_LEARNING_SKILL_ITEM]: withNavigation(SkillItem),
 }, {
   headerMode: 'none',
   navigationOptions: {

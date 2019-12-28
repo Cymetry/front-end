@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { ListItem } from "react-native-elements";
 import { createStackNavigator } from "react-navigation-stack";
 import { withNavigation } from "react-navigation";
+import { ScrollView } from "react-native-gesture-handler";
 
 import { createTabNavigationOptions } from '../../../../platform/services/navigation';
 import Topics from "./pages/topics";
@@ -35,7 +36,7 @@ class Learning extends PureComponent {
     const { navigation } = this.props;
 
     return (
-      <View style={Styles.page}>
+      <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
             {curriculums.map(item => <ListItem
@@ -49,7 +50,7 @@ class Learning extends PureComponent {
             />)}
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 };

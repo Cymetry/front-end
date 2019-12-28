@@ -35,7 +35,7 @@ class SignIn extends Component {
       const { form } = this.state;
       const result = await AuthController.Login(form);
       if (result) {
-        AsyncStorage.setItem('token', result);
+        await AsyncStorage.setItem('token', result);
         navigation.navigate(ROUTES.HOME);
       } else Alert.alert('Username or Password is incorrect!!');
     }

@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { View } from "react-native";
 import { ListItem } from "react-native-elements";
+import { ScrollView } from "react-native-gesture-handler";
 
 import ROUTES from "../../../../../../platform/constants/routes";
 import TopicController from '../../../../../../platform/api/topic';
@@ -29,7 +30,7 @@ class Topics extends PureComponent {
     const { navigation } = this.props;
 
     return (
-      <View style={Styles.page}>
+      <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
             {topics.map(item => <ListItem
@@ -43,7 +44,7 @@ class Topics extends PureComponent {
             />)}
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 };

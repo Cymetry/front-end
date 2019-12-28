@@ -35,3 +35,6 @@ export const createTabNavigationOptions = (headerTitle, title, iconName) => ({
     },
   }
 });
+
+// Would be set from home component
+export const navigationWrapper = {};

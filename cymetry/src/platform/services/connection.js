@@ -1,5 +1,8 @@
 import { AsyncStorage } from 'react-native';
 
+import { navigationWrapper } from '../services/navigation';
+import ROUTES from '../constants/routes';
+
 class Connection {
 
   static BASE_URL = 'http://68.183.47.174:8080';
@@ -25,10 +28,11 @@ class Connection {
     return HEADERS;
   }
 
-  static responseRestructure = response => {
+  static responseRestructure = async response => {
     if (response.status === 401 || response.status === 403) {
-      console.error('Something is wrong with permission or authentication');
-    };
+      await AsyncStorage.removeItem('token');
+      navigationWrapper.navigation && navigationWrapper.navigation.navigate(ROUTES.AUTH);
+    }
 
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.indexOf("application/json") !== -1) return response.ok ? response.json() : {};
@@ -54,7 +58,7 @@ class Connection {
     });
 
     window.pendingRequest = false;
-    return Connection.responseRestructure(response);
+    return await Connection.responseRestructure(response);
   }
 
   static PUT = async (controllerName, actionName, body, queryConfig) => {
@@ -68,7 +72,7 @@ class Connection {
     })
 
     window.pendingRequest = false;
-    return Connection.responseRestructure(response);
+    return await Connection.responseRestructure(response);
   }
 
   static DELETE = async (controllerName, actionName, queryConfig) => {
@@ -81,7 +85,7 @@ class Connection {
     });
 
     window.pendingRequest = false;
-    return Connection.responseRestructure(response);
+    return await Connection.responseRestructure(response);
   }
 
   static GET = async (controllerName, actionName, queryConfig) => {
@@ -94,7 +98,7 @@ class Connection {
     });
 
     window.pendingRequest = false;
-    return Connection.responseRestructure(response);
+    return await Connection.responseRestructure(response);
   }
 
   static UPLOAD = async (controllerName, actionName, body, queryConfig) => {
@@ -108,7 +112,7 @@ class Connection {
     });
 
     window.pendingRequest = false;
-    return Connection.responseRestructure(response);
+    return await Connection.responseRestructure(response);
   }
 }
 

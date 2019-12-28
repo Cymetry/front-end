@@ -1,13 +1,14 @@
 import React, { PureComponent } from "react";
 import { View } from "react-native";
 import { ListItem } from "react-native-elements";
+import { ScrollView } from "react-native-gesture-handler";
 
 import SkillController from '../../../../../../platform/api/skill';
 import ROUTES from "../../../../../../platform/constants/routes";
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from './styles';
   
-class Sub extends PureComponent {
+class Skills extends PureComponent {
 
   state = {
     skills: [],
@@ -29,7 +30,7 @@ class Sub extends PureComponent {
     const { navigation } = this.props;
 
     return (
-      <View style={Styles.page}>
+      <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
             {skills.map(item => <ListItem
@@ -43,9 +44,9 @@ class Sub extends PureComponent {
             />)}
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 };
 
-export default Sub;
+export default Skills;

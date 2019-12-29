@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { View, Text } from "react-native";
+import { View, Text, AsyncStorage } from "react-native";
 import { ListItem } from "react-native-elements";
 import { createStackNavigator } from "react-navigation-stack";
 import { withNavigation } from "react-navigation";
@@ -14,29 +14,36 @@ import HelpAndFeedback from "./pages/help-and-feedback";
 import Curriculum from "./pages/curriculum";
 import FAQ from "./pages/faq";
 
-const list = [
-  {
-    name: 'Curriculum',
-    url: ROUTES.CONTENT_SETTINGS_CURRICULUM,
-    avatar_url: '',
-  },
-  {
-    name: 'FAQ',
-    url: ROUTES.CONTENT_SETTINGS_FAQ,
-    avatar_url: '',
-  },
-  {
-    name: 'Help & Feedback',
-    url: ROUTES.CONTENT_SETTINGS_HELP,
-    avatar_url: '',
-  },
-  {
-    name: 'Sign out',
-    avatar_url: '',
-  },
-];
-
 class Settings extends PureComponent {
+
+  list = [
+    {
+      name: 'Curriculum',
+      url: ROUTES.CONTENT_SETTINGS_CURRICULUM,
+      avatar_url: '',
+    },
+    {
+      name: 'FAQ',
+      url: ROUTES.CONTENT_SETTINGS_FAQ,
+      avatar_url: '',
+    },
+    {
+      name: 'Help & Feedback',
+      url: ROUTES.CONTENT_SETTINGS_HELP,
+      avatar_url: '',
+    },
+    {
+      name: 'Sign out',
+      onPress: () => this.signOut(),
+      avatar_url: '',
+    },
+  ];
+
+  signOut = async () => {
+    const { navigation } = this.props;
+    await AsyncStorage.removeItem('token');
+    navigation.navigate(ROUTES.AUTH);
+  }
 
   render() {
     const { navigation } = this.props;
@@ -45,10 +52,10 @@ class Settings extends PureComponent {
       <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
-            {list.map(item => <ListItem
+            {this.list.map(item => <ListItem
               key={item.name}
               title={item.name}
-              onPress={() => item.url && navigation.navigate(item.url)}
+              onPress={() => item.url ? navigation.navigate(item.url) : item.onPress()}
               containerStyle={LocalStyles.listItem}
               leftAvatar={{ uri: item.avatar_url }}
               roundAvatar

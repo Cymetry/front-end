@@ -29,6 +29,14 @@ const LocalStyles = StyleSheet.create({
   suggestionButton: {
     color: Variables.blue,
   },
+
+  datePicker: {
+    alignItems: 'flex-start',
+    borderWidth: 0,
+    marginVertical: 10,
+    marginHorizontal: 10,
+    borderBottomWidth: 1,
+  },
 });
 
 export default LocalStyles;

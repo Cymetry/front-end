@@ -15,7 +15,7 @@ const LocalStyles = StyleSheet.create({
     paddingVertical: 15,
     justifyContent: 'center',
     borderColor: Variables.gray,
-    borderRadius: 8 ,
+    borderRadius: 8,
     marginBottom: 20,
   },
 

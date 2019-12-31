@@ -8,6 +8,11 @@ class SkillLearningController {
     const request = Connection.GET(controller, 'start', { skillId: id });
     return request;
   }
+
+  static SaveProgress = body => {
+    const request = Connection.PUT(controller, 'saveProgress', body);
+    return request;
+  }
 };
 
 export default SkillLearningController;

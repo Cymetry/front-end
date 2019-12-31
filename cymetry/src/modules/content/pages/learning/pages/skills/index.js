@@ -28,6 +28,7 @@ class Skills extends PureComponent {
   render() {
     const { skills } = this.state;
     const { navigation } = this.props;
+    const { id } = navigation.state.params;
 
     return (
       <ScrollView style={Styles.page}>
@@ -38,7 +39,7 @@ class Skills extends PureComponent {
               title={`${item.name} ${item.complete ? '(complete)' : ''}`}
               containerStyle={LocalStyles.listItem}
               leftAvatar={{ uri: '' }}
-              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILL_ITEM, item)}
+              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILL_ITEM, { ...item, parentId: id })}
               roundAvatar
               chevron
             />)}

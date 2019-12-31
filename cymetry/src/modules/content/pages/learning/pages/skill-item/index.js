@@ -85,7 +85,7 @@ class SkillItem extends Component {
         
         const number = parseInt(splitted[index + 1].split(']}')[0]);
         const func = `(function(e) { window.postMessage(JSON.stringify({ value: e.target.value, input: ${number - 1} })); })(event)`;
-        splitted[index] = `$${item}$ <input style="width: 20px" onchange="${func}" />`;
+        splitted[index] = `$${item}$ <input style="width: 40px" onchange="${func}" />`;
       });
     }
 
@@ -145,7 +145,7 @@ class SkillItem extends Component {
               </View>
 
               {!item.fillIn && item.options.map(item => <TouchableHighlight key={item._id} style={Styles.latexWrapper} onPress={() => this.nonFillInAnswer(index, item)}>
-                <MathJax html={`$(${item.index}) ${item.content}$`} />
+                <MathJax html={`<span style="${stepAnswers[index] === item.index ? 'color: blue' : ''}">$(${item.index}) ${item.content}$</span>`} />
               </TouchableHighlight>)}
             </View>
           </View>)}

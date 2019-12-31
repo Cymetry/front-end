@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import { View, Text, TouchableHighlight } from "react-native";
 import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Video from "react-native-video";
+import { Video } from "expo-av";
 
-import MathJax from "../../../../../../components/mathjax";
+import SampleVideo from '../../../../../../../assets/videos/sample.mp4';
+import MathJax from '../../../../../../components/mathjax';
 import SkillLearningController from '../../../../../../platform/api/skillLearning';
 import { createTabNavigationOptions } from '../../../../../../platform/services/navigation';
 import ROUTES from '../../../../../../platform/constants/routes';
-import Styles from "../../../../../../../assets/styles";
+import Styles from '../../../../../../../assets/styles';
 import LocalStyles from './styles';
 
 class SkillItem extends Component {
@@ -26,7 +27,6 @@ class SkillItem extends Component {
     const { id } = navigation.state.params;
 
     const result = await SkillLearningController.Start(id);
-    console.log(result.body.content);
     result && result.body && result.body.content && this.setState({ data: result.body.content });
   }
 
@@ -121,10 +121,12 @@ class SkillItem extends Component {
       <View style={Styles.page}>
         <KeyboardAwareScrollView>
           <Video
-            source={{ uri: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" }}
-            ref={videoPlayer => (this.videoPlayer = videoPlayer)}
+            source={SampleVideo}
             style={LocalStyles.video}
+            resizeMode="cover"
+            useNativeControls
           />
+
           <View style={LocalStyles.container}>
             <View style={LocalStyles.questionWrapper}>
               <Text style={Styles.text.normalSize}>{data.question}</Text>

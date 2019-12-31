@@ -10,7 +10,8 @@ const LocalStyles = StyleSheet.create({
 
   video: {
     flex: 1,
-    height: 300,
+    height: 200,
+    marginBottom: 20,
   },
 
   questionWrapper: {

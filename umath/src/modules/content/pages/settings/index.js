@@ -5,7 +5,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { withNavigation } from "react-navigation";
 import { ScrollView } from "react-native-gesture-handler";
 
-import { createTabNavigationOptions } from '../../../../platform/services/navigation';
+import { createNavigationOptions, createTabNavigationOptions } from '../../../../platform/services/navigation';
 import Constants from './../../../../platform/constants';
 import ROUTES from './../../../../platform/constants/routes';
 import Styles from "../../../../../assets/styles";
@@ -15,6 +15,8 @@ import Curriculum from "./pages/curriculum";
 import FAQ from "./pages/faq";
 
 class Settings extends PureComponent {
+
+  static navigationOptions = createNavigationOptions('Settings');
 
   list = [
     {
@@ -78,9 +80,7 @@ export default createStackNavigator({
   [ROUTES.CONTENT_SETTINGS_FAQ]: FAQ,
   [ROUTES.CONTENT_SETTINGS_HELP]: HelpAndFeedback,
 }, {
-  headerMode: 'none',
-  navigationOptions: {
-    headerVisible: false,
-    ...createTabNavigationOptions('Settings', 'Settings', 'settings'),
-  },
+  headerLayoutPreset: 'center',
+  defaultNavigationOptions: () =>  Styles.navigation,
+  navigationOptions: createTabNavigationOptions('Settings', 'settings'),
 });

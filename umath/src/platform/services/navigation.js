@@ -8,8 +8,7 @@ export const createNavigationOptions = title => ({
   title,
 });
 
-export const createTabNavigationOptions = (headerTitle, title, iconName) => ({
-  title: headerTitle,
+export const createTabNavigationOptions = (title, iconName) => ({
   tabBarLabel: title,
   tabBarIcon: ({ tintColor }) => <Ionicons
     name={Platform.OS === 'ios' ? `ios-${iconName}` : `md-${iconName}`}

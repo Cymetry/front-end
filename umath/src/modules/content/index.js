@@ -4,6 +4,7 @@ import Learning from './pages/learning';
 import Settings from './pages/settings';
 import MyAccount from './pages/my-account';
 import ROUTES from '../../platform/constants/routes';
+import { createNavigationOptions } from '../../platform/services/navigation';
 
 export default createBottomTabNavigator({
   [ROUTES.CONTENT_LEARNING]: Learning,

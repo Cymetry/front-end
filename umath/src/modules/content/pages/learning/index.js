@@ -16,6 +16,14 @@ import LocalStyles from './styles';
   
 class Learning extends PureComponent {
 
+  static navigationOptions = ({ navigation }) => {
+    const { name } = navigation.state.params;
+
+    return {
+      title: name,
+    }
+  };
+
   state = {
     curriculums: [],
   };
@@ -61,9 +69,7 @@ export default createStackNavigator({
   [ROUTES.CONTENT_LEARNING_SKILLS]: withNavigation(Skills),
   [ROUTES.CONTENT_LEARNING_SKILL_ITEM]: withNavigation(SkillItem),
 }, {
-  headerMode: 'none',
-  navigationOptions: {
-    headerVisible: false,
-    ...createTabNavigationOptions('Learning', 'Learning', 'sunny'),
-  },
-});;;
+  headerLayoutPreset: 'center',
+  defaultNavigationOptions: () =>  Styles.navigation,
+  navigationOptions: createTabNavigationOptions('Learning', 'sunny'),
+});

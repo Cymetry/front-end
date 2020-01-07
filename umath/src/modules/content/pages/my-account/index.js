@@ -1,8 +1,10 @@
 import React, { PureComponent } from "react";
 import { View, Text, Image } from 'react-native';
 import { Bar } from 'react-native-progress';
+import { createStackNavigator } from "react-navigation-stack";
 
-import { createTabNavigationOptions } from '../../../../platform/services/navigation';
+import { createTabNavigationOptions, createNavigationOptions } from '../../../../platform/services/navigation';
+import ROUTES from '../../../../platform/constants/routes';
 
 import Styles from "../../../../../assets/styles";
 import LocalStyles from "./styles";
@@ -10,7 +12,7 @@ import Variables from "../../../../../assets/styles/variables";
 
 class MyAccount extends PureComponent {
 
-  static navigationOptions = createTabNavigationOptions('My Account', 'My Account', 'person');
+  static navigationOptions = createNavigationOptions('My Account');
 
   BarItem = ({ percent }) => <Bar
     color={Variables.lightBlue}
@@ -46,4 +48,10 @@ class MyAccount extends PureComponent {
   }
 };
 
-export default MyAccount;
+export default createStackNavigator({
+  [ROUTES.CONTENT_MY_ACCOUNT]: MyAccount,
+}, {
+  headerLayoutPreset: 'center',
+  defaultNavigationOptions: () =>  Styles.navigation,
+  navigationOptions: createTabNavigationOptions('My Account', 'person'),
+});;

@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { ListItem } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -9,6 +9,11 @@ import Styles from "../../../../../../../assets/styles";
 import LocalStyles from './styles';
   
 class Topics extends PureComponent {
+
+  static navigationOptions = ({ navigation }) => {
+    const { name } = navigation.state.params;
+    return { title: name };
+  };
 
   state = {
     topics: [],
@@ -35,7 +40,10 @@ class Topics extends PureComponent {
           <View style={Styles.list.container}>
             {topics.map(item => <ListItem
               key={item.id}
-              title={`${item.name} (${item.complete}/${item.total})`}
+              title={<View style={LocalStyles.title}>
+                <Text style={Styles.text.smallestSize}>{item.name}</Text>
+                <Text style={LocalStyles.completeText}>{item.complete}/{item.total}</Text>
+              </View>}
               containerStyle={LocalStyles.listItem}
               leftAvatar={{ uri: '' }}
               onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, item)}

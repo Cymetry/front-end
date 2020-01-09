@@ -1,9 +1,10 @@
 import React, { PureComponent } from "react";
 import { View, Text, Image } from 'react-native';
 import { Bar } from 'react-native-progress';
-import { createStackNavigator } from "react-navigation-stack";
+import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 
 import { createTabNavigationOptions, createNavigationOptions } from '../../../../platform/services/navigation';
+import AccountController from '../../../../platform/api/account';
 import ROUTES from '../../../../platform/constants/routes';
 
 import Styles from "../../../../../assets/styles";
@@ -12,7 +13,12 @@ import Variables from "../../../../../assets/styles/variables";
 
 class MyAccount extends PureComponent {
 
-  static navigationOptions = createNavigationOptions('My Account');
+  static navigationOptions = ({ navigation }) => ({
+    title: 'My Account',
+    headerLeft: <HeaderBackButton onPress={() => navigation.navigate(ROUTES.HOME)} />
+  });
+
+  state = { details: null };
 
   BarItem = ({ percent }) => <Bar
     color={Variables.lightBlue}
@@ -24,13 +30,19 @@ class MyAccount extends PureComponent {
     borderWidth={0}
   />;
 
-  render() {
+  async componentDidMount() {
+    const result = await AccountController.Details();
+    this.setState({ details: result && result.user ? result.user : null });
+  }
 
-    return (
+  render() {
+    const { details } = this.state;
+
+    return details ? (
       <View style={Styles.page}>
         <View style={Styles.card.classic}>
           <Image style={LocalStyles.profileImage} source={{}} />
-          <Text style={LocalStyles.fullName}>Name Surname</Text>
+          <Text style={LocalStyles.fullName}>{details.name} {details.surname}</Text>
           <Text style={Styles.text.smallSize}>Curriculum: IB Maths HL</Text>
           <View style={LocalStyles.progressItem}>
             <Text style={Styles.text.smallSize}>Learning: &nbsp;&nbsp;</Text>
@@ -44,7 +56,7 @@ class MyAccount extends PureComponent {
           </View>
         </View>   
       </View>
-    );
+    ) : null;
   }
 };
 

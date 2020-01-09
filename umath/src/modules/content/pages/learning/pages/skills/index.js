@@ -10,6 +10,11 @@ import LocalStyles from './styles';
   
 class Skills extends PureComponent {
 
+  static navigationOptions = ({ navigation }) => {
+    const { name } = navigation.state.params;
+    return { title: name };
+  };
+  
   state = {
     skills: [],
   };

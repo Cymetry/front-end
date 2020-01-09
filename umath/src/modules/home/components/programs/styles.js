@@ -6,7 +6,6 @@ import Variables from "../../../../../assets/styles/variables";
 const LocalStyles = StyleSheet.create({
   container: {
     ...Styles.card.classic,
-    marginTop: 30,
     paddingVertical: 0,
     paddingHorizontal: 0,
   },

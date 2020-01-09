@@ -31,18 +31,19 @@ class SignIn extends Component {
 
   submit = async () => {
     if (this.formValid) {
-      const { navigation } = this.props;
       const { form } = this.state;
+      const { navigation, signUpActive } = this.props;
+      const { lastPath, lastParams } = navigation.state.params;
       const result = await AuthController.Login(form);
       if (result) {
         await AsyncStorage.setItem('token', result);
-        navigation.navigate(ROUTES.HOME);
+        navigation.push(lastPath, lastParams);
       } else Alert.alert('Username or Password is incorrect!!');
     }
   }
   
   render() {
-    const { changeViewType } = this.props;
+    const { changeViewType, signUpActive } = this.props;
     
     return (
       <View style={LocalStyles.container}>
@@ -58,14 +59,14 @@ class SignIn extends Component {
           onChangeText={value => this.change('password', value)}
           secureTextEntry
         />
-        <Text style={LocalStyles.suggestionText}>
+        {signUpActive && <Text style={LocalStyles.suggestionText}>
           Not logined yet?&nbsp;
           <Text
             style={LocalStyles.suggestionButton}
             accessibilityRole="button"
             onPress={() => changeViewType(ViewTypeEnum.SignUp)}
           >Sign up</Text>
-        </Text>
+        </Text>}
         <View style={{ ...LocalStyles.button, ...(!this.formValid ? Styles.button.disabled : {}) }}>
           <Button
             disabled={!this.formValid}

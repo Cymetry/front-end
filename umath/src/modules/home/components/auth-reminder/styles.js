@@ -5,7 +5,7 @@ import Styles from "../../../../../assets/styles";
 const LocalStyles = StyleSheet.create({
   container: {
     ...Styles.card.classic,
-    marginBottom: 30,
+    marginBottom: 40,
   },
 
   button: {

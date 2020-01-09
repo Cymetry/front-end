@@ -19,7 +19,7 @@ const AuthReminder = memo(({ navigation }) => (
         title="Sign in"
         type="clear"
         titleStyle={LocalStyles.buttonTitle}
-        onPress={() => navigation.navigate(ROUTES.AUTH)} 
+        onPress={() => navigation.navigate(ROUTES.AUTH, { signUp: false, lastPath: ROUTES.HOME })} 
       />
     </View>
   </View>

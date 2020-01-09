@@ -1,7 +1,7 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import { View, Text, AsyncStorage } from "react-native";
 import { ListItem } from "react-native-elements";
-import { createStackNavigator } from "react-navigation-stack";
+import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 import { withNavigation } from "react-navigation";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -14,37 +14,53 @@ import HelpAndFeedback from "./pages/help-and-feedback";
 import Curriculum from "./pages/curriculum";
 import FAQ from "./pages/faq";
 
-class Settings extends PureComponent {
+class Settings extends Component {
 
-  static navigationOptions = createNavigationOptions('Settings');
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Settings',
+    headerLeft: <HeaderBackButton onPress={() => navigation.navigate(ROUTES.HOME)} />
+  });
 
-  list = [
-    {
-      name: 'Curriculum',
-      url: ROUTES.CONTENT_SETTINGS_CURRICULUM,
-      avatar_url: '',
-    },
-    {
-      name: 'FAQ',
-      url: ROUTES.CONTENT_SETTINGS_FAQ,
-      avatar_url: '',
-    },
-    {
-      name: 'Help & Feedback',
-      url: ROUTES.CONTENT_SETTINGS_HELP,
-      avatar_url: '',
-    },
-    {
-      name: 'Sign out',
-      onPress: () => this.signOut(),
-      avatar_url: '',
-    },
-  ];
+  state = { token: null };
+
+  async componentDidMount() {
+    this.setState({ token: !!(await AsyncStorage.getItem('token')) });
+  }
+
+  get list() {
+    const { token } = this.state;
+
+    return [
+      {
+        name: 'Curriculum',
+        url: ROUTES.CONTENT_SETTINGS_CURRICULUM,
+        avatar_url: '',
+      },
+      {
+        name: 'FAQ',
+        url: ROUTES.CONTENT_SETTINGS_FAQ,
+        avatar_url: '',
+      },
+      {
+        name: 'Help & Feedback',
+        url: ROUTES.CONTENT_SETTINGS_HELP,
+        avatar_url: '',
+      },
+      ...(token ? [{
+        name: 'Sign out',
+        onPress: () => this.signOut(),
+        avatar_url: '',
+      }] : []),
+    ];
+  }
 
   signOut = async () => {
     const { navigation } = this.props;
     await AsyncStorage.removeItem('token');
-    navigation.navigate(ROUTES.AUTH);
+    navigation.reset({
+      index: 0,
+      actions: [navigation.navigate(ROUTES.HOME, { signOuted: true })],
+    });
   }
 
   render() {

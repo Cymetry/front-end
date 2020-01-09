@@ -25,7 +25,7 @@ class Home extends Component {
     this.fetchPrograms();
     this.setState({ logined: !!(await AsyncStorage.getItem('token')) });
   }
-
+  
   fetchPrograms = async () => {
     const result = await ProgramController.List();
     result && result.length && this.setState({ programs: result });
@@ -33,10 +33,12 @@ class Home extends Component {
 
   render() {
     const { programs, logined } = this.state;
+    const { navigation } = this.props;
+    const { signOuted } = navigation.state.params || {};
 
     return (
       <ScrollView style={Styles.page}>
-        {!logined && <AuthReminder />}
+        {(!logined || signOuted) && <AuthReminder />}
         <Programs data={programs} />
       </ScrollView>
     );

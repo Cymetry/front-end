@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { View } from "react-native";
 import { ListItem } from "react-native-elements";
-import { createStackNavigator } from "react-navigation-stack";
+import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 import { withNavigation } from "react-navigation";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -18,10 +18,11 @@ class Learning extends PureComponent {
 
   static navigationOptions = ({ navigation }) => {
     const { name } = navigation.state.params;
-
+    
     return {
       title: name,
-    }
+      headerLeft: <HeaderBackButton onPress={() => navigation.navigate(ROUTES.HOME)} />
+    };
   };
 
   state = {

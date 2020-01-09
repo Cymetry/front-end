@@ -11,6 +11,10 @@ export default StyleSheet.create({
     fontSize: Variables.smallFontSize,
   },
 
+  smallestSize: {
+    fontSize: Variables.smallestFontSize,
+  },
+
   center: {
     textAlign: 'center',
   },

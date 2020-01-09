@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { View } from "react-native";
 import { ListItem } from "react-native-elements";
 
-import { createTabNavigationOptions } from "../../../../../../platform/services/navigation";
+import { createNavigationOptions } from '../../../../../../platform/services/navigation';
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from "./styles";
   
@@ -35,7 +35,7 @@ const list = [
 
 class Curriculum extends PureComponent {
 
-  static navigationOptions = createTabNavigationOptions('Curriculum', 'Curriculum', 'sunny');
+  static navigationOptions = createNavigationOptions('Curriculum');
 
   render() {
 

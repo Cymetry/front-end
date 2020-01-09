@@ -3,13 +3,15 @@ import { View, Text } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 
+import { createNavigationOptions } from "../../../../../../platform/services/navigation";
 import LocalStyles from './styles';
 import Styles from '../../../../../../../assets/styles';
 
 class HelpAndFeedback extends React.PureComponent {
 
-  render() {
+  static navigationOptions = createNavigationOptions('Help & Feedback');
 
+  render() {
     return (
       <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>

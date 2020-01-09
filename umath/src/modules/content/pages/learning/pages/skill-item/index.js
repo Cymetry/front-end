@@ -14,7 +14,10 @@ import LocalStyles from './styles';
 
 class SkillItem extends Component {
 
-  static navigationOptions = createTabNavigationOptions('Skill', 'Skill', 'sunny');
+  static navigationOptions = ({ navigation }) => {
+    const { name } = navigation.state.params;
+    return { title: name };
+  };
 
   state = {
     data: null,
@@ -25,9 +28,12 @@ class SkillItem extends Component {
   async componentDidMount() {
     const { navigation } = this.props;
     const { id } = navigation.state.params;
-
     const result = await SkillLearningController.Start(id);
-    result && result.body && result.body.content && this.setState({ data: result.body.content });
+    
+    if (result && result.body && result.body.content) {
+      result.body.content.steps = result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item);
+      this.setState({ data: result.body.content });
+    }
   }
 
   get nextDisabled() {
@@ -119,11 +125,11 @@ class SkillItem extends Component {
 
     return data ? (
       <View style={Styles.page}>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView enableOnAndroid>
           <Video
             source={SampleVideo}
             style={LocalStyles.video}
-            resizeMode="cover"
+            resizeMode="contain"
             useNativeControls
           />
 

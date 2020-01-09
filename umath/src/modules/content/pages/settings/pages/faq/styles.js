@@ -16,7 +16,7 @@ const LocalStyles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: Variables.gray,
     borderRadius: 8,
-    marginBottom: 20,
+    marginBottom: 10,
   },
 
   accordionHeaderText: {

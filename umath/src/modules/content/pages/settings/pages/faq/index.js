@@ -1,59 +1,26 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { View, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Accordion from 'react-native-collapsible/Accordion';
 
+import { createNavigationOptions } from '../../../../../../platform/services/navigation';
+import AccountController from '../../../../../../platform/api/account';
 import LocalStyles from './styles';
 import Styles from '../../../../../../../assets/styles';
 
-const SECTIONS = [
-  {
-    title: 'Something',
-    content: 'Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum...',
-  },
-  {
-    title: 'Something',
-    content: 'Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum...',
-  },
-  {
-    title: 'Something',
-    content: 'Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum...',
-  },
-  {
-    title: 'Something',
-    content: 'Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum...',
-  },
-  {
-    title: 'Something',
-    content: 'Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum...',
-  },
-  {
-    title: 'Something',
-    content: 'Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum...',
-  },
-  {
-    title: 'Something',
-    content: 'Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum...',
-  },
-  {
-    title: 'Something',
-    content: 'Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum...',
-  },
-  {
-    title: 'Something',
-    content: 'Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum...',
-  },
-  {
-    title: 'Something',
-    content: 'Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum... Lorem ipsum...',
-  },
-];
+class FAQ extends PureComponent {
 
-class FAQ extends React.PureComponent {
+  static navigationOptions = createNavigationOptions('FAQ');
 
   state = {
     activeSections: [],
+    data: [],
   };
+
+  async componentDidMount() {
+    const result = await AccountController.FAQ();
+    result && result.length && this.setState({ data: result });
+  }
  
   renderHeader = section => {
     return (
@@ -76,14 +43,15 @@ class FAQ extends React.PureComponent {
   };
 
   render() {
-    const { activeSections } = this.state;
+    const { data, activeSections } = this.state;
 
     return (
       <ScrollView style={Styles.page}>
         <View style={{ paddingVertical: 20, paddingHorizontal: 20 }}>
           <Accordion
             activeSections={activeSections}
-            sections={SECTIONS}
+            sections={data}
+            underlayColor="transparent"
             renderHeader={this.renderHeader}
             renderContent={this.renderContent}
             onChange={this.updateSections}

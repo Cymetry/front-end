@@ -15,6 +15,18 @@ const LocalStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Variables.gray,
   },
+
+  title: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  completeText: {
+    color: Variables.gray,
+    fontSize: Variables.smallestFontSize,
+  },
 });
 
 export default LocalStyles;

@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { View, Text } from "react-native";
+import { View, Text, AsyncStorage } from "react-native";
 import { ListItem } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -17,12 +17,14 @@ class Topics extends PureComponent {
 
   state = {
     topics: [],
+    userPremium: false,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { navigation } = this.props;
     const { id } = navigation.state.params;
     this.fetchTopics(id);
+    this.setState({ userPremium: !!(await AsyncStorage.getItem('premium')) });
   }
 
   fetchTopics = async id => {
@@ -31,25 +33,27 @@ class Topics extends PureComponent {
   }
 
   render() {
-    const { topics } = this.state;
     const { navigation } = this.props;
+    const { topics, userPremium } = this.state;
 
     return (
       <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
-            {topics.map(item => <ListItem
+            {topics.map((item, index) => <ListItem
               key={item.id}
+              disabled={!!index && !userPremium}
+              disabledStyle={{ opacity: .3 }}
               title={<View style={LocalStyles.title}>
                 <Text style={Styles.text.smallestSize}>{item.name}</Text>
                 <Text style={LocalStyles.completeText}>{item.complete}/{item.total}</Text>
               </View>}
               containerStyle={LocalStyles.listItem}
               leftAvatar={{ uri: '' }}
-              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, item)}
+              onPress={() => (!index || userPremium) && navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, item)}
               roundAvatar
               chevron
-            />)}
+            />)}  
           </View>
         </View>
       </ScrollView>

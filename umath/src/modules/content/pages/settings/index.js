@@ -56,7 +56,7 @@ class Settings extends Component {
 
   signOut = async () => {
     const { navigation } = this.props;
-    await AsyncStorage.removeItem('token');
+    await AsyncStorage.multiRemove(['token', 'premium']);
     navigation.reset({
       index: 0,
       actions: [navigation.navigate(ROUTES.HOME, { signOuted: true })],

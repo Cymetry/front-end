@@ -30,7 +30,7 @@ class Connection {
 
   static responseRestructure = async response => {
     if (response.status === 401 || response.status === 403) {
-      await AsyncStorage.removeItem('token');
+      await AsyncStorage.multiRemove(['token', 'premium']);
       if (navigationWrapper.navigation) {
         const { state } = navigationWrapper.navigation;
         navigationWrapper.navigation.navigate(ROUTES.AUTH, { signUp: true, lastPath: state.routeName, lastParams: state.params });

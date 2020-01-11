@@ -32,11 +32,14 @@ class SignIn extends Component {
   submit = async () => {
     if (this.formValid) {
       const { form } = this.state;
-      const { navigation, signUpActive } = this.props;
+      const { navigation } = this.props;
       const { lastPath, lastParams } = navigation.state.params;
       const result = await AuthController.Login(form);
       if (result) {
-        await AsyncStorage.setItem('token', result);
+        await AsyncStorage.multiSet([
+          ['token', result.jwt],
+          ['premium', result.isPremium ? 'true' : ''],
+        ]);
         navigation.push(lastPath, lastParams);
       } else Alert.alert('Username or Password is incorrect!!');
     }

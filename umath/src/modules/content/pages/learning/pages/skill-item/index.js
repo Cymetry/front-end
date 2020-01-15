@@ -28,12 +28,14 @@ class SkillItem extends Component {
   async componentDidMount() {
     const { navigation } = this.props;
     const { id } = navigation.state.params;
-    const result = await SkillLearningController.Start(id);
-    
-    if (result && result.body && result.body.content) {
-      result.body.content.steps = result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item);
-      this.setState({ data: result.body.content });
-    }
+    const response = await SkillLearningController.Start(id);
+    try {
+      const result = JSON.parse(response);
+      if (result && result.body && result.body.content) {
+        result.body.content.steps = result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item);
+        this.setState({ data: result.body.content });
+      }
+    } catch (e) { /* */ }
   }
 
   get nextDisabled() {
@@ -80,12 +82,21 @@ class SkillItem extends Component {
   prepareFillIn = latex => {
     const splitted = latex.split('{[');
 
+    console.log(splitted);
     if (splitted.length > 1) {
       splitted.map((item, index) => {
-        if (index === splitted.length - 1) return splitted[index] = '';
+        if (index === splitted.length - 1) {
+          if (splitted[index].includes(']}')) {
+            const number = parseInt(splitted[index].split(']}')[0]);
+            splitted[index] = splitted[index].replace(`${number}]}`, '');
+          }
+
+          return;
+        }
 
         if (index) {
           const number = parseInt(splitted[index + 1].split(']}')[0]);
+          console.log(number, [...splitted][index + 1])
           splitted[index] = item.split(`${number}]}`).join('');
         }
         

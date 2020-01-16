@@ -31,6 +31,7 @@ class SkillItem extends Component {
     const response = await SkillLearningController.Start(id);
     try {
       const result = JSON.parse(response);
+      console.log(result);  
       if (result && result.body && result.body.content) {
         result.body.content.steps = result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item);
         this.setState({ data: result.body.content });
@@ -82,7 +83,6 @@ class SkillItem extends Component {
   prepareFillIn = latex => {
     const splitted = latex.split('{[');
 
-    console.log(splitted);
     if (splitted.length > 1) {
       splitted.map((item, index) => {
         if (index === splitted.length - 1) {
@@ -146,7 +146,7 @@ class SkillItem extends Component {
 
           <View style={LocalStyles.container}>
             <View style={LocalStyles.questionWrapper}>
-              <Text style={Styles.text.normalSize}>{data.question}</Text>
+              <MathJax html={`<span style="font-style: 'normal'">$${data.question}$</span>`} />
             </View>          
           </View>
           

@@ -15,7 +15,7 @@ class HelpAndFeedback extends React.PureComponent {
     return (
       <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
-          <Text style={Styles.text.normalSize}>If you need any help, please refer to FAQ. However, if you cannot find an answer to your question, feel free to contact us and we will get back to you as soon as possible.</Text>
+          <Text style={LocalStyles.text}>If you need any help, please refer to FAQ. However, if you cannot find an answer to your question, feel free to contact us and we will get back to you as soon as possible.</Text>
           <Input
             containerStyle={Styles.input.classic}
             placeholder="Name"

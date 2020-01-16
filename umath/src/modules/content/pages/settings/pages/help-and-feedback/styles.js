@@ -8,6 +8,11 @@ const LocalStyles = StyleSheet.create({
     ...Styles.card.classic,
   },
 
+  text: {
+    fontSize: Variables.normalFontSize,
+    marginBottom: 10,
+  },
+
   button: {
     width: 150,
     marginTop: 30,

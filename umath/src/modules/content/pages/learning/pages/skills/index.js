@@ -43,7 +43,7 @@ class Skills extends PureComponent {
               key={item.id}
               title={`${item.name} ${item.complete ? '(complete)' : ''}`}
               containerStyle={LocalStyles.listItem}
-              leftAvatar={{ uri: '' }}
+              leftAvatar={{ source: { uri: item.logo } }}
               onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILL_ITEM, { ...item, parentId: id })}
               roundAvatar
               chevron

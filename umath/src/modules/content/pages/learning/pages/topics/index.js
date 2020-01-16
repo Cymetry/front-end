@@ -49,7 +49,7 @@ class Topics extends PureComponent {
                 <Text style={LocalStyles.completeText}>{item.complete}/{item.total}</Text>
               </View>}
               containerStyle={LocalStyles.listItem}
-              leftAvatar={{ uri: '' }}
+              leftAvatar={{ source: { uri: item.logo } }}
               onPress={() => (!index || userPremium) && navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, item)}
               roundAvatar
               chevron

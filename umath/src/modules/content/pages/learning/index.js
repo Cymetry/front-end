@@ -52,7 +52,7 @@ class Learning extends PureComponent {
               key={item.id}
               title={item.name}
               containerStyle={LocalStyles.listItem}
-              leftAvatar={{ uri: '' }}
+              leftAvatar={{ source: { uri: item.logo } }}
               onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_TOPICS, item)}
               roundAvatar
               chevron

@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { View, Text, TouchableHighlight } from "react-native";
 import { Button } from "react-native-elements";
+import Latex from 'react-native-latex';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Video } from "expo-av";
 
 import SampleVideo from '../../../../../../../assets/videos/sample.mp4';
 import MathJax from '../../../../../../components/mathjax';
 import SkillLearningController from '../../../../../../platform/api/skillLearning';
-import { createTabNavigationOptions } from '../../../../../../platform/services/navigation';
 import ROUTES from '../../../../../../platform/constants/routes';
 import Styles from '../../../../../../../assets/styles';
 import LocalStyles from './styles';
@@ -27,13 +27,14 @@ class SkillItem extends Component {
 
   async componentDidMount() {
     const { navigation } = this.props;
-    const { id } = navigation.state.params;
-    const response = await SkillLearningController.Start(id);
+    const { id, parentId } = navigation.state.params;
+    const response = await SkillLearningController.Resume(id);
+    if (response.message === 'Skill has been completed') return navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id: parentId });
     try {
       const result = JSON.parse(response);
-      console.log(result);  
       if (result && result.body && result.body.content) {
         result.body.content.steps = result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item);
+        console.log(result.body);
         this.setState({ data: result.body.content });
       }
     } catch (e) { /* */ }
@@ -67,9 +68,12 @@ class SkillItem extends Component {
 
     stepAnswers.map((item, index) => {
       const stepData = data.steps[index];
-      let correct = false;
+      let correct = true;
       
-      if (stepData.fillIn) correct = JSON.stringify(Object.values(item)) === JSON.stringify(stepData.answer);
+      if (stepData.fillIn) Object.values(item).map((item, index) => {
+        if (!stepData.answer[index].find(sub => sub === item)) correct = false;
+      });
+
       else correct = item === stepData.solution;
 
       if (correct) body.correctCount += 1;
@@ -77,42 +81,39 @@ class SkillItem extends Component {
     });
 
     await SkillLearningController.SaveProgress(body);
-    navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id: parentId });
+    this.setState({ data: null }, async () => {
+      const response = await SkillLearningController.Resume(id);
+      if (response.message === 'Skill has been completed') return navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id: parentId });
+  
+      if (response && response.body && response.body.content) {
+        response.body.content.steps = response.body.content.steps.map(item => Array.isArray(item) ? item[0] : item);
+        this.setState({ data: response.body.content });
+      } 
+    });
   }
 
-  prepareFillIn = latex => {
-    const splitted = latex.split('{[');
+  prepareGraphs = (index, latex) => {
+    const { data } = this.state;
+    const splitted = latex.split('[()]');
+    const activeStep = data.steps[index];
 
     if (splitted.length > 1) {
       splitted.map((item, index) => {
         if (index === splitted.length - 1) {
-          if (splitted[index].includes(']}')) {
-            const number = parseInt(splitted[index].split(']}')[0]);
-            splitted[index] = splitted[index].replace(`${number}]}`, '');
-          }
-
+          splitted[index] = `$$${splitted[index]}$$`;
           return;
         }
-
-        if (index) {
-          const number = parseInt(splitted[index + 1].split(']}')[0]);
-          console.log(number, [...splitted][index + 1])
-          splitted[index] = item.split(`${number}]}`).join('');
-        }
-        
-        const number = parseInt(splitted[index + 1].split(']}')[0]);
-        const func = `(function(e) { window.postMessage(JSON.stringify({ value: e.target.value, input: ${number - 1} })); })(event)`;
-        splitted[index] = `$${item}$ <input style="width: 40px" onchange="${func}" />`;
+        splitted[index] = `$$${splitted[index]}$$ <img src="${activeStep.graphs[index]}" style="width: 100%" alt="graph" />`;
       });
-    }
-
+    } else splitted[0] = `$$${splitted[0]}$$ <img src="${activeStep.graphs[0]}" style="width: 100%" alt="graph" />`;
     return splitted.join('');
-  }
+  } 
 
   fillInAnswer = (index, postData) => {
+    console.log(postData);
     if (postData && !parseInt(postData)) {
       const message = JSON.parse(postData);
-      const { data, stepAnswers, currentStep } = this.state;
+      const { stepAnswers, currentStep } = this.state;
 
       if (stepAnswers[index] && index === currentStep) stepAnswers[index][message.input] = message.value;
       else if (!stepAnswers[index]) stepAnswers[index] = { [message.input]: message.value };
@@ -137,16 +138,16 @@ class SkillItem extends Component {
     return data ? (
       <View style={Styles.page}>
         <KeyboardAwareScrollView enableOnAndroid>
-          <Video
+          {data.videoUrl && <Video
             source={SampleVideo}
             style={LocalStyles.video}
             resizeMode="contain"
             useNativeControls
-          />
+          />}
 
           <View style={LocalStyles.container}>
             <View style={LocalStyles.questionWrapper}>
-              <MathJax html={`<span style="font-style: 'normal'">$${data.question}$</span>`} />
+              <MathJax html={`$$${data.question}$$`} style={{ width: '100%' }} />
             </View>          
           </View>
           
@@ -156,13 +157,13 @@ class SkillItem extends Component {
               <Text style={LocalStyles.stepText}>Step {index + 1}:</Text>
               <View style={Styles.latexWrapper}>
                 <MathJax
-                  html={item.fillIn ? this.prepareFillIn(item.instruction) : `$${item.instruction}$`}
+                  html={item.graphs.length ? this.prepareGraphs(index, item.instruction) : `$$${item.instruction}$$`}
                   onMessage={item.fillIn ? data => this.fillInAnswer(index, data) : undefined}
                 />
               </View>
 
               {!item.fillIn && item.options.map(item => <TouchableHighlight key={item._id} style={Styles.latexWrapper} onPress={() => this.nonFillInAnswer(index, item)}>
-                <MathJax html={`<span style="${stepAnswers[index] === item.index ? 'color: blue' : ''}">$(${item.index}) ${item.content}$</span>`} />
+                <MathJax html={`<span style="${stepAnswers[index] === item.index ? 'color: blue' : ''}">(${item.index}) ${item.content}</span>`} style={{ width: '100%' }} />
               </TouchableHighlight>)}
             </View>
           </View>)}

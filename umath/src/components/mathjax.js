@@ -3,7 +3,7 @@ import { View, WebView } from 'react-native';
 
 const defaultOptions = {
 	messageStyle: 'none',
-	extensions: [ 'tex2jax.js' ],
+	extensions: [ 'tex2jax.js', 'https://cdn.mathjax.org/mathjax/contrib/forminput/forminput.js' ],
 	jax: [ 'input/TeX', 'output/HTML-CSS' ],
 	tex2jax: {
 		inlineMath: [ ['$','$'], ['\\(','\\)'] ],
@@ -12,7 +12,7 @@ const defaultOptions = {
 	},
 	TeX: {
 		extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js']
-	}
+	}  
 };
 
 class MathJax extends Component {
@@ -21,8 +21,7 @@ class MathJax extends Component {
 
 	handleMessage = message => {
 		const { onMessage } = this.props;
-		const { data } = message.nativeEvent;
-
+		const { data } = message.nativeEvent;	
 		if (parseInt(data)) this.setState({ height: Number(data) });
 		else onMessage && onMessage(data);
 	}
@@ -41,14 +40,24 @@ class MathJax extends Component {
 					var height = document.documentElement.scrollHeight;
 
 					window.postMessage(String(height));
+					Array.from(document.querySelectorAll("[id^='box-']")).map(function(item) {
+						item.onkeyup = item.keyup || function(e) {
+							const idNum = +e.target.id.replace('box-', '');
+							window.postMessage(JSON.stringify({ value: e.target.value, input: idNum - 1 }));
+						};
+					});
 				});
 			</script>
-
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js"></script>
+			<script defer>
+			window.postMessage('mtavvvvv');
+		
+			</script>
 
 			${content}
 		`;
 	}
+	
 	render() {
 		const html = this.wrapMathjax(this.props.html);
 
@@ -60,8 +69,8 @@ class MathJax extends Component {
       <View style={{ height: this.state.height, ...props.style }}>
         <WebView
           scrollEnabled={false}
-          onMessage={this.handleMessage}
-          source={{ html }}
+					onMessage={this.handleMessage}
+					source={{ html }}
           {...props}
         />
       </View>

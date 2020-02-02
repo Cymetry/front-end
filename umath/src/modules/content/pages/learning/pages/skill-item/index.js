@@ -87,7 +87,7 @@ class SkillItem extends Component {
   
       if (response && response.body && response.body.content) {
         response.body.content.steps = response.body.content.steps.map(item => Array.isArray(item) ? item[0] : item);
-        this.setState({ data: response.body.content });
+        this.setState({ data: response.body.content, currentStep: 0, stepAnswers: [] });
       } 
     });
   }

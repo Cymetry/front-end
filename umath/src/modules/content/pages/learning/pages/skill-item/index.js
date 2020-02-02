@@ -29,7 +29,7 @@ class SkillItem extends Component {
     const { navigation } = this.props;
     const { id, parentId } = navigation.state.params;
     let response = await SkillLearningController.Resume(id);
-    if (response.message === 'Skill has been completed') response = await SkillLearningController.Start(id);
+    if (response.message === 'Skill has been completed' || !Object.keys(response).length) response = await SkillLearningController.Start(id);
     try {
       const result = JSON.parse(response);
       if (result && result.body && result.body.content) {

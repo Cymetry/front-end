@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { View } from "react-native";
 import { ListItem } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
+import { Platform } from '@unimodules/core';
 
 import SkillController from '../../../../../../platform/api/skill';
 import ROUTES from "../../../../../../platform/constants/routes";
@@ -35,15 +36,17 @@ class Skills extends PureComponent {
     const { navigation } = this.props;
     const { id } = navigation.state.params;
 
+
     return (
       <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
             {skills.map(item => <ListItem
               key={item.id}
-              title={`${item.name} ${item.complete ? '(complete)' : ''}`}
+              title={item.name}
               containerStyle={LocalStyles.listItem}
-              leftAvatar={{ source: { uri: item.logo } }}
+              leftAvatar={{ source: { uri: item.logo }, ...Styles.avatar }}
+              rightIcon={item.complete ? { name: Platform.OS === 'ios' ? 'ios-checkmark-circle' : 'md-checkmark-circle', type: 'ionicon', color: '#bcbec1' } : {}}
               onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILL_ITEM, { ...item, parentId: id })}
               roundAvatar
               chevron

@@ -17,7 +17,7 @@ const Programs = memo(({ data, navigation }) => (
         key={item.id}
         title={item.name}
         containerStyle={Styles.list.item}
-        leftAvatar={{ source: { uri: item.logo } }}
+        leftAvatar={{ source: { uri: item.logo }, ...Styles.avatar }}
         onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING, item)}
         roundAvatar
         chevron

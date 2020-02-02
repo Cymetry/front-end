@@ -40,17 +40,18 @@ class Topics extends PureComponent {
       <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
-            {topics.map((item, index) => <ListItem
+            {topics.map(item => <ListItem
               key={item.id}
-              disabled={!!index && !userPremium}
+              // disabled={!!index && !userPremium}
               disabledStyle={{ opacity: .3 }}
               title={<View style={LocalStyles.title}>
                 <Text style={Styles.text.smallestSize}>{item.name}</Text>
                 <Text style={LocalStyles.completeText}>{item.complete}/{item.total}</Text>
               </View>}
               containerStyle={LocalStyles.listItem}
-              leftAvatar={{ source: { uri: item.logo } }}
-              onPress={() => (!index || userPremium) && navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, item)}
+              leftAvatar={{ source: { uri: item.logo }, ...Styles.avatar }}
+              // onPress={() => (!index || userPremium) && navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, item)}
+              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, item)}
               roundAvatar
               chevron
             />)}  

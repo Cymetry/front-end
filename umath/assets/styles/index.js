@@ -6,6 +6,7 @@ import text from './global/text';
 import button from './global/button';
 import input from './global/input';
 import list from './global/list';
+import avatar from './global/avatar';
 
 import navigation from './navigation';
 
@@ -19,6 +20,7 @@ const Styles = {
   button,
   input,
   list,
+  avatar,
 
   // Global end
 

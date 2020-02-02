@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { View, Text, TouchableHighlight } from "react-native";
+import { View, Text, TouchableHighlight, Keyboard } from "react-native";
 import { Button } from "react-native-elements";
-import Latex from 'react-native-latex';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Video } from "expo-av";
 
 import SampleVideo from '../../../../../../../assets/videos/sample.mp4';
 import MathJax from '../../../../../../components/mathjax';
+import DismissKeyboard from '../../../../../../components/dismiss-keyboard';
 import SkillLearningController from '../../../../../../platform/api/skillLearning';
 import ROUTES from '../../../../../../platform/constants/routes';
 import Styles from '../../../../../../../assets/styles';
@@ -28,8 +28,8 @@ class SkillItem extends Component {
   async componentDidMount() {
     const { navigation } = this.props;
     const { id, parentId } = navigation.state.params;
-    const response = await SkillLearningController.Resume(id);
-    if (response.message === 'Skill has been completed') return navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id: parentId });
+    let response = await SkillLearningController.Resume(id);
+    if (response.message === 'Skill has been completed') response = await SkillLearningController.Start(id);
     try {
       const result = JSON.parse(response);
       if (result && result.body && result.body.content) {
@@ -100,17 +100,16 @@ class SkillItem extends Component {
     if (splitted.length > 1) {
       splitted.map((item, index) => {
         if (index === splitted.length - 1) {
-          splitted[index] = `$$${splitted[index]}$$`;
+          splitted[index] = `$${splitted[index]}$`;
           return;
         }
-        splitted[index] = `$$${splitted[index]}$$ <img src="${activeStep.graphs[index]}" style="width: 100%" alt="graph" />`;
+        splitted[index] = `$${splitted[index]}$ <img src="${activeStep.graphs[index]}" style="width: 100%" alt="graph" />`;
       });
-    } else splitted[0] = `$$${splitted[0]}$$ <img src="${activeStep.graphs[0]}" style="width: 100%" alt="graph" />`;
+    } else splitted[0] = `$${splitted[0]}$ <img src="${activeStep.graphs[0]}" style="width: 100%" alt="graph" />`;
     return splitted.join('');
   } 
 
   fillInAnswer = (index, postData) => {
-    console.log(postData);
     if (postData && !parseInt(postData)) {
       const message = JSON.parse(postData);
       const { stepAnswers, currentStep } = this.state;
@@ -137,48 +136,58 @@ class SkillItem extends Component {
 
     return data ? (
       <View style={Styles.page}>
-        <KeyboardAwareScrollView enableOnAndroid>
-          {data.videoUrl && <Video
-            source={SampleVideo}
-            style={LocalStyles.video}
-            resizeMode="contain"
-            useNativeControls
-          />}
+        <DismissKeyboard>
+          <>
+            <KeyboardAwareScrollView
+              enableOnAndroid
+              keyboardShouldPersistTaps="handled"
+              innerRef={ref => this.scrollView = ref}
+              onPress={() => Keyboard.dismiss()}
+              onContentSizeChange={(width, height) => this.scrollView.scrollTo({ y:height })}
+            >
+              {data.videoUrl && <Video
+                source={SampleVideo}
+                style={LocalStyles.video}
+                resizeMode="contain"
+                useNativeControls
+              />}
 
-          <View style={LocalStyles.container}>
-            <View style={LocalStyles.questionWrapper}>
-              <MathJax html={`$$${data.question}$$`} style={{ width: '100%' }} />
-            </View>          
-          </View>
-          
-          <Text style={LocalStyles.solution}>Solution</Text>
-          {stepsData.map((item, index) => <View key={index} style={LocalStyles.container}>
-            <View style={LocalStyles.stepWrapper}>
-              <Text style={LocalStyles.stepText}>Step {index + 1}:</Text>
-              <View style={Styles.latexWrapper}>
-                <MathJax
-                  html={item.graphs.length ? this.prepareGraphs(index, item.instruction) : `$$${item.instruction}$$`}
-                  onMessage={item.fillIn ? data => this.fillInAnswer(index, data) : undefined}
+              <View style={LocalStyles.container}>
+                <View style={LocalStyles.questionWrapper}>
+                  <MathJax html={`$${data.question}$`} />
+                </View>          
+              </View>
+              
+              <Text style={LocalStyles.solution}>Solution</Text>
+              {stepsData.map((item, index) => <View key={index} style={LocalStyles.container}>
+                <View style={LocalStyles.stepWrapper}>
+                  <Text style={LocalStyles.stepText}>Step {index + 1}:</Text>
+                  <View style={Styles.latexWrapper}>
+                    <MathJax
+                      html={item.graphs.length ? this.prepareGraphs(index, item.instruction) : `$${item.instruction}$`}
+                      onMessage={item.fillIn ? data => this.fillInAnswer(index, data) : undefined}
+                    />
+                  </View>
+
+                  {!item.fillIn && item.options.map(item => <TouchableHighlight key={item._id} style={Styles.latexWrapper} onPress={() => this.nonFillInAnswer(index, item)}>
+                    <MathJax html={`<span style="${stepAnswers[index] === item.index ? 'color: blue' : ''}">(${item.index}) ${item.content}</span>`} style={{ width: '100%' }} />
+                  </TouchableHighlight>)}
+                </View>
+              </View>)}
+            </KeyboardAwareScrollView>
+            <View style={LocalStyles.buttonWrapper}>
+              <View style={{ ...LocalStyles.button, ...(this.nextDisabled ? Styles.button.disabled : {}) }}>
+                <Button
+                  disabled={this.nextDisabled}
+                  titleStyle={LocalStyles.buttonTitle}
+                  title={currentStep === data.steps.length - 1 ? "Finish" : "Next step"}
+                  onPress={this.nextStep}
+                  type="clear"
                 />
               </View>
-
-              {!item.fillIn && item.options.map(item => <TouchableHighlight key={item._id} style={Styles.latexWrapper} onPress={() => this.nonFillInAnswer(index, item)}>
-                <MathJax html={`<span style="${stepAnswers[index] === item.index ? 'color: blue' : ''}">(${item.index}) ${item.content}</span>`} style={{ width: '100%' }} />
-              </TouchableHighlight>)}
             </View>
-          </View>)}
-        </KeyboardAwareScrollView>
-        <View style={LocalStyles.buttonWrapper}>
-          <View style={{ ...LocalStyles.button, ...(this.nextDisabled ? Styles.button.disabled : {}) }}>
-            <Button
-              disabled={this.nextDisabled}
-              titleStyle={LocalStyles.buttonTitle}
-              title={currentStep === data.steps.length - 1 ? "Finish" : "Next step"}
-              onPress={this.nextStep}
-              type="clear"
-            />
-          </View>
-        </View>
+          </>
+        </DismissKeyboard>
       </View>
     ) : null;
   }

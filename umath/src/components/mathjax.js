@@ -54,7 +54,7 @@ class MathJax extends Component {
 		
 			</script>
 
-			${content}
+			${content && content.split(' ').join('~')}
 		`;
 	}
 	

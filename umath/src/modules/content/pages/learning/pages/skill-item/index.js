@@ -92,6 +92,8 @@ class SkillItem extends Component {
     });
   }
 
+  normalLatex = latex => latex.split(' ').join('~');
+
   prepareGraphs = (index, latex) => {
     const { data } = this.state;
     const splitted = latex.split('[()]');
@@ -100,12 +102,13 @@ class SkillItem extends Component {
     if (splitted.length > 1) {
       splitted.map((item, index) => {
         if (index === splitted.length - 1) {
-          splitted[index] = `$${splitted[index]}$`;
+          if (splitted[index]) splitted[index] = `$$${this.normalLatex(splitted[index])}$$`;
           return;
         }
-        splitted[index] = `$${splitted[index]}$ <img src="${activeStep.graphs[index]}" style="width: 100%" alt="graph" />`;
+        splitted[index] = `$$${this.normalLatex(splitted[index])}$$ <img src="${activeStep.graphs[index]}" style="width: 100%;" alt="graph" />`;
       });
-    } else splitted[0] = `$${splitted[0]}$ <img src="${activeStep.graphs[0]}" style="width: 100%" alt="graph" />`;
+    }
+
     return splitted.join('');
   } 
 
@@ -143,7 +146,7 @@ class SkillItem extends Component {
               keyboardShouldPersistTaps="handled"
               innerRef={ref => this.scrollView = ref}
               onPress={() => Keyboard.dismiss()}
-              onContentSizeChange={(width, height) => this.scrollView.scrollTo({ y:height })}
+              onContentSizeChange={(width, height) => this.scrollView.scrollTo({ y: height })}
             >
               {data.videoUrl && <Video
                 source={SampleVideo}
@@ -154,7 +157,7 @@ class SkillItem extends Component {
 
               <View style={LocalStyles.container}>
                 <View style={LocalStyles.questionWrapper}>
-                  <MathJax html={`$${data.question}$`} />
+                  <MathJax html={`$$${this.normalLatex(data.question)}$$`} />
                 </View>          
               </View>
               
@@ -164,13 +167,13 @@ class SkillItem extends Component {
                   <Text style={LocalStyles.stepText}>Step {index + 1}:</Text>
                   <View style={Styles.latexWrapper}>
                     <MathJax
-                      html={item.graphs.length ? this.prepareGraphs(index, item.instruction) : `$${item.instruction}$`}
+                      html={item.graphs.length ? this.prepareGraphs(index, item.instruction) : `$$${this.normalLatex(item.instruction)}$$`}
                       onMessage={item.fillIn ? data => this.fillInAnswer(index, data) : undefined}
                     />
                   </View>
 
                   {!item.fillIn && item.options.map(item => <TouchableHighlight key={item._id} style={Styles.latexWrapper} onPress={() => this.nonFillInAnswer(index, item)}>
-                    <MathJax html={`<span style="${stepAnswers[index] === item.index ? 'color: blue' : ''}">(${item.index}) ${item.content}</span>`} style={{ width: '100%' }} />
+                    <MathJax html={`<span style="${stepAnswers[index] === item.index ? 'color: blue' : ''}">(${item.index}) ${this.normalLatex(item.content)}</span>`} style={{ width: '100%' }} />
                   </TouchableHighlight>)}
                 </View>
               </View>)}

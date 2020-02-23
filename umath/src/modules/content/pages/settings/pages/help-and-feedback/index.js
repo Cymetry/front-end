@@ -38,9 +38,9 @@ class HelpAndFeedback extends React.PureComponent {
           />
           <View style={LocalStyles.button}>
             <Button
+              titleStyle={Styles.button.title}
               title="Send"
               type="clear"
-              titleStyle={LocalStyles.buttonTitle}
             />
           </View>
         </View>

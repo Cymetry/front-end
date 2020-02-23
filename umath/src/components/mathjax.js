@@ -12,7 +12,7 @@ const defaultOptions = {
 	},
 	TeX: {
 		extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js']
-	}  
+	},
 };
 
 class MathJax extends Component {
@@ -49,10 +49,6 @@ class MathJax extends Component {
 				});
 			</script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js"></script>
-			<script defer>
-			window.postMessage('mtavvvvv');
-		
-			</script>
 
 			${content}
 		`;
@@ -63,14 +59,19 @@ class MathJax extends Component {
 
 		const props = Object.assign({}, this.props);
 		delete props.html;
+		delete props.webViewRef;
 		delete props.onMessage;
 
 		return (
       <View style={{ height: this.state.height, ...props.style }}>
         <WebView
-          scrollEnabled={false}
+					originWhitelist={['*']}
+					scrollEnabled={true}
 					onMessage={this.handleMessage}
-					source={{ html }}
+					useWebKit={true}
+					javaScriptEnabled={true}
+					source={{ html, baseUrl: '' }}
+					ref={this.props.webViewRef}
           {...props}
         />
       </View>

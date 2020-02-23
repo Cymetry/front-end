@@ -4,6 +4,7 @@ import Variables from "../variables";
 
 export default StyleSheet.create({
   classic: {
+    color: 'white',
     fontSize: Variables.smallFontSize,
     paddingVertical: 5,
     textAlign: 'center',
@@ -17,5 +18,13 @@ export default StyleSheet.create({
   disabled: {
     opacity: .5,
     backgroundColor: '#999',
-  }
+  },
+
+  title: {
+    color: 'white',
+  },
+
+  disabledTitle: {
+    color: 'black',
+  },
 });

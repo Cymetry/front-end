@@ -13,10 +13,6 @@ const LocalStyles = StyleSheet.create({
     marginTop: 40,
     ...Styles.button.classic,
   },
-
-  buttonTitle: {
-    color: 'white',
-  },
 });
 
 export default LocalStyles;

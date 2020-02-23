@@ -5,7 +5,14 @@ import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 import { withNavigation } from "react-navigation";
 import { ScrollView } from "react-native-gesture-handler";
 
-import { createNavigationOptions, createTabNavigationOptions } from '../../../../platform/services/navigation';
+import FaqIcon from "../../../../../assets/images/faq_icon.png";
+import HelpAndFeedbackIcon from "../../../../../assets/images/help_and_feedback_icon.png";
+import TermsAndConditionsIcon from "../../../../../assets/images/terms_and_conditions_icon.png";
+import PrivacyPolicyIcon from "../../../../../assets/images/privacy_policy_icon.png";
+import SubscriptionIcon from "../../../../../assets/images/subscription_icon.png";
+import SignOutIcon from "../../../../../assets/images/sign_out_icon.png";
+
+import { createTabNavigationOptions } from '../../../../platform/services/navigation';
 import Constants from './../../../../platform/constants';
 import ROUTES from './../../../../platform/constants/routes';
 import Styles from "../../../../../assets/styles";
@@ -32,24 +39,34 @@ class Settings extends Component {
 
     return [
       {
-        name: 'Curriculum',
-        url: ROUTES.CONTENT_SETTINGS_CURRICULUM,
-        avatar_url: '',
-      },
-      {
         name: 'FAQ',
         url: ROUTES.CONTENT_SETTINGS_FAQ,
-        avatar_url: '',
+        avatar_source: FaqIcon,
       },
       {
         name: 'Help & Feedback',
         url: ROUTES.CONTENT_SETTINGS_HELP,
-        avatar_url: '',
+        avatar_source: HelpAndFeedbackIcon,
+      },
+      {
+        name: 'Terms & Conditions',
+        onPress: () => { /* */ },
+        avatar_source: TermsAndConditionsIcon,
+      },
+      {
+        name: 'Privacy Policy',
+        onPress: () => { /* */ },
+        avatar_source: PrivacyPolicyIcon,
+      },
+      {
+        name: 'Subscription',
+        onPress: () => { /* */ },
+        avatar_source: SubscriptionIcon,
       },
       ...(token ? [{
         name: 'Sign out',
         onPress: () => this.signOut(),
-        avatar_url: '',
+        avatar_source: SignOutIcon,
       }] : []),
     ];
   }
@@ -75,13 +92,13 @@ class Settings extends Component {
               title={item.name}
               onPress={() => item.url ? navigation.navigate(item.url) : item.onPress()}
               containerStyle={LocalStyles.listItem}
-              leftAvatar={{ uri: item.avatar_url }}
+              leftAvatar={{ source: item.avatar_source, ...Styles.avatar }}
               roundAvatar
               chevron
             />)}
           </View>
         </View>
-        <View style={Styles.card.classic}>
+        <View style={{ ...Styles.card.classic }}>
           <Text style={LocalStyles.nameText}>{Constants.ProjectTitle} v1.0</Text>
           <Text style={LocalStyles.descriptionText}>By Signing in, you agree to our Terms of Service and Privacy Policy.</Text>
         </View>

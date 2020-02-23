@@ -28,7 +28,7 @@ class Learning extends PureComponent {
             <Button
               title="Back"
               type="clear"
-              titleStyle={LocalStyles.buttonTitle}
+              titleStyle={Styles.button.title}
               onPress={() => this.setState({ viewing: false, latex: '' })}
             />
           </View>
@@ -46,7 +46,7 @@ class Learning extends PureComponent {
             <Button
               title="Test"
               type="clear"
-              titleStyle={LocalStyles.buttonTitle}
+              titleStyle={Styles.button.title}
               onPress={() => this.setState({ viewing: true })}
             />
           </View>

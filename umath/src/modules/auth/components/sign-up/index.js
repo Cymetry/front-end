@@ -18,7 +18,6 @@ class SignUp extends Component {
       name: '',
       surname: '',
       password: '',
-      confirmPassword: '',
       email: '',
       dob: null,
       role: "USER",
@@ -41,7 +40,7 @@ class SignUp extends Component {
     const { changeViewType, navigation } = this.props;
     const { lastPath, lastParams } = navigation.state.params;
 
-    if (!this.disabled && form.password === form.confirmPassword) {
+    if (!this.disabled && form.password) {
       const result = await UserController.Create(form);
       if (result) {
         const authResult = await AuthController.Login({ email: form.email, password: form.password });
@@ -101,14 +100,6 @@ class SignUp extends Component {
           placeholder="Password"
           secureTextEntry
         />
-        <Input
-          errorMessage={submited && form.password !== form.confirmPassword ? 'Password and confirm password are not same' : ''}
-          value={form.confirmPassword}
-          onChangeText={value => this.change('confirmPassword', value)}
-          containerStyle={Styles.input.classic}
-          placeholder="Confirm password"
-          secureTextEntry
-        />
         <Text style={LocalStyles.suggestionText}>
           Already a member?&nbsp;
           <Text
@@ -119,11 +110,10 @@ class SignUp extends Component {
         </Text>
         <View style={{ ...LocalStyles.button, ...(this.disabled ? Styles.button.disabled : {}) }}>
           <Button
-            disabled={this.disabled}
+            titleStyle={Styles.button.title} 
             title="Sign up"
             type="clear"
             onPress={this.submit}
-            titleStyle={LocalStyles.buttonTitle}
           />
         </View>
       </View>

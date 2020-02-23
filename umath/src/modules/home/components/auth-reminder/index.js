@@ -16,9 +16,9 @@ const AuthReminder = memo(({ navigation }) => (
     
     <View style={LocalStyles.button}>
       <Button
+        titleStyle={Styles.button.title}
         title="Sign in"
         type="clear"
-        titleStyle={LocalStyles.buttonTitle}
         onPress={() => navigation.navigate(ROUTES.AUTH, { signUp: false, lastPath: ROUTES.HOME })} 
       />
     </View>

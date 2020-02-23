@@ -72,8 +72,7 @@ class SignIn extends Component {
         </Text>}
         <View style={{ ...LocalStyles.button, ...(!this.formValid ? Styles.button.disabled : {}) }}>
           <Button
-            disabled={!this.formValid}
-            titleStyle={LocalStyles.buttonTitle}
+            titleStyle={Styles.button.title} 
             title="Sign in"
             type="clear"
             onPress={this.submit}

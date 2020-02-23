@@ -6,16 +6,13 @@ import Variables from "../../../assets/styles/variables";
 const LocalStyles = StyleSheet.create({
   container: {
     ...Styles.card.classic,
+    flex: 1,
   },
 
   button: {
     width: 150,
     marginTop: 30,
     ...Styles.button.classic,
-  },
-
-  buttonTitle: {
-    color: 'white',
   },
 
   suggestionText: {

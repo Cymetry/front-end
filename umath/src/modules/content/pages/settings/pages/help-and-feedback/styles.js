@@ -19,10 +19,6 @@ const LocalStyles = StyleSheet.create({
     ...Styles.button.classic,
   },
 
-  buttonTitle: {
-    color: 'white',
-  },
-
   suggestionText: {
     width: '100%',
     fontSize: 18,

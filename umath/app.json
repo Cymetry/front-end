@@ -25,7 +25,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.umath.umath"
+      "bundleIdentifier": "io.umath.umath"
     },
     "android": {
       "package": "com.umath.umath"

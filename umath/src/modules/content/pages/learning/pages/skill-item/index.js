@@ -1,16 +1,19 @@
-import React, { Component } from "react";
-import { View, Text, TouchableHighlight, Keyboard } from "react-native";
+import React, { Component, createRef } from "react";
+import { View, Text, TouchableHighlight, Keyboard, Dimensions } from "react-native";
 import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Video } from "expo-av";
+import { Html5Entities } from 'html-entities';
+import KeyboardAccessory from 'react-native-sticky-keyboard-accessory'
 
-import SampleVideo from '../../../../../../../assets/videos/sample.mp4';
 import MathJax from '../../../../../../components/mathjax';
 import DismissKeyboard from '../../../../../../components/dismiss-keyboard';
 import SkillLearningController from '../../../../../../platform/api/skillLearning';
 import ROUTES from '../../../../../../platform/constants/routes';
 import Styles from '../../../../../../../assets/styles';
 import LocalStyles from './styles';
+
+const htmlEntities = new Html5Entities();
 
 class SkillItem extends Component {
 
@@ -21,75 +24,118 @@ class SkillItem extends Component {
 
   state = {
     data: null,
+    showSolution: false,
     currentStep: 0,
     stepAnswers: [],
   };
 
+  webViews = [createRef()];
+  reamingMistakes = 2;
+
   async componentDidMount() {
     const { navigation } = this.props;
-    const { id, parentId } = navigation.state.params;
+    const { id } = navigation.state.params;
     let response = await SkillLearningController.Resume(id);
     if (response.message === 'Skill has been completed' || !Object.keys(response).length) response = await SkillLearningController.Start(id);
     try {
       const result = JSON.parse(response);
+
       if (result && result.body && result.body.content) {
-        result.body.content.steps = result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item);
-        console.log(result.body);
-        this.setState({ data: result.body.content });
+        if (typeof result.body.content.content === 'string') result.body.content.videoUrl = result.body.content.content;
+        console.log(result.body, 'ekav mihat');
+        this.reamingMistakes = result.body.maxMistakes || 2;
+        result.body.content.steps = result.body.content.steps ? result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item) : [];
+        this.setState({ data: result.body.content, currentStep: 0, stepAnswers: [], showSolution: result.body.maxMistakes && result.body.maxMistakes > 100 });
       }
     } catch (e) { /* */ }
   }
 
   get nextDisabled() {
     const { data, stepAnswers, currentStep } = this.state;
-    const lastAnswer = stepAnswers[currentStep];
-    const lastActiveStep = data.steps[currentStep];
 
-    if (lastActiveStep.fillIn) return !lastAnswer || Object.keys(lastAnswer).length !== lastActiveStep.answer.length;
-    else return !lastAnswer;
+    if (data.steps.length) {
+      const lastAnswer = stepAnswers[currentStep];
+      const lastActiveStep = data.steps[currentStep];
+
+      if (lastActiveStep.fillIn) return !lastAnswer || Object.keys(lastAnswer).length !== lastActiveStep.answer.length;
+      else return !lastAnswer;
+    }
+
+    return false;
   }
 
   nextStep = () => {
-    const { currentStep, data } = this.state;
-    if (currentStep === data.steps.length - 1) this.finish();
-    else this.setState({ currentStep: currentStep + 1 });
+    if (!this.nextDisabled) {
+      const { currentStep, stepAnswers, data } = this.state;
+
+      const answer = stepAnswers[stepAnswers.length - 1];
+      const stepData = data.steps[currentStep];
+      
+      if (stepData && answer) {
+        let correct = true;
+
+        if (stepData.fillIn) Object.values(answer).map((item, index) => {
+          if (!stepData.answer[index].find(sub => sub === item)) correct = false;
+        }); else if (answer !== stepData.solution) correct = false;
+
+        if (!correct) this.reamingMistakes -= 1;
+      }
+      
+      if (this.reamingMistakes <= 0) this.finish(false);
+      else {
+        if (currentStep === data.steps.length - 1 || !data.steps.length) this.finish(true);
+        else {
+          this.webViews.push(createRef());
+          this.setState({ currentStep: currentStep + 1 });
+        }
+      }
+    }
   }
 
-  finish = async () => {
+  finish = async fullFinished => {
     const { navigation } = this.props;
     const { id, parentId } = navigation.state.params;
-    const { data, stepAnswers } = this.state;
+    const { data, stepAnswers, currentStep } = this.state;
+    const dataStorage = {...data};
+    const stepsData = data && data.steps.slice(0, currentStep + 1);
 
     const body = {
       skillId: id,
       mistakeCount: 0,
-      correctCount: 0,
+      correctCount: fullFinished ? stepsData.length : stepsData.length - 1,
     };
 
     stepAnswers.map((item, index) => {
-      const stepData = data.steps[index];
       let correct = true;
+      const stepData = data.steps[index];
       
       if (stepData.fillIn) Object.values(item).map((item, index) => {
         if (!stepData.answer[index].find(sub => sub === item)) correct = false;
-      });
+      }); else if (item !== stepData.solution) correct = false;
 
-      else correct = item === stepData.solution;
-
-      if (correct) body.correctCount += 1;
-      else body.mistakeCount += 1;
+      if (!correct) body.mistakeCount += 1;
     });
 
     await SkillLearningController.SaveProgress(body);
-    this.setState({ data: null }, async () => {
-      const response = await SkillLearningController.Resume(id);
-      if (response.message === 'Skill has been completed') return navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id: parentId });
-  
-      if (response && response.body && response.body.content) {
-        response.body.content.steps = response.body.content.steps.map(item => Array.isArray(item) ? item[0] : item);
-        this.setState({ data: response.body.content, currentStep: 0, stepAnswers: [] });
-      } 
-    });
+    console.log(body);
+    const response = await SkillLearningController.Resume(id);
+    if (response.message  === 'Skill has been completed') return navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id: parentId });
+
+    try {
+      const result = JSON.parse(response);
+
+      if (result && result.body && result.body.content && result.body.content.type !== dataStorage.type) {
+        if (typeof result.body.content.content === 'string') result.body.content.videoUrl = result.body.content.content;
+        result.body.content.steps = result.body.content.steps ? result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item) : [];
+        console.log(result.body, 'ekav mihat');
+        this.reamingMistakes = result.body.maxMistakes || 2;
+        this.webViews = [createRef()];
+        this.setState({ data: result.body.content, currentStep: 0, stepAnswers: [], showSolution: result.body.maxMistakes && result.body.maxMistakes > 100 });
+      } else if (result && result.body && result.body.content) {
+        this.webViews.push(createRef());
+        this.setState({ currentStep: this.state.currentStep + 1 });
+      }
+    } catch (e) { /* */ }
   }
 
   normalLatex = latex => latex.split(' ').join('~');
@@ -102,12 +148,12 @@ class SkillItem extends Component {
     if (splitted.length > 1) {
       splitted.map((item, index) => {
         if (index === splitted.length - 1) {
-          if (splitted[index]) splitted[index] = `$$${this.normalLatex(splitted[index])}$$`;
+          if (splitted[index]) splitted[index] = this.normalLatex(splitted[index]);
           return;
         }
-        splitted[index] = `$$${this.normalLatex(splitted[index])}$$ <img src="${activeStep.graphs[index]}" style="width: 100%;" alt="graph" />`;
-      });
-    }
+        splitted[index] = `${this.normalLatex(splitted[index])} <img src="${activeStep.graphs[index]}" style="width: 100%; height: 400px" alt="graph" />`;
+      }); 
+    } else return this.normalLatex(splitted[0]);
 
     return splitted.join('');
   } 
@@ -133,8 +179,68 @@ class SkillItem extends Component {
     }
   }
 
+  keyboardType = content => {
+    const currents = this.webViews
+      .filter(item => item.current)
+      .map(item => item.current);
+    
+    currents.map(item => item.injectJavaScript(`
+      (() => {
+        if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+          const { activeElement } = document;
+          const splitted = activeElement.value.split('');
+          splitted[activeElement.selectionStart] = '${content}' + (splitted[activeElement.selectionStart] || '');
+          activeElement.value = splitted.join('');
+          const idNum = +activeElement.id.replace('box-', '');
+          window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
+        }
+
+        return;
+      })();
+    `));
+  }
+
+  showSolution = () => {
+    const { data } = this.state;
+    const stepAnswers = data.steps.map(item => {
+      if (item.fillIn) {
+        const obj = {};
+        item.answer.map((sub, subIndex) => {
+          obj[subIndex] = sub[0];
+        });
+
+        return obj;
+      } else return item.solution;
+    });
+
+    this.webViews = data.steps.map(() => createRef());
+
+    this.setState({ currentStep: data.steps.length - 1, stepAnswers }, () => {
+      setTimeout(() => {
+        this.webViews.map((item, index) => {
+          if (item.current) {
+            Object.keys(stepAnswers[index]).map(sub => {
+              item.current.injectJavaScript(`
+                (() => {
+                  const activeElement = document.getElementById('box-' + '${sub}');             
+                  if (activeElement) {
+                    activeElement.value = '${stepAnswers[index][sub]}';
+                    const idNum = +activeElement.id.replace('box-', '');
+                    window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
+                  }
+  
+                  return;
+                })();
+              `);
+            });
+          }
+        });
+      }, 1500);
+    });
+  }
+
   render() {
-    const { data, currentStep, stepAnswers } = this.state;
+    const { data, currentStep, showSolution } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
     return data ? (
@@ -149,45 +255,98 @@ class SkillItem extends Component {
               onContentSizeChange={(width, height) => this.scrollView.scrollTo({ y: height })}
             >
               {data.videoUrl && <Video
-                source={SampleVideo}
+                source={{ uri: data.videoUrl }}
                 style={LocalStyles.video}
                 resizeMode="contain"
                 useNativeControls
               />}
 
-              <View style={LocalStyles.container}>
+              {data.question && <View style={LocalStyles.container}>
                 <View style={LocalStyles.questionWrapper}>
-                  <MathJax html={`$$${this.normalLatex(data.question)}$$`} />
+                  <MathJax html={this.normalLatex(data.question)} />
                 </View>          
-              </View>
+              </View>}
               
-              <Text style={LocalStyles.solution}>Solution</Text>
+              {!!stepsData.length && <Text style={LocalStyles.solution}>Solution</Text>}
               {stepsData.map((item, index) => <View key={index} style={LocalStyles.container}>
                 <View style={LocalStyles.stepWrapper}>
                   <Text style={LocalStyles.stepText}>Step {index + 1}:</Text>
                   <View style={Styles.latexWrapper}>
                     <MathJax
-                      html={item.graphs.length ? this.prepareGraphs(index, item.instruction) : `$$${this.normalLatex(item.instruction)}$$`}
+                      html={item.graphs.length ? this.prepareGraphs(index, item.instruction) : this.normalLatex(item.instruction)}
                       onMessage={item.fillIn ? data => this.fillInAnswer(index, data) : undefined}
+                      webViewRef={this.webViews[index]}
                     />
                   </View>
-
+                
                   {!item.fillIn && item.options.map(item => <TouchableHighlight key={item._id} style={Styles.latexWrapper} onPress={() => this.nonFillInAnswer(index, item)}>
-                    <MathJax html={`<span style="${stepAnswers[index] === item.index ? 'color: blue' : ''}">(${item.index}) ${this.normalLatex(item.content)}</span>`} style={{ width: '100%' }} />
+                    <MathJax html={`<span style="${stepAnswers[index] === item.index ? 'color: green' : ''}">(${item.index}) ${this.normalLatex(item.content)}</span>`} style={{ width: '100%' }} />
                   </TouchableHighlight>)}
                 </View>
               </View>)}
             </KeyboardAwareScrollView>
+            <KeyboardAccessory>
+              <View style={{ flexDirection: 'row', height: 50, bottom: -60, flex: 1, backgroundColor: 'transparent' }}>
+                <View style={{ ...LocalStyles.button, width: Dimensions.get('window').width / 5 }}>
+                  <Button
+                    titleStyle={Styles.button.title}
+                    title={htmlEntities.decode("&radic;")}
+                    onPress={() => this.keyboardType('√()')}
+                    type="clear"
+                  />
+                </View>
+                <View style={{ ...LocalStyles.button, width: Dimensions.get('window').width / 5  }}>
+                  <Button
+                    titleStyle={Styles.button.title}
+                    title="sin"
+                    onPress={() => this.keyboardType('sin()')}
+                    type="clear"
+                  />
+                </View>
+                <View style={{ ...LocalStyles.button, width: Dimensions.get('window').width / 5  }}>
+                  <Button
+                    titleStyle={Styles.button.title}
+                    title="cos"
+                    onPress={() => this.keyboardType('cos()')}
+                    type="clear"
+                  />
+                </View>
+                <View style={{ ...LocalStyles.button, width: Dimensions.get('window').width / 5  }}>
+                  <Button
+                    titleStyle={Styles.button.title}
+                    title="tan"
+                    onPress={() => this.keyboardType('tan()')}
+                    type="clear"
+                  />
+                </View>
+                <View style={{ ...LocalStyles.button, width: Dimensions.get('window').width / 5  }}>
+                  <Button
+                    titleStyle={Styles.button.title}
+                    title="kot"
+                    onPress={() => this.keyboardType('kot()')}
+                    type="clear"
+                  />
+                </View>
+              </View>
+            </KeyboardAccessory>
             <View style={LocalStyles.buttonWrapper}>
-              <View style={{ ...LocalStyles.button, ...(this.nextDisabled ? Styles.button.disabled : {}) }}>
+              <View style={{ ...LocalStyles.button, ...LocalStyles.lastButtons, ...(this.nextDisabled ? Styles.button.disabled : {}) }}>
                 <Button
-                  disabled={this.nextDisabled}
-                  titleStyle={LocalStyles.buttonTitle}
-                  title={currentStep === data.steps.length - 1 ? "Finish" : "Next step"}
+                  titleStyle={this.nextDisabled ? LocalStyles.disabledButtonTitle : LocalStyles.buttonTitle}
+                  title={!stepsData.length || currentStep === data.steps.length - 1 ? "Done" : "Next step"}
                   onPress={this.nextStep}
                   type="clear"
                 />
               </View>
+
+              {!!showSolution && <View style={{ ...LocalStyles.button, ...LocalStyles.lastButtons }}>
+                <Button
+                  titleStyle={LocalStyles.buttonTitle}
+                  title="Solution"
+                  onPress={this.showSolution}
+                  type="clear"
+                />
+              </View>}
             </View>
           </>
         </DismissKeyboard>

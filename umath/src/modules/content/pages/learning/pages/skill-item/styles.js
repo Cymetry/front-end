@@ -47,17 +47,30 @@ const LocalStyles = StyleSheet.create({
     ...Styles.card.classic,
     width: '100%',
     alignSelf: 'flex-end',
-    paddingVertical: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 10,
   },
 
   button: {
     ...Styles.button.classic,
-    width: 150,
+    width: 120,
+  },
+
+  lastButtons: {
+    marginVertical: 10,
+    marginHorizontal: 10,
   },
 
   buttonTitle: {
-    color: 'white',
+    ...Styles.button.title,
+    fontSize: 14,
   },
+
+  disabledButtonTitle: {
+    ...Styles.button.disabledTitle,
+    fontSize: 14,
+  }
 });
 
 export default LocalStyles;

@@ -22,13 +22,9 @@ import Styles from './assets/styles';
 
 const Stack = createStackNavigator();
 
-// const App = createAppContainer(MainNavigator);
+const App = createAppContainer(MainNavigator);
 
 class App extends Component {
-
-  componnentDidMount() {
-    throw new Error('abortable content');
-  }
 
   render() {
 

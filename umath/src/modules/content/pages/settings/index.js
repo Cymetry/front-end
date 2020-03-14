@@ -18,8 +18,9 @@ import ROUTES from './../../../../platform/constants/routes';
 import Styles from "../../../../../assets/styles";
 import LocalStyles from './styles';
 import HelpAndFeedback from "./pages/help-and-feedback";
-import Curriculum from "./pages/curriculum";
 import FAQ from "./pages/faq";
+import TermsAndConditions from "./pages/terms-and-conditions";
+import PrivacyPolicy from "./pages/privacy-policy";
 
 class Settings extends Component {
 
@@ -50,12 +51,12 @@ class Settings extends Component {
       },
       {
         name: 'Terms & Conditions',
-        onPress: () => { /* */ },
+        url: ROUTES.CONTENT_SETTINGS_TERMS,
         avatar_source: TermsAndConditionsIcon,
       },
       {
         name: 'Privacy Policy',
-        onPress: () => { /* */ },
+        url: ROUTES.CONTENT_SETTINGS_PRIVACY,
         avatar_source: PrivacyPolicyIcon,
       },
       {
@@ -109,9 +110,10 @@ class Settings extends Component {
 
 export default createStackNavigator({
   [ROUTES.CONTENT_SETTINGS]: withNavigation(Settings),
-  [ROUTES.CONTENT_SETTINGS_CURRICULUM]: Curriculum,
   [ROUTES.CONTENT_SETTINGS_FAQ]: FAQ,
   [ROUTES.CONTENT_SETTINGS_HELP]: HelpAndFeedback,
+  [ROUTES.CONTENT_SETTINGS_TERMS]: TermsAndConditions,
+  [ROUTES.CONTENT_SETTINGS_PRIVACY]: PrivacyPolicy,
 }, {
   headerLayoutPreset: 'center',
   defaultNavigationOptions: () =>  Styles.navigation,

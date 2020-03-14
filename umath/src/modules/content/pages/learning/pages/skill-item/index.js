@@ -43,7 +43,7 @@ class SkillItem extends Component {
       if (result && result.body && result.body.content) {
         if (typeof result.body.content.content === 'string') result.body.content.videoUrl = result.body.content.content;
         console.log(result.body, 'ekav mihat');
-        this.reamingMistakes = result.body.maxMistakes || 2;
+        this.reamingMistakes = (result.body.maxMistakes || result.body.maxMistakes === 0) ? result.body.maxMistakes : 2;
         result.body.content.steps = result.body.content.steps ? result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item) : [];
         this.setState({ data: result.body.content, currentStep: 0, stepAnswers: [], showSolution: result.body.maxMistakes && result.body.maxMistakes > 100 });
       }
@@ -123,18 +123,13 @@ class SkillItem extends Component {
 
     try {
       const result = JSON.parse(response);
-
-      if (result && result.body && result.body.content && result.body.content.type !== dataStorage.type) {
-        if (typeof result.body.content.content === 'string') result.body.content.videoUrl = result.body.content.content;
-        result.body.content.steps = result.body.content.steps ? result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item) : [];
-        console.log(result.body, 'ekav mihat');
-        this.reamingMistakes = result.body.maxMistakes || 2;
-        this.webViews = [createRef()];
-        this.setState({ data: result.body.content, currentStep: 0, stepAnswers: [], showSolution: result.body.maxMistakes && result.body.maxMistakes > 100 });
-      } else if (result && result.body && result.body.content) {
-        this.webViews.push(createRef());
-        this.setState({ currentStep: this.state.currentStep + 1 });
-      }
+      if (typeof result.body.content.content === 'string') result.body.content.videoUrl = result.body.content.content;
+      
+      result.body.content.steps = result.body.content.steps ? result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item) : [];
+      console.log(result.body, 'ekav mihat');
+      this.reamingMistakes = (result.body.maxMistakes || result.body.maxMistakes === 0) ? result.body.maxMistakes : 2;
+      this.webViews = [createRef()];
+      this.setState({ data: result.body.content, currentStep: 0, stepAnswers: [], showSolution: result.body.maxMistakes && result.body.maxMistakes > 100 });
     } catch (e) { /* */ }
   }
 
@@ -240,7 +235,7 @@ class SkillItem extends Component {
   }
 
   render() {
-    const { data, currentStep, showSolution } = this.state;
+    const { data, currentStep,stepAnswers, showSolution } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
     return data ? (

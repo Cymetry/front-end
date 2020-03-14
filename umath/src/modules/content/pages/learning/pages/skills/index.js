@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
-import { View } from "react-native";
-import { ListItem } from "react-native-elements";
+import { View, Text, StatusBar} from "react-native";
+import { ListItem, Button } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 import { Platform } from '@unimodules/core';
 
@@ -20,6 +20,12 @@ class Skills extends PureComponent {
     skills: [],
   };
 
+  get completePercent() {
+    const { skills } = this.state;
+    const completeCount = skills.filter(item => item.complete).length;
+    return Math.floor(100 * completeCount / skills.length);
+  }
+
   componentDidMount() {
     const { navigation } = this.props;
     const { id } = navigation.state.params;
@@ -36,9 +42,20 @@ class Skills extends PureComponent {
     const { navigation } = this.props;
     const { id } = navigation.state.params;
 
-
     return (
       <ScrollView style={Styles.page}>
+        {!!skills.length && <View style={LocalStyles.completeContainer}>
+          <Text style={LocalStyles.learningCompleteText}>{this.completePercent}% of learning complete</Text>
+          <View style={{ ...LocalStyles.button, ...(this.completePercent < 100 ? Styles.button.disabled : {}) }}>
+            <Button
+              titleStyle={LocalStyles.buttonTitle} 
+              title="Begin Test"
+              type="clear"
+              onPress={this.submit}
+            />
+          </View>
+        </View>}
+
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
             {skills.map(item => <ListItem

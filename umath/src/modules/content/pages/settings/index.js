@@ -12,7 +12,7 @@ import PrivacyPolicyIcon from "../../../../../assets/images/privacy_policy_icon.
 import SubscriptionIcon from "../../../../../assets/images/subscription_icon.png";
 import SignOutIcon from "../../../../../assets/images/sign_out_icon.png";
 
-import { createTabNavigationOptions } from '../../../../platform/services/navigation';
+import { createTabNavigationOptions, navigationWrapper } from '../../../../platform/services/navigation';
 import Constants from './../../../../platform/constants';
 import ROUTES from './../../../../platform/constants/routes';
 import Styles from "../../../../../assets/styles";
@@ -24,9 +24,9 @@ import PrivacyPolicy from "./pages/privacy-policy";
 
 class Settings extends Component {
 
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = () => ({
     title: 'Settings',
-    headerLeft: <HeaderBackButton onPress={() => navigation.navigate(ROUTES.HOME)} />
+    headerLeft: () => <HeaderBackButton onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)} />
   });
 
   state = { token: null };
@@ -73,16 +73,14 @@ class Settings extends Component {
   }
 
   signOut = async () => {
-    const { navigation } = this.props;
     await AsyncStorage.multiRemove(['token', 'premium']);
-    navigation.reset({
+    navigationWrapper.navigation.reset({
       index: 0,
-      actions: [navigation.navigate(ROUTES.HOME, { signOuted: true })],
+      actions: [navigationWrapper.navigation.navigate(ROUTES.HOME, { signOuted: true })],
     });
   }
 
   render() {
-    const { navigation } = this.props;
 
     return (
       <ScrollView style={Styles.page}>
@@ -91,7 +89,7 @@ class Settings extends Component {
             {this.list.map(item => <ListItem
               key={item.name}
               title={item.name}
-              onPress={() => item.url ? navigation.navigate(item.url) : item.onPress()}
+              onPress={() => item.url ? navigationWrapper.navigation.navigate(item.url) : item.onPress()}
               containerStyle={LocalStyles.listItem}
               leftAvatar={{ source: item.avatar_source, ...Styles.avatar }}
               roundAvatar

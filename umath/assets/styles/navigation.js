@@ -3,7 +3,7 @@ import text from "./global/text";
 
 export default {
   headerStyle: {
-    height: 60,
+    height: 80,
     elevation: 0,
     shadowOpacity: 0,
     borderWidth: 1,
@@ -12,6 +12,7 @@ export default {
   },
   headerTitleStyle: {
     fontWeight: 'normal',
+    marginBottom: 7,
     ...text.normalSize,
   }
 };

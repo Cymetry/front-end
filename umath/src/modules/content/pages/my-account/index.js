@@ -3,7 +3,7 @@ import { View, Text, Image } from 'react-native';
 import { Bar } from 'react-native-progress';
 import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 
-import { createTabNavigationOptions, createNavigationOptions } from '../../../../platform/services/navigation';
+import { createTabNavigationOptions, navigationWrapper } from '../../../../platform/services/navigation';
 import AccountController from '../../../../platform/api/account';
 import ROUTES from '../../../../platform/constants/routes';
 
@@ -15,7 +15,7 @@ class MyAccount extends PureComponent {
 
   static navigationOptions = ({ navigation }) => ({
     title: 'My Account',
-    headerLeft: <HeaderBackButton onPress={() => navigation.navigate(ROUTES.HOME)} />
+    headerLeft: () => <HeaderBackButton onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)} />
   });
 
   state = { details: null };

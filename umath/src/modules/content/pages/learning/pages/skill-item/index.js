@@ -12,15 +12,11 @@ import SkillLearningController from '../../../../../../platform/api/skillLearnin
 import ROUTES from '../../../../../../platform/constants/routes';
 import Styles from '../../../../../../../assets/styles';
 import LocalStyles from './styles';
+import { navigationWrapper } from "../../../../../../platform/services/navigation";
 
 const htmlEntities = new Html5Entities();
 
 class SkillItem extends Component {
-
-  static navigationOptions = ({ navigation }) => {
-    const { name } = navigation.state.params;
-    return { title: name };
-  };
 
   state = {
     data: null,
@@ -33,8 +29,7 @@ class SkillItem extends Component {
   reamingMistakes = 2;
 
   async componentDidMount() {
-    const { navigation } = this.props;
-    const { id } = navigation.state.params;
+    const { id } = navigationWrapper.navigation.state?.params || {};
     let response = await SkillLearningController.Resume(id);
     if (response.message === 'Skill has been completed' || !Object.keys(response).length) response = await SkillLearningController.Start(id);
     try {
@@ -93,10 +88,8 @@ class SkillItem extends Component {
   }
 
   finish = async fullFinished => {
-    const { navigation } = this.props;
-    const { id, parentId } = navigation.state.params;
+    const { id, parentId } = navigationWrapper.navigation.state?.params || {};
     const { data, stepAnswers, currentStep } = this.state;
-    const dataStorage = {...data};
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
     const body = {
@@ -119,7 +112,7 @@ class SkillItem extends Component {
     await SkillLearningController.SaveProgress(body);
     console.log(body);
     const response = await SkillLearningController.Resume(id);
-    if (response.message  === 'Skill has been completed') return navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id: parentId });
+    if (response.message  === 'Skill has been completed') return navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id: parentId });
 
     try {
       const result = JSON.parse(response);

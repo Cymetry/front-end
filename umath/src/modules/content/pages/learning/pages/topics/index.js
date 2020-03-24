@@ -7,13 +7,9 @@ import ROUTES from "../../../../../../platform/constants/routes";
 import TopicController from '../../../../../../platform/api/topic';
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from './styles';
+import { navigationWrapper } from "../../../../../../platform/services/navigation";
   
 class Topics extends PureComponent {
-
-  static navigationOptions = ({ navigation }) => {
-    const { name } = navigation.state.params;
-    return { title: name };
-  };
 
   state = {
     topics: [],
@@ -21,8 +17,7 @@ class Topics extends PureComponent {
   };
 
   async componentDidMount() {
-    const { navigation } = this.props;
-    const { id } = navigation.state.params;
+    const { id } = navigationWrapper.navigation.state?.params || {};
     this.fetchTopics(id);
     this.setState({ userPremium: !!(await AsyncStorage.getItem('premium')) });
   }
@@ -51,7 +46,7 @@ class Topics extends PureComponent {
               containerStyle={LocalStyles.listItem}
               leftAvatar={{ source: { uri: item.logo }, ...Styles.avatar }}
               // onPress={() => (!index || userPremium) && navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, item)}
-              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, item)}
+              onPress={() => navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, item)}
               roundAvatar
               chevron
             />)}  

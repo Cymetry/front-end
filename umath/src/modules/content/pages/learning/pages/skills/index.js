@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { View, Text, StatusBar} from "react-native";
+import { View, Text } from "react-native";
 import { ListItem, Button } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 import { Platform } from '@unimodules/core';
@@ -8,13 +8,9 @@ import SkillController from '../../../../../../platform/api/skill';
 import ROUTES from "../../../../../../platform/constants/routes";
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from './styles';
+import { navigationWrapper } from "../../../../../../platform/services/navigation";
   
 class Skills extends PureComponent {
-
-  static navigationOptions = ({ navigation }) => {
-    const { name } = navigation.state.params;
-    return { title: name };
-  };
   
   state = {
     skills: [],
@@ -27,8 +23,7 @@ class Skills extends PureComponent {
   }
 
   componentDidMount() {
-    const { navigation } = this.props;
-    const { id } = navigation.state.params;
+    const { id } = navigationWrapper.navigation.state?.params || {};
     this.fetchSkills(id);
   }
 
@@ -39,8 +34,7 @@ class Skills extends PureComponent {
 
   render() {
     const { skills } = this.state;
-    const { navigation } = this.props;
-    const { id } = navigation.state.params;
+    const { id } = navigationWrapper.navigation.state?.params || {};
 
     return (
       <ScrollView style={Styles.page}>
@@ -64,7 +58,7 @@ class Skills extends PureComponent {
               containerStyle={LocalStyles.listItem}
               leftAvatar={{ source: { uri: item.logo }, ...Styles.avatar }}
               rightIcon={item.complete ? { name: Platform.OS === 'ios' ? 'ios-checkmark-circle' : 'md-checkmark-circle', type: 'ionicon', color: '#bcbec1' } : {}}
-              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_SKILL_ITEM, { ...item, parentId: id })}
+              onPress={() => navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING_SKILL_ITEM, { ...item, parentId: id })}
               roundAvatar
               chevron
             />)}

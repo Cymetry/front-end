@@ -1,11 +1,10 @@
 import React, { PureComponent } from "react";
 import { View } from "react-native";
 import { ListItem } from "react-native-elements";
-import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
-import { withNavigation } from "react-navigation";
 import { ScrollView } from "react-native-gesture-handler";
+import { createStackNavigator, HeaderBackButton } from "@react-navigation/stack";
 
-import { createTabNavigationOptions } from '../../../../platform/services/navigation';
+import { createTabNavigationOptions, navigationWrapper } from '../../../../platform/services/navigation';
 import Topics from "./pages/topics";
 import Skills from "./pages/skills";
 import SkillItem from "./pages/skill-item";
@@ -17,11 +16,11 @@ import LocalStyles from './styles';
 class Learning extends PureComponent {
 
   static navigationOptions = ({ navigation }) => {
-    const { name } = navigation.state.params;
+    const { name } = navigationWrapper.navigation.state?.params || {};
     
     return {
       title: name,
-      headerLeft: <HeaderBackButton onPress={() => navigation.navigate(ROUTES.HOME)} />
+      headerLeft: () => <HeaderBackButton onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)} />
     };
   };
 
@@ -30,8 +29,7 @@ class Learning extends PureComponent {
   };
 
   componentDidMount() {
-    const { navigation } = this.props;
-    const { id } = navigation.state.params;
+    const { id } = navigationWrapper.navigation.state?.params || {};
     this.fetchCurriculums(id);
   }
 
@@ -42,7 +40,6 @@ class Learning extends PureComponent {
 
   render() {
     const { curriculums } = this.state;
-    const { navigation } = this.props;
 
     return (
       <ScrollView style={Styles.page}>
@@ -53,7 +50,7 @@ class Learning extends PureComponent {
               title={item.name}
               containerStyle={LocalStyles.listItem}
               leftAvatar={{ source: { uri: item.logo }, ...Styles.avatar }}
-              onPress={() => navigation.navigate(ROUTES.CONTENT_LEARNING_TOPICS, item)}
+              onPress={() => navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING_TOPICS, item)}
               roundAvatar
               chevron
             />)}
@@ -64,13 +61,51 @@ class Learning extends PureComponent {
   }
 };
 
-export default createStackNavigator({
-  [ROUTES.CONTENT_LEARNING]: withNavigation(Learning),
-  [ROUTES.CONTENT_LEARNING_TOPICS]: withNavigation(Topics),
-  [ROUTES.CONTENT_LEARNING_SKILLS]: withNavigation(Skills),
-  [ROUTES.CONTENT_LEARNING_SKILL_ITEM]: withNavigation(SkillItem),
-}, {
-  headerLayoutPreset: 'center',
-  defaultNavigationOptions: () =>  Styles.navigation,
-  navigationOptions: createTabNavigationOptions('Learning', 'sunny'),
-});
+const Stack = createStackNavigator();
+
+const LearningScreens = () => <Stack.Navigator
+  headerLayoutPreset="center"
+  screenOptions={() => Styles.navigation}
+  initialRouteName={ROUTES.CONTENT_LEARNING}
+>
+  <Stack.Screen
+    name={ROUTES.CONTENT_LEARNING}
+    component={Learning}
+    options={() => {
+      const { name } = navigationWrapper.navigation.state?.params || {};
+      return {
+        title: name,
+        headerLeft: () => <HeaderBackButton onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)} />
+      };
+    }}
+  />
+
+  <Stack.Screen
+    name={ROUTES.CONTENT_LEARNING_TOPICS}
+    component={Topics}
+    options={() =>{
+      const { name } = navigationWrapper.navigation.state?.params || {};
+      return { title: name };
+    }}
+  />
+
+  <Stack.Screen
+    name={ROUTES.CONTENT_LEARNING_SKILLS}
+    component={Skills}
+    options={() =>{
+      const { name } = navigationWrapper.navigation.state?.params || {};
+      return { title: name };
+    }}
+  />
+
+  <Stack.Screen
+    name={ROUTES.CONTENT_LEARNING_SKILL_ITEM}
+    component={SkillItem}
+    options={() =>{
+      const { name } = navigationWrapper.navigation.state?.params || {};
+      return { title: name };
+    }}
+  />
+</Stack.Navigator>;
+
+export default LearningScreens;

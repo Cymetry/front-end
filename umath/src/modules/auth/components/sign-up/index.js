@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, AsyncStorage } from 'react-native';
 import { Input, Button } from 'react-native-elements';
-import { withNavigation } from 'react-navigation';
 import DatePicker from 'react-native-datepicker';
 
 import UserController from '../../../../platform/api/user';
@@ -9,6 +8,7 @@ import AuthController from '../../../../platform/api/auth';
 import LocalStyles from '../../styles';
 import { ViewTypeEnum } from '../../constants/enums';
 import Styles from '../../../../../assets/styles';
+import { navigationWrapper } from '../../../../platform/services/navigation';
 
 class SignUp extends Component {
 
@@ -37,8 +37,8 @@ class SignUp extends Component {
 
   submit = async () => { 
     const { form } = this.state;
-    const { changeViewType, navigation } = this.props;
-    const { lastPath, lastParams } = navigation.state.params;
+    const { navigation } = this.props;
+    const { lastPath, lastParams } = navigationWrapper.navigation.state?.params || {};
 
     if (!this.disabled && form.password) {
       const result = await UserController.Create(form);
@@ -49,14 +49,14 @@ class SignUp extends Component {
             ['token', authResult.jwt],
             ['premium', authResult.isPremium ? 'true' : ''],
           ]);
-          navigation.push(lastPath, lastParams);
+          navigationWrapper.navigation.push(lastPath, lastParams);
         } else Alert.alert('Something is wrong!!');
       }
     }
   };
   
   render() {
-    const { form, submited } = this.state;
+    const { form } = this.state;
     const { changeViewType } = this.props;
 
     return (
@@ -121,4 +121,4 @@ class SignUp extends Component {
   }
 };
 
-export default withNavigation(SignUp);
+export default SignUp;

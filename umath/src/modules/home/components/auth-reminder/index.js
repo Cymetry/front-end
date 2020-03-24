@@ -6,8 +6,9 @@ import { withNavigation } from 'react-navigation';
 import ROUTES from '../../../../platform/constants/routes';
 import Styles from '../../../../../assets/styles';
 import LocalStyles from './styles';
+import { navigationWrapper } from '../../../../platform/services/navigation';
 
-const AuthReminder = memo(({ navigation }) => (
+const AuthReminder = memo(() => (
   <View style={LocalStyles.container}>
     <Text style={{ ...Styles.text.center, ...Styles.text.normalSize }}>
       Begin your personalised{"\n"}
@@ -19,10 +20,10 @@ const AuthReminder = memo(({ navigation }) => (
         titleStyle={Styles.button.title}
         title="Sign in"
         type="clear"
-        onPress={() => navigation.navigate(ROUTES.AUTH, { signUp: false, lastPath: ROUTES.HOME })} 
+        onPress={() => navigationWrapper.navigation.navigate(ROUTES.AUTH, { signUp: false, lastPath: ROUTES.HOME })} 
       />
     </View>
   </View>
 ));
 
-export default withNavigation(AuthReminder);
+export default AuthReminder;

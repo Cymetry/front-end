@@ -3,7 +3,7 @@ import { View, Text, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 
-import Variables from 'styles/variables';
+import Variables from '../../../../../assets/styles/variables';
 import ROUTES from '../../../../platform/constants/routes';
 import Styles from '../../../../../assets/styles';
 import { navigationWrapper } from '../../../../platform/services/navigation';

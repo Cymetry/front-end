@@ -29,7 +29,7 @@ class Learning extends PureComponent {
   };
 
   componentDidMount() {
-    const { id } = navigationWrapper.navigation.state?.params || {};
+    const { id } = this.props;
     this.fetchCurriculums(id);
   }
 
@@ -63,14 +63,13 @@ class Learning extends PureComponent {
 
 const Stack = createStackNavigator();
 
-const LearningScreens = () => <Stack.Navigator
+const LearningScreens = ({ id }) => <Stack.Navigator
   headerLayoutPreset="center"
   screenOptions={() => Styles.navigation}
   initialRouteName={ROUTES.CONTENT_LEARNING}
 >
   <Stack.Screen
     name={ROUTES.CONTENT_LEARNING}
-    component={Learning}
     options={() => {
       const { name } = navigationWrapper.navigation.state?.params || {};
       return {
@@ -78,7 +77,9 @@ const LearningScreens = () => <Stack.Navigator
         headerLeft: () => <HeaderBackButton onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)} />
       };
     }}
-  />
+  >
+    { (props) => <Learning {...props} id={id} /> }
+  </Stack.Screen>
 
   <Stack.Screen
     name={ROUTES.CONTENT_LEARNING_TOPICS}

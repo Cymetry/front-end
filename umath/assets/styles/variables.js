@@ -4,12 +4,13 @@ const Variables = {
   normalFontSize: 22,
   smallestFontSize: 16,
 
-  blue: '#0880FA',
-  lightBlue: '#32C5FF',
+  blue: "#0880FA",
+  vividBlue: "#0091FF",
+  lightBlue: "#32C5FF",
 
-  textGray: '#979797',
-  gray: '#D8D8D8',
-  lightGray: '#F8F8F8',
+  textGray: "#979797",
+  gray: "#D8D8D8",
+  lightGray: "#F8F8F8"
 };
 
 export default Variables;

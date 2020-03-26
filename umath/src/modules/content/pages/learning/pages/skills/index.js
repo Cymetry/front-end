@@ -9,6 +9,7 @@ import ROUTES from "../../../../../../platform/constants/routes";
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from './styles';
 import { navigationWrapper } from "../../../../../../platform/services/navigation";
+import { withNavigation } from 'react-navigation';
   
 class Skills extends PureComponent {
   
@@ -23,7 +24,7 @@ class Skills extends PureComponent {
   }
 
   componentDidMount() {
-    const { id } = navigationWrapper.navigation.state?.params || {};
+    const { id } = this.props.route.params || {};
     this.fetchSkills(id);
   }
 
@@ -69,4 +70,4 @@ class Skills extends PureComponent {
   }
 };
 
-export default Skills;
+export default withNavigation(Skills);

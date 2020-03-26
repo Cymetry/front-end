@@ -18,7 +18,8 @@ class Auth extends PureComponent {
   render() {
     const { viewType } = this.state;
     const { navigation } = this.props;
-    const { signUp } = navigationWrapper.navigation.state?.params || {};
+    // const { signUp } = navigationWrapper.navigation.state?.params || {};
+    const signUp = true;
 
     return (
       <KeyboardAwareScrollView style={Styles.page} enableOnAndroid>

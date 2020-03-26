@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { View, Text, Image } from 'react-native';
 import { Bar } from 'react-native-progress';
-import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
+import { createStackNavigator, HeaderBackButton } from "@react-navigation/stack";
 
 import { createTabNavigationOptions, navigationWrapper } from '../../../../platform/services/navigation';
 import AccountController from '../../../../platform/api/account';
@@ -60,10 +60,18 @@ class MyAccount extends PureComponent {
   }
 };
 
-export default createStackNavigator({
-  [ROUTES.CONTENT_MY_ACCOUNT]: MyAccount,
-}, {
-  headerLayoutPreset: 'center',
-  defaultNavigationOptions: () =>  Styles.navigation,
-  navigationOptions: createTabNavigationOptions('My Account', 'person'),
-});;
+const Stack = createStackNavigator();
+
+const MyAccountScreens = () => <Stack.Navigator
+  headerLayoutPreset="center"
+  screenOptions={() => Styles.navigation}
+  initialRouteName={ROUTES.CONTENT_MY_ACCOUNT}
+>
+  <Stack.Screen
+    name={ROUTES.CONTENT_MY_ACCOUNT}
+  >
+    { (props) => <MyAccount {...props} /> }
+  </Stack.Screen>
+</Stack.Navigator>;
+
+export default MyAccountScreens;

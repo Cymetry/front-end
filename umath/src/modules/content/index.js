@@ -10,9 +10,9 @@ import { createTabNavigationOptions } from '../../platform/services/navigation';
 const Tab = createBottomTabNavigator();
 
 const ContentScreens = ({ route }) => {
-  const { id } = route.params;
+  const { id, loggedIn } = route.params;
   return (
-    <Tab.Navigator initialRouteName={ROUTES.CONTENT_LEARNING}>
+    <Tab.Navigator initialRouteName={loggedIn ? ROUTES.CONTENT_MY_ACCOUNT : ROUTES.CONTENT_LEARNING}>
       <Tab.Screen
         name={ROUTES.CONTENT_LEARNING}
         options={createTabNavigationOptions('Learning', 'sunny')}

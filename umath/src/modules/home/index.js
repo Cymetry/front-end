@@ -8,6 +8,7 @@ import Intro from './components/intro';
 import { navigationWrapper } from '../../platform/services/navigation';
 import ProgramController from '../../platform/api/program';
 import Styles from '../../../assets/styles';
+import ROUTES from '../../platform/constants/routes';
 
 class Home extends Component {
 
@@ -19,7 +20,11 @@ class Home extends Component {
 
   async componentDidMount() {
     this.fetchPrograms();
-    this.setState({ loggedIn: !!(await AsyncStorage.getItem('token')) });
+    const loggedIn = !!(await AsyncStorage.getItem('token'));
+    if (loggedIn) {
+      navigationWrapper.navigation.navigate(ROUTES.CONTENT, { loggedIn });
+    }
+    this.setState({ loggedIn });
   }
   
   fetchPrograms = async () => {

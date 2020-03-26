@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, AsyncStorage } from "react-native";
 import { ListItem } from "react-native-elements";
-import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
+import { createStackNavigator, HeaderBackButton } from "@react-navigation/stack";
 import { withNavigation } from "react-navigation";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -21,6 +21,8 @@ import HelpAndFeedback from "./pages/help-and-feedback";
 import FAQ from "./pages/faq";
 import TermsAndConditions from "./pages/terms-and-conditions";
 import PrivacyPolicy from "./pages/privacy-policy";
+
+const Stack = createStackNavigator();
 
 class Settings extends Component {
 
@@ -106,14 +108,31 @@ class Settings extends Component {
   }
 };
 
-export default createStackNavigator({
-  [ROUTES.CONTENT_SETTINGS]: withNavigation(Settings),
-  [ROUTES.CONTENT_SETTINGS_FAQ]: FAQ,
-  [ROUTES.CONTENT_SETTINGS_HELP]: HelpAndFeedback,
-  [ROUTES.CONTENT_SETTINGS_TERMS]: TermsAndConditions,
-  [ROUTES.CONTENT_SETTINGS_PRIVACY]: PrivacyPolicy,
-}, {
-  headerLayoutPreset: 'center',
-  defaultNavigationOptions: () =>  Styles.navigation,
-  navigationOptions: createTabNavigationOptions('Settings', 'settings'),
-});
+const MyAccountScreens = () => <Stack.Navigator
+  headerLayoutPreset="center"
+  screenOptions={() => Styles.navigation}
+  initialRouteName={ROUTES.CONTENT_SETTINGS}
+>
+  <Stack.Screen
+    component={Settings}
+    name={ROUTES.CONTENT_SETTINGS}
+  />
+  <Stack.Screen
+    component={FAQ}
+    name={ROUTES.CONTENT_SETTINGS_FAQ}
+  />
+  <Stack.Screen
+    component={HelpAndFeedback}
+    name={ROUTES.CONTENT_SETTINGS_HELP}
+  />
+  <Stack.Screen
+    component={TermsAndConditions}
+    name={ROUTES.CONTENT_SETTINGS_TERMS}
+  />
+  <Stack.Screen
+    component={PrivacyPolicy}
+    name={ROUTES.CONTENT_SETTINGS_PRIVACY}
+  />
+</Stack.Navigator>;
+
+export default MyAccountScreens;

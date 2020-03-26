@@ -7,6 +7,7 @@ import ROUTES from "../../../../../../platform/constants/routes";
 import TopicController from '../../../../../../platform/api/topic';
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from './styles';
+import { withNavigation } from 'react-navigation';
 import { navigationWrapper } from "../../../../../../platform/services/navigation";
   
 class Topics extends PureComponent {
@@ -17,7 +18,7 @@ class Topics extends PureComponent {
   };
 
   async componentDidMount() {
-    const { id } = navigationWrapper.navigation.state?.params || {};
+    const { id } = this.props.route.params || {};
     this.fetchTopics(id);
     this.setState({ userPremium: !!(await AsyncStorage.getItem('premium')) });
   }
@@ -57,4 +58,4 @@ class Topics extends PureComponent {
   }
 };
 
-export default Topics;
+export default withNavigation(Topics);

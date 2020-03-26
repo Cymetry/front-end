@@ -76,7 +76,7 @@ class Settings extends Component {
     await AsyncStorage.multiRemove(['token', 'premium']);
     navigationWrapper.navigation.reset({
       index: 0,
-      actions: [navigationWrapper.navigation.navigate(ROUTES.HOME, { signOuted: true })],
+      actions: [navigationWrapper.navigation.navigate(ROUTES.HOME, { signedOut: true })],
     });
   }
 

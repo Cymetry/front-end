@@ -27,7 +27,7 @@ const Styles = {
   navigation,
   page: {
     flex: 1,
-    backgroundColor: Variables.lightGray,
+    backgroundColor: 'white',
   },
 };
 

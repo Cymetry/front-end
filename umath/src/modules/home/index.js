@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import Programs from './components/programs';
 import AuthReminder from './components/auth-reminder';
+import Intro from './components/intro';
 import { navigationWrapper } from '../../platform/services/navigation';
 import ProgramController from '../../platform/api/program';
 import Styles from '../../../assets/styles';
@@ -12,12 +13,13 @@ class Home extends Component {
 
   state = {
     programs: [],
-    logined: true,
+    loggedIn: true,
+    skipped: false,
   };
 
   async componentDidMount() {
     this.fetchPrograms();
-    this.setState({ logined: !!(await AsyncStorage.getItem('token')) });
+    this.setState({ loggedIn: !!(await AsyncStorage.getItem('token')) });
   }
   
   fetchPrograms = async () => {
@@ -25,14 +27,28 @@ class Home extends Component {
     result && result.length && this.setState({ programs: result });
   }
 
+  skip = () => {
+    this.setState({ skipped: true })
+  }
+
   render() {
-    const { programs, logined } = this.state;
-    const { signOuted } = navigationWrapper.navigation.state?.params || {};
+    const { programs, loggedIn, skipped } = this.state;
+    const { signedOut } = navigationWrapper.navigation.state?.params || {};
 
     return (
       <ScrollView style={Styles.page}>
-        {(!logined || signOuted) && <AuthReminder />}
-        <Programs data={programs} />
+        {(!loggedIn || signedOut) && (
+          !skipped
+          ? (
+            <Intro skip={this.skip} />
+          )
+          : (
+            <AuthReminder />
+          )
+        )}
+        { skipped && 
+          <Programs data={programs} />
+        }
       </ScrollView>
     );
   }

@@ -5,6 +5,7 @@ import SignIn from './components/sign-in';
 import SignUp from './components/sign-up';
 import { ViewTypeEnum } from './constants/enums';
 import Styles from '../../../assets/styles';
+import { withNavigation } from 'react-navigation';
 import { navigationWrapper } from '../../platform/services/navigation';
 
 class Auth extends PureComponent {
@@ -24,11 +25,11 @@ class Auth extends PureComponent {
     return (
       <KeyboardAwareScrollView style={Styles.page} enableOnAndroid>
         {viewType === ViewTypeEnum.SignIn
-          ? <SignIn changeViewType={this.changeViewType} signUpActive={signUp} />
+          ? <SignIn changeViewType={this.changeViewType} signUpActive={signUp} navigation={this.props.navigation} />
           : <SignUp changeViewType={this.changeViewType} />}
       </KeyboardAwareScrollView>
     );
   }
 };
 
-export default Auth;
+export default withNavigation(Auth);

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, Alert, AsyncStorage } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 
+import ROUTES from '../../../../platform/constants/routes';
+import { withNavigation } from 'react-navigation';
 import AuthController from '../../../../platform/api/auth';
 import { ViewTypeEnum } from '../../constants/enums';
 import LocalStyles from '../../styles';
@@ -31,14 +33,13 @@ class SignIn extends Component {
   submit = async () => {
     if (this.formValid) {
       const { form } = this.state;
-      const { lastPath, lastParams } = navigationWrapper.navigation.state?.params || {};
       const result = await AuthController.Login(form);
       if (result) {
         await AsyncStorage.multiSet([
           ['token', result.jwt],
           ['premium', result.isPremium ? 'true' : ''],
         ]);
-        navigationWrapper.navigation.push(lastPath, lastParams);
+        this.props.navigation.navigate(ROUTES.HOME);
       } else Alert.alert('Username or Password is incorrect!!');
     }
   }

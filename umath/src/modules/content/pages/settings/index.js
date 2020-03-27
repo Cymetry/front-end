@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, AsyncStorage } from "react-native";
+import { View, Text, AsyncStorage, Alert } from "react-native";
 import { ListItem } from "react-native-elements";
 import {
   createStackNavigator,
@@ -73,14 +73,29 @@ class Settings extends Component {
       },
       {
         name: "Subscription",
-        url: ROUTES.CONTENT_SETTINGS_SUBSCRIPTION,
+        onPress: () =>
+          token
+            ? navigationWrapper.navigation.navigate(
+                ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
+              )
+            : Alert.alert("Please sign in to be able to subscribe", "", [
+                {
+                  text: "Sign in",
+                  onPress: () =>
+                    navigationWrapper.navigation.navigate(ROUTES.AUTH)
+                },
+                {
+                  text: "Cancel",
+                  style: "cancel"
+                }
+              ]),
         avatar_source: SubscriptionIcon
       },
       ...(token
         ? [
             {
               name: "Sign out",
-              onPress: () => this.signOut(),
+              onPress: () => this.onSignOutPress(),
               avatar_source: SignOutIcon
             }
           ]
@@ -93,9 +108,24 @@ class Settings extends Component {
     navigationWrapper.navigation.reset({
       index: 0,
       actions: [
-        navigationWrapper.navigation.navigate(ROUTES.HOME, { signedOut: true })
+        navigationWrapper.navigation.navigate(ROUTES.HOME, {
+          signedOut: true
+        })
       ]
     });
+  };
+
+  onSignOutPress = () => {
+    Alert.alert("Are you sure you want to sign out?", "", [
+      {
+        text: "Confirm",
+        onPress: this.signOut
+      },
+      {
+        text: "Cancel",
+        style: "cancel"
+      }
+    ]);
   };
 
   render() {
@@ -140,24 +170,19 @@ const MyAccountScreens = () => (
     initialRouteName={ROUTES.CONTENT_SETTINGS}
   >
     <Stack.Screen component={Settings} name={ROUTES.CONTENT_SETTINGS} />
-
     <Stack.Screen component={FAQ} name={ROUTES.CONTENT_SETTINGS_FAQ} />
-
     <Stack.Screen
       component={HelpAndFeedback}
       name={ROUTES.CONTENT_SETTINGS_HELP}
     />
-
     <Stack.Screen
       component={TermsAndConditions}
       name={ROUTES.CONTENT_SETTINGS_TERMS}
     />
-
     <Stack.Screen
       component={PrivacyPolicy}
       name={ROUTES.CONTENT_SETTINGS_PRIVACY}
     />
-
     <Stack.Screen
       component={PaymentScreen}
       name={ROUTES.CONTENT_SETTINGS_SUBSCRIPTION}

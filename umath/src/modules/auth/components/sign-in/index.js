@@ -39,7 +39,7 @@ class SignIn extends Component {
           ['token', result.jwt],
           ['premium', result.isPremium ? 'true' : ''],
         ]);
-        this.props.navigation.navigate(ROUTES.HOME);
+        this.props.navigation.navigate(ROUTES.CONTENT, { loggedIn: true });
       } else Alert.alert('Username or Password is incorrect!!');
     }
   }

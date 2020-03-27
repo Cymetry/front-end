@@ -104,15 +104,12 @@ class Settings extends Component {
   }
 
   signOut = async () => {
-    await AsyncStorage.multiRemove(["token", "premium"]);
-    navigationWrapper.navigation.reset({
-      index: 0,
-      actions: [
-        navigationWrapper.navigation.navigate(ROUTES.HOME, {
-          signedOut: true
-        })
-      ]
-    });
+    try {
+      await AsyncStorage.multiRemove(["token", "premium"]);
+      navigationWrapper.navigation.navigate(ROUTES.HOME);
+    } catch(e) {
+      console.warn(e);
+    }
   };
 
   onSignOutPress = () => {

@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { View, Text, AsyncStorage } from "react-native";
 import { ListItem } from "react-native-elements";
-import { createStackNavigator, HeaderBackButton } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  HeaderBackButton
+} from "@react-navigation/stack";
 import { withNavigation } from "react-navigation";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -12,29 +15,36 @@ import PrivacyPolicyIcon from "../../../../../assets/images/privacy_policy_icon.
 import SubscriptionIcon from "../../../../../assets/images/subscription_icon.png";
 import SignOutIcon from "../../../../../assets/images/sign_out_icon.png";
 
-import { createTabNavigationOptions, navigationWrapper } from '../../../../platform/services/navigation';
-import Constants from './../../../../platform/constants';
-import ROUTES from './../../../../platform/constants/routes';
+import {
+  createTabNavigationOptions,
+  navigationWrapper
+} from "../../../../platform/services/navigation";
+import Constants from "./../../../../platform/constants";
+import ROUTES from "./../../../../platform/constants/routes";
 import Styles from "../../../../../assets/styles";
-import LocalStyles from './styles';
+import LocalStyles from "./styles";
 import HelpAndFeedback from "./pages/help-and-feedback";
 import FAQ from "./pages/faq";
 import TermsAndConditions from "./pages/terms-and-conditions";
 import PrivacyPolicy from "./pages/privacy-policy";
+import PaymentScreen from "./pages/payments";
 
 const Stack = createStackNavigator();
 
 class Settings extends Component {
-
   static navigationOptions = () => ({
-    title: 'Settings',
-    headerLeft: () => <HeaderBackButton onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)} />
+    title: "Settings",
+    headerLeft: () => (
+      <HeaderBackButton
+        onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)}
+      />
+    )
   });
 
   state = { token: null };
 
   async componentDidMount() {
-    this.setState({ token: !!(await AsyncStorage.getItem('token')) });
+    this.setState({ token: !!(await AsyncStorage.getItem("token")) });
   }
 
   get list() {
@@ -42,97 +52,117 @@ class Settings extends Component {
 
     return [
       {
-        name: 'FAQ',
+        name: "FAQ",
         url: ROUTES.CONTENT_SETTINGS_FAQ,
-        avatar_source: FaqIcon,
+        avatar_source: FaqIcon
       },
       {
-        name: 'Help & Feedback',
+        name: "Help & Feedback",
         url: ROUTES.CONTENT_SETTINGS_HELP,
-        avatar_source: HelpAndFeedbackIcon,
+        avatar_source: HelpAndFeedbackIcon
       },
       {
-        name: 'Terms & Conditions',
+        name: "Terms & Conditions",
         url: ROUTES.CONTENT_SETTINGS_TERMS,
-        avatar_source: TermsAndConditionsIcon,
+        avatar_source: TermsAndConditionsIcon
       },
       {
-        name: 'Privacy Policy',
+        name: "Privacy Policy",
         url: ROUTES.CONTENT_SETTINGS_PRIVACY,
-        avatar_source: PrivacyPolicyIcon,
+        avatar_source: PrivacyPolicyIcon
       },
       {
-        name: 'Subscription',
-        onPress: () => { /* */ },
-        avatar_source: SubscriptionIcon,
+        name: "Subscription",
+        url: ROUTES.CONTENT_SETTINGS_SUBSCRIPTION,
+        avatar_source: SubscriptionIcon
       },
-      ...(token ? [{
-        name: 'Sign out',
-        onPress: () => this.signOut(),
-        avatar_source: SignOutIcon,
-      }] : []),
+      ...(token
+        ? [
+            {
+              name: "Sign out",
+              onPress: () => this.signOut(),
+              avatar_source: SignOutIcon
+            }
+          ]
+        : [])
     ];
   }
 
   signOut = async () => {
-    await AsyncStorage.multiRemove(['token', 'premium']);
+    await AsyncStorage.multiRemove(["token", "premium"]);
     navigationWrapper.navigation.reset({
       index: 0,
-      actions: [navigationWrapper.navigation.navigate(ROUTES.HOME, { signedOut: true })],
+      actions: [
+        navigationWrapper.navigation.navigate(ROUTES.HOME, { signedOut: true })
+      ]
     });
-  }
+  };
 
   render() {
-
     return (
       <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
-            {this.list.map(item => <ListItem
-              key={item.name}
-              title={item.name}
-              onPress={() => item.url ? navigationWrapper.navigation.navigate(item.url) : item.onPress()}
-              containerStyle={LocalStyles.listItem}
-              leftAvatar={{ source: item.avatar_source, ...Styles.avatar }}
-              roundAvatar
-              chevron
-            />)}
+            {this.list.map(item => (
+              <ListItem
+                key={item.name}
+                title={item.name}
+                onPress={() =>
+                  item.url
+                    ? navigationWrapper.navigation.navigate(item.url)
+                    : item.onPress()
+                }
+                containerStyle={LocalStyles.listItem}
+                leftAvatar={{ source: item.avatar_source, ...Styles.avatar }}
+                roundAvatar
+                chevron
+              />
+            ))}
           </View>
         </View>
         <View style={{ ...Styles.card.classic }}>
-          <Text style={LocalStyles.nameText}>{Constants.ProjectTitle} v1.0</Text>
-          <Text style={LocalStyles.descriptionText}>By Signing in, you agree to our Terms of Service and Privacy Policy.</Text>
+          <Text style={LocalStyles.nameText}>
+            {Constants.ProjectTitle} v1.0
+          </Text>
+          <Text style={LocalStyles.descriptionText}>
+            By Signing in, you agree to our Terms of Service and Privacy Policy.
+          </Text>
         </View>
       </ScrollView>
     );
   }
-};
+}
 
-const MyAccountScreens = () => <Stack.Navigator
-  headerLayoutPreset="center"
-  screenOptions={() => Styles.navigation}
-  initialRouteName={ROUTES.CONTENT_SETTINGS}
->
-  <Stack.Screen
-    component={Settings}
-    name={ROUTES.CONTENT_SETTINGS}
-  />
-  <Stack.Screen
-    component={FAQ}
-    name={ROUTES.CONTENT_SETTINGS_FAQ}
-  />
-  <Stack.Screen
-    component={HelpAndFeedback}
-    name={ROUTES.CONTENT_SETTINGS_HELP}
-  />
-  <Stack.Screen
-    component={TermsAndConditions}
-    name={ROUTES.CONTENT_SETTINGS_TERMS}
-  />
-  <Stack.Screen
-    component={PrivacyPolicy}
-    name={ROUTES.CONTENT_SETTINGS_PRIVACY}
-  />
-</Stack.Navigator>;
+const MyAccountScreens = () => (
+  <Stack.Navigator
+    headerLayoutPreset="center"
+    screenOptions={() => Styles.navigation}
+    initialRouteName={ROUTES.CONTENT_SETTINGS}
+  >
+    <Stack.Screen component={Settings} name={ROUTES.CONTENT_SETTINGS} />
+
+    <Stack.Screen component={FAQ} name={ROUTES.CONTENT_SETTINGS_FAQ} />
+
+    <Stack.Screen
+      component={HelpAndFeedback}
+      name={ROUTES.CONTENT_SETTINGS_HELP}
+    />
+
+    <Stack.Screen
+      component={TermsAndConditions}
+      name={ROUTES.CONTENT_SETTINGS_TERMS}
+    />
+
+    <Stack.Screen
+      component={PrivacyPolicy}
+      name={ROUTES.CONTENT_SETTINGS_PRIVACY}
+    />
+
+    <Stack.Screen
+      component={PaymentScreen}
+      name={ROUTES.CONTENT_SETTINGS_SUBSCRIPTION}
+    />
+  </Stack.Navigator>
+);
 
 export default MyAccountScreens;

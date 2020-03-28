@@ -1,12 +1,14 @@
 import React, { PureComponent } from 'react';
 import { View, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { ListItem } from "react-native-elements";
 import Accordion from 'react-native-collapsible/Accordion';
 
 import { createNavigationOptions } from '../../../../../../platform/services/navigation';
 import AccountController from '../../../../../../platform/api/account';
 import LocalStyles from './styles';
-import Styles from '../../../../../../../assets/styles';
+import Styles from 'assets/styles';
+import Variables from 'assets/styles/variables';
 
 class FAQ extends PureComponent {
 
@@ -22,17 +24,26 @@ class FAQ extends PureComponent {
     result && result.length && this.setState({ data: result });
   }
  
-  renderHeader = section => {
+  renderHeader = (section, _, isActive) => {
     return (
-      <View style={LocalStyles.accordionHeader}>
-        <Text style={LocalStyles.accordionHeaderText}>{section.title}</Text>
-      </View>
+      <ListItem
+        key={section.title}
+        title={section.title}
+        containerStyle={LocalStyles.accordionHeader}
+        chevron={{
+          color: Variables.darkGray,
+          iconStyle: {
+            transform: [{ rotate: isActive ? '90deg' : '0deg'}]
+          }
+        }}
+      />
     );
+    // <Text style={LocalStyles.accordionHeaderText}>{}</Text>
   };
  
   renderContent = section => {
     return (
-      <View style={LocalStyles.accordionHeader}>
+      <View style={{...LocalStyles.accordionHeader, ...LocalStyles.accordionContentHeader}}>
         <Text style={LocalStyles.accordionHeaderText}>{section.content}</Text>
       </View>
     );

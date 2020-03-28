@@ -14,9 +14,14 @@ const LocalStyles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 15,
     justifyContent: 'center',
-    borderColor: Variables.gray,
+    borderColor: Variables.textGray,
     borderRadius: 8,
     marginBottom: 10,
+    backgroundColor: Variables.gray,
+  },
+
+  accordionContentHeader: {
+    backgroundColor: Variables.lightGray,
   },
 
   accordionHeaderText: {

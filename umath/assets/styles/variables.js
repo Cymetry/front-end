@@ -7,7 +7,8 @@ const Variables = {
   blue: "#0880FA",
   vividBlue: "#0091FF",
   lightBlue: "#32C5FF",
-
+  
+  darkGray: '#24272C',
   textGray: "#979797",
   gray: "#D8D8D8",
   lightGray: "#F8F8F8"

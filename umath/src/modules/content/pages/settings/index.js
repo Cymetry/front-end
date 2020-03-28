@@ -166,8 +166,16 @@ const MyAccountScreens = () => (
     screenOptions={() => Styles.navigation}
     initialRouteName={ROUTES.CONTENT_SETTINGS}
   >
-    <Stack.Screen component={Settings} name={ROUTES.CONTENT_SETTINGS} />
-    <Stack.Screen component={FAQ} name={ROUTES.CONTENT_SETTINGS_FAQ} />
+    <Stack.Screen 
+      component={Settings} 
+      name={ROUTES.CONTENT_SETTINGS} 
+      options={{ title: 'Settings' }}
+    />
+    <Stack.Screen 
+      component={FAQ} 
+      name={ROUTES.CONTENT_SETTINGS_FAQ}
+      options={{ title: 'FAQ' }}
+    />
     <Stack.Screen
       component={HelpAndFeedback}
       name={ROUTES.CONTENT_SETTINGS_HELP}

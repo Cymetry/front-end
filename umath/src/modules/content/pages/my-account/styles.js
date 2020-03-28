@@ -23,6 +23,10 @@ const LocalStyles = StyleSheet.create({
     flexDirection: 'row',
   },
 
+  progressBar: {
+    marginHorizontal: 10,
+  },
+
   button: {
     padding: 15,
     borderRadius: 8,

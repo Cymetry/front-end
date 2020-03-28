@@ -25,28 +25,38 @@ class MyAccount extends PureComponent {
     ),
   });
 
-  state = { details: null, skills: [] };
+  state = { details: null, skills: [], progress: { revision: 0, learning: 0 } };
 
   handleProgressClick = route => () =>
     navigationWrapper.navigation.navigate(route);
 
+  getPercentage = num => Math.round(num * 100);
+
   BarItem = ({ percent }) => (
     <Bar
-      color={Variables.lightBlue}
-      unfilledColor={Variables.lightGray}
       width={120}
-      height={10}
-      progress={percent}
-      borderRadius={0}
+      height={12}
       borderWidth={0}
+      borderRadius={0}
+      progress={percent}
+      color={Variables.lightBlue}
+      style={LocalStyles.progressBar}
+      unfilledColor={Variables.lightGray}
     />
   );
 
   async componentDidMount() {
+    const {
+      progress: { learning, revision },
+    } = this.state;
     const result = await AccountController.Details();
 
     this.setState({
-      details: result && result.user ? result.user : null,
+      details: result?.user || null,
+      progress: {
+        revision: result?.revision || revision,
+        learning: result?.learning || learning,
+      },
       skills: [
         {
           rating: 9,
@@ -63,7 +73,7 @@ class MyAccount extends PureComponent {
   }
 
   render() {
-    const { details, skills } = this.state;
+    const { details, skills, progress } = this.state;
 
     return details ? (
       <View style={Styles.page}>
@@ -87,14 +97,18 @@ class MyAccount extends PureComponent {
           <View style={LocalStyles.divider} />
           <Text style={Styles.text.normalSize}>Progress:</Text>
           <View style={LocalStyles.progressItem}>
-            <Text style={Styles.text.smallSize}>Learning: &nbsp;&nbsp;</Text>
-            <this.BarItem percent={0.75} />
-            <Text style={Styles.text.smallSize}>&nbsp;&nbsp; 75%</Text>
+            <Text style={Styles.text.smallSize}>Learning:</Text>
+            <this.BarItem percent={progress.learning} />
+            <Text style={Styles.text.smallSize}>
+              {this.getPercentage(progress.learning)}%
+            </Text>
           </View>
           <View style={LocalStyles.progressItem}>
-            <Text style={Styles.text.smallSize}>Revision: &nbsp;&nbsp;</Text>
-            <this.BarItem percent={0.25} />
-            <Text style={Styles.text.smallSize}>&nbsp;&nbsp; 25%</Text>
+            <Text style={Styles.text.smallSize}>Revision:</Text>
+            <this.BarItem percent={progress.revision} />
+            <Text style={Styles.text.smallSize}>
+              {this.getPercentage(progress.revision)}%
+            </Text>
           </View>
         </View>
       </View>

@@ -12,7 +12,7 @@ import SkillLearningController from '../../../../../../platform/api/skillLearnin
 import ROUTES from '../../../../../../platform/constants/routes';
 import Styles from '../../../../../../../assets/styles';
 import LocalStyles from './styles';
-import { navigationWrapper } from "../../../../../../platform/services/navigation";
+import { withNavigation } from 'react-navigation';
 
 const htmlEntities = new Html5Entities();
 
@@ -29,20 +29,17 @@ class SkillItem extends Component {
   reamingMistakes = 2;
 
   async componentDidMount() {
-    const { id } = navigationWrapper.navigation.state?.params || {};
+    const { id } = this.props.route.params || {};
     let response = await SkillLearningController.Resume(id);
     if (response.message === 'Skill has been completed' || !Object.keys(response).length) response = await SkillLearningController.Start(id);
-    try {
-      const result = JSON.parse(response);
+    const result = JSON.parse(response);
 
-      if (result && result.body && result.body.content) {
-        if (typeof result.body.content.content === 'string') result.body.content.videoUrl = result.body.content.content;
-        console.log(result.body, 'ekav mihat');
-        this.reamingMistakes = (result.body.maxMistakes || result.body.maxMistakes === 0) ? result.body.maxMistakes : 2;
-        result.body.content.steps = result.body.content.steps ? result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item) : [];
-        this.setState({ data: result.body.content, currentStep: 0, stepAnswers: [], showSolution: result.body.maxMistakes && result.body.maxMistakes > 100 });
-      }
-    } catch (e) { /* */ }
+    if (result && result.body && result.body.content) {
+      if (typeof result.body.content.content === 'string') result.body.content.videoUrl = result.body.content.content;
+      this.reamingMistakes = (result.body.maxMistakes || result.body.maxMistakes === 0) ? result.body.maxMistakes : 2;
+      result.body.content.steps = result.body.content.steps ? result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item) : [];
+      this.setState({ data: result.body.content, currentStep: 0, stepAnswers: [], showSolution: result.body.maxMistakes && result.body.maxMistakes > 100 });
+    }
   }
 
   get nextDisabled() {
@@ -88,7 +85,6 @@ class SkillItem extends Component {
   }
 
   finish = async fullFinished => {
-    const { id, parentId } = navigationWrapper.navigation.state?.params || {};
     const { data, stepAnswers, currentStep } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
@@ -343,4 +339,4 @@ class SkillItem extends Component {
   }
 };
 
-export default SkillItem;
+export default withNavigation(SkillItem);

@@ -9,6 +9,7 @@ import { navigationWrapper } from '../../platform/services/navigation';
 import ProgramController from '../../platform/api/program';
 import Styles from '../../../assets/styles';
 import ROUTES from '../../platform/constants/routes';
+import { withNavigation } from 'react-navigation';
 
 class Home extends Component {
 
@@ -19,7 +20,7 @@ class Home extends Component {
   };
 
   async componentDidMount() {
-    this.fetchPrograms();
+    // this.fetchPrograms();
     const loggedIn = !!(await AsyncStorage.getItem('token'));
     if (loggedIn) {
       navigationWrapper.navigation.navigate(ROUTES.CONTENT, { loggedIn });
@@ -27,36 +28,32 @@ class Home extends Component {
     this.setState({ loggedIn });
   }
   
-  fetchPrograms = async () => {
-    const result = await ProgramController.List();
-    result && result.length && this.setState({ programs: result });
-  }
+  // fetchPrograms = async () => {
+  //   const result = await ProgramController.List();
+  //   result && result.length && this.setState({ programs: result });
+  // }
 
   skip = () => {
-    this.setState({ skipped: true })
+    this.props.navigation.navigate(ROUTES.CONTENT);
   }
 
   render() {
-    const { programs, loggedIn, skipped } = this.state;
-    const { signedOut } = navigationWrapper.navigation.state?.params || {};
+    const { loggedIn } = this.state;
 
     return (
       <ScrollView style={Styles.page}>
-        {(!loggedIn || signedOut) && (
-          !skipped
-          ? (
-            <Intro skip={this.skip} />
-          )
-          : (
-            <AuthReminder />
-          )
+        {(
+          !loggedIn
+            ? (
+              <Intro skip={this.skip} />
+            )
+            : (
+              <AuthReminder />
+            )
         )}
-        { skipped && 
-          <Programs data={programs} />
-        }
       </ScrollView>
     );
   }
 };
 
-export default Home;
+export default withNavigation(Home);

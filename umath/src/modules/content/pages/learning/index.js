@@ -19,73 +19,73 @@ import CurriculumController from "../../../../platform/api/curriculum";
 import Styles from "../../../../../assets/styles";
 import LocalStyles from "./styles";
 
-class Learning extends PureComponent {
-  static navigationOptions = ({ navigation }) => {
-    const { name } = navigationWrapper.navigation.state?.params || {};
+// class Learning extends PureComponent {
+//   static navigationOptions = ({ navigation }) => {
+//     const { name } = navigationWrapper.navigation.state?.params || {};
 
-    return {
-      title: name,
-      headerLeft: () => (
-        <HeaderBackButton
-          onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)}
-        />
-      )
-    };
-  };
+//     return {
+//       title: name,
+//       headerLeft: () => (
+//         <HeaderBackButton
+//           onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)}
+//         />
+//       )
+//     };
+//   };
 
-  state = {
-    curriculums: []
-  };
+//   state = {
+//     curriculums: []
+//   };
 
-  componentDidMount() {
-    const { id } = this.props;
-    this.fetchCurriculums(id);
-  }
+//   componentDidMount() {
+//     const { id } = this.props;
+//     this.fetchCurriculums(id);
+//   }
 
-  fetchCurriculums = async id => {
-    const result = await CurriculumController.List(id);
-    result && result.length && this.setState({ curriculums: result });
-  };
+//   fetchCurriculums = async id => {
+//     const result = await CurriculumController.List(id);
+//     result && result.length && this.setState({ curriculums: result });
+//   };
 
-  render() {
-    const { curriculums } = this.state;
+//   render() {
+//     const { curriculums } = this.state;
 
-    return (
-      <ScrollView style={Styles.page}>
-        <View style={LocalStyles.container}>
-          <View style={Styles.list.container}>
-            {curriculums.map(item => (
-              <ListItem
-                key={item.id}
-                title={item.name}
-                containerStyle={LocalStyles.listItem}
-                leftAvatar={{ source: { uri: item.logo }, ...Styles.avatar }}
-                onPress={() =>
-                  navigationWrapper.navigation.navigate(
-                    ROUTES.CONTENT_LEARNING_TOPICS,
-                    item
-                  )
-                }
-                roundAvatar
-                chevron
-              />
-            ))}
-          </View>
-        </View>
-      </ScrollView>
-    );
-  }
-}
+//     return (
+//       <ScrollView style={Styles.page}>
+//         <View style={LocalStyles.container}>
+//           <View style={Styles.list.container}>
+//             {curriculums.map(item => (
+//               <ListItem
+//                 key={item.id}
+//                 title={item.name}
+//                 containerStyle={LocalStyles.listItem}
+//                 leftAvatar={{ source: { uri: item.logo }, ...Styles.avatar }}
+//                 onPress={() =>
+//                   navigationWrapper.navigation.navigate(
+//                     ROUTES.CONTENT_LEARNING_TOPICS,
+//                     item
+//                   )
+//                 }
+//                 roundAvatar
+//                 chevron
+//               />
+//             ))}
+//           </View>
+//         </View>
+//       </ScrollView>
+//     );
+//   }
+// }
 
 const Stack = createStackNavigator();
 
-const LearningScreens = ({ id }) => (
+const LearningScreens = () => (
   <Stack.Navigator
     headerLayoutPreset="center"
     screenOptions={() => Styles.navigation}
-    initialRouteName={ROUTES.CONTENT_LEARNING}
+    initialRouteName={ROUTES.CONTENT_LEARNING_TOPICS}
   >
-    <Stack.Screen
+    {/* <Stack.Screen
       name={ROUTES.CONTENT_LEARNING}
       options={() => {
         const { name } = navigationWrapper.navigation.state?.params || {};
@@ -100,7 +100,7 @@ const LearningScreens = ({ id }) => (
       }}
     >
       {props => <Learning {...props} id={id} />}
-    </Stack.Screen>
+    </Stack.Screen> */}
 
     <Stack.Screen
       name={ROUTES.CONTENT_LEARNING_TOPICS}

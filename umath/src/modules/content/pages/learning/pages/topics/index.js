@@ -25,7 +25,7 @@ class Topics extends PureComponent {
   }
 
   fetchTopics = async id => {
-    const result = await TopicController.List(id);
+    const result = await TopicController.List(1);
     result && result.length && this.setState({ topics: result });
   };
 

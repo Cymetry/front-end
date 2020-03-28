@@ -15,7 +15,7 @@ import {
 const Tab = createBottomTabNavigator();
 
 const ContentScreens = ({ route }) => {
-  const { id, loggedIn } = route.params;
+  const { loggedIn } = route.params || { loggedIn: false };
 
   const myAccountTabPressListener = {
     tabPress: event => {
@@ -44,9 +44,9 @@ const ContentScreens = ({ route }) => {
     >
       <Tab.Screen
         name={ROUTES.CONTENT_LEARNING}
-        options={createTabNavigationOptions('Learning', 'sunny')}
+        component={Learning}
+        options={createTabNavigationOptions("Learning", "sunny")}
       >
-        {props => <Learning {...props} id={id} />}
       </Tab.Screen>
       <Tab.Screen
         component={MyAccount}

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, ScrollView, Text, Image } from 'react-native';
 import { Bar } from 'react-native-progress';
 import {
   createStackNavigator,
@@ -111,7 +111,7 @@ class MyAccount extends PureComponent {
     const { details, topic, skill, progress } = this.state;
 
     return details ? (
-      <View style={Styles.page}>
+      <ScrollView style={Styles.page}>
         <View style={Styles.card.classic}>
           <Image style={LocalStyles.profileImage} source={{}} />
           <Text style={LocalStyles.fullName}>
@@ -152,7 +152,7 @@ class MyAccount extends PureComponent {
             </Text>
           </View>
         </View>
-      </View>
+      </ScrollView>
     ) : null;
   }
 }

@@ -71,7 +71,7 @@ class SignIn extends Component {
             ...LocalStyles.forgotButton
           }}
           accessibilityRole="button"
-          onPress={() => changeViewType(ViewTypeEnum.SignUp)}
+          onPress={() => navigationWrapper.navigation.navigate(ROUTES.FORGOT_EMAIL, { lastPath: ROUTES.AUTH })} 
         >
           Forgot password?
         </Text>

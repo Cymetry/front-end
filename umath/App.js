@@ -9,6 +9,11 @@ import ROUTES from './src/platform/constants/routes';
 import Styles from './assets/styles';
 import { navigationWrapper, createNavigationOptions } from './src/platform/services/navigation';
 import Constants from './src/platform/constants';
+import {
+  ForgotEmail,
+  ResetPass,
+  Verification,
+} from './src/modules/forgot'
 
 // const MainNavigator = createStackNavigator({
 //   [ROUTES.HOME]: Modules.Home,
@@ -63,7 +68,25 @@ class App extends Component {
               />,
             }}
           />
+          
+          <Stack.Screen
+            name={ROUTES.FORGOT_EMAIL}
+            component={ForgotEmail}
+            options={{title: 'Welcome'}}
+          />
 
+          <Stack.Screen
+            name={ROUTES.FORGOT_VERIFY}
+            component={Verification}
+            options={{title: 'Welcome'}}
+          />
+
+          <Stack.Screen
+            name={ROUTES.FORGOT_RESET}
+            component={ResetPass}
+            options={{title: 'Welcome'}}
+          />
+          
           <Stack.Screen
             name={ROUTES.CONTENT}
             component={Modules.Content}

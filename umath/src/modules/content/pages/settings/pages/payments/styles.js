@@ -8,7 +8,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-around",
     alignItems: "center",
-    backgroundColor: "white"
+    backgroundColor: "white",
+    paddingVertical: 20
+  },
+  scrollview_wrapper: {
+    flexGrow: 1
   },
   text: {
     fontSize: 24,

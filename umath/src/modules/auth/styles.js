@@ -27,6 +27,13 @@ const LocalStyles = StyleSheet.create({
     color: Variables.blue,
   },
 
+  forgotButton: {
+    display: 'flex',
+    flex: 1,
+    textAlign: 'right',
+    width: '100%',
+  },
+
   datePicker: {
     alignItems: 'flex-start',
     borderWidth: 0,

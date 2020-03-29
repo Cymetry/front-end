@@ -23,6 +23,10 @@ const LocalStyles = StyleSheet.create({
     paddingRight: 10,
   },
 
+  logo: {
+    marginBottom: 10
+  },
+
   suggestionButton: {
     color: Variables.blue,
   },

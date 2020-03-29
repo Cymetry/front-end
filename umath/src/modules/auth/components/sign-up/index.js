@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, AsyncStorage } from 'react-native';
+import { View, Text, AsyncStorage, Image } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 
@@ -21,6 +21,7 @@ class SignUp extends Component {
       email: '',
       dob: null,
       role: "USER",
+      school: '',
     },
   };
 
@@ -61,7 +62,11 @@ class SignUp extends Component {
 
     return (
       <View style={LocalStyles.container}>
-        <Text style={{ ...Styles.text.center, ...Styles.text.normalSize }}>Profile</Text>
+        <Image 
+          source={require('assets/images/logo.png')}
+          style={LocalStyles.logo}
+        />
+        <Text style={{ ...Styles.text.center, ...Styles.text.normalSize }}>Register an account</Text>
         <Input
           value={form.name}
           onChangeText={value => this.change('name', value)}
@@ -80,8 +85,15 @@ class SignUp extends Component {
           containerStyle={Styles.input.classic}
           placeholder="Email"
         />
+        <Input
+          value={form.password}
+          onChangeText={value => this.change('password', value)}
+          containerStyle={Styles.input.classic}
+          placeholder="Password"
+          secureTextEntry
+        />
         <DatePicker
-          style={{ width: '100%' }}
+          style={{ ...Styles.input.classic, width: '100%' }}
           customStyles={{
             placeholderText: Styles.text.smallSize,
             dateInput: LocalStyles.datePicker,
@@ -94,11 +106,10 @@ class SignUp extends Component {
           placeholder="Date of Birth"
         />
         <Input
-          value={form.password}
-          onChangeText={value => this.change('password', value)}
+          value={form.school}
+          onChangeText={value => this.change('school', value)}
           containerStyle={Styles.input.classic}
-          placeholder="Password"
-          secureTextEntry
+          placeholder="School"
         />
         <Text style={LocalStyles.suggestionText}>
           Already a member?&nbsp;

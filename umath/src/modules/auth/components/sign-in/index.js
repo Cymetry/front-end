@@ -51,7 +51,7 @@ class SignIn extends Component {
       <View style={LocalStyles.container}>
         <Image 
           source={require('assets/images/logo.png')}
-          style={{ marginBottom: 10 }}
+          style={LocalStyles.logo}
         />
         <Text style={{ ...Styles.text.center, ...Styles.text.normalSize, marginBottom: 20 }}>Sign in to your existing account</Text>
         <Input
@@ -77,7 +77,7 @@ class SignIn extends Component {
         </Text>
         {signUpActive && (
           <Text style={LocalStyles.suggestionText}>
-            Not logined yet?&nbsp;
+            Not logged in yet?&nbsp;
             <Text
               style={LocalStyles.suggestionButton}
               accessibilityRole="button"

@@ -107,7 +107,7 @@ class Settings extends Component {
     try {
       await AsyncStorage.multiRemove(["token", "premium"]);
       navigationWrapper.navigation.navigate(ROUTES.HOME);
-    } catch(e) {
+    } catch (e) {
       console.warn(e);
     }
   };
@@ -166,15 +166,15 @@ const MyAccountScreens = () => (
     screenOptions={() => Styles.navigation}
     initialRouteName={ROUTES.CONTENT_SETTINGS}
   >
-    <Stack.Screen 
-      component={Settings} 
-      name={ROUTES.CONTENT_SETTINGS} 
-      options={{ title: 'Settings' }}
+    <Stack.Screen
+      component={Settings}
+      name={ROUTES.CONTENT_SETTINGS}
+      options={{ title: "Settings" }}
     />
-    <Stack.Screen 
-      component={FAQ} 
+    <Stack.Screen
+      component={FAQ}
       name={ROUTES.CONTENT_SETTINGS_FAQ}
-      options={{ title: 'FAQ' }}
+      options={{ title: "FAQ" }}
     />
     <Stack.Screen
       component={HelpAndFeedback}
@@ -191,6 +191,9 @@ const MyAccountScreens = () => (
     <Stack.Screen
       component={PaymentScreen}
       name={ROUTES.CONTENT_SETTINGS_SUBSCRIPTION}
+      options={{
+        title: "Subscription"
+      }}
     />
   </Stack.Navigator>
 );

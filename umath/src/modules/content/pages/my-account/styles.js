@@ -8,6 +8,8 @@ const LocalStyles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     backgroundColor: 'gray',
+    borderWidth: 12,
+    borderColor: '#F8F8F8',
   },
 
   fullName: {

@@ -7,12 +7,14 @@ import {
 } from '@react-navigation/stack';
 import { Button } from 'react-native-elements';
 
-import { navigationWrapper } from '../../../../platform/services/navigation';
-import AccountController from '../../../../platform/api/account';
 import ROUTES from '../../../../platform/constants/routes';
+import SkillController from '../../../../platform/api/skill';
+import TopicController from '../../../../platform/api/topic';
+import AccountController from '../../../../platform/api/account';
+import { navigationWrapper } from '../../../../platform/services/navigation';
 
-import Styles from '../../../../../assets/styles';
 import LocalStyles from './styles';
+import Styles from '../../../../../assets/styles';
 import Variables from '../../../../../assets/styles/variables';
 
 class MyAccount extends PureComponent {
@@ -25,10 +27,26 @@ class MyAccount extends PureComponent {
     ),
   });
 
-  state = { details: null, skills: [], progress: { revision: 0, learning: 0 } };
+  state = {
+    skill: {},
+    topic: {},
+    details: null,
+    progress: { revision: 0, learning: 0 },
+  };
 
-  handleProgressClick = route => () =>
-    navigationWrapper.navigation.navigate(route);
+  handleSkillClick = () =>
+    this.state.skill.redirectToTopic
+      ? this.handleTopicClick()
+      : navigationWrapper.navigation.navigate(
+          ROUTES.CONTENT_LEARNING_SKILL_ITEM,
+          this.state.skill,
+        );
+
+  handleTopicClick = () =>
+    navigationWrapper.navigation.navigate(
+      ROUTES.CONTENT_LEARNING_SKILLS,
+      this.state.topic,
+    );
 
   getPercentage = num => Math.round(num * 100);
 
@@ -51,29 +69,46 @@ class MyAccount extends PureComponent {
     } = this.state;
     const result = await AccountController.Details();
 
+    const {
+      lastSkill: { skillId, topicId },
+    } = result.recent;
+
+    const [topics, skills] = await Promise.all([
+      TopicController.List(1),
+      SkillController.List(topicId),
+    ]);
+
+    const topic = topics.find(({ id }) => id === Number(topicId));
+
+    const retrieveSkill = () => {
+      const skillIndex = skills.findIndex(
+        skill => skill.id === Number(skillId),
+      );
+
+      if (!skills[skillIndex].complete)
+        return { ...skills[skillIndex], step: skillIndex + 1 };
+
+      if (!skills[skillIndex + 1])
+        return { ...skills[skillIndex], redirectToTopic: true };
+
+      return { ...skills[skillIndex + 1], step: skillIndex + 2 };
+    };
+
+    const skill = retrieveSkill();
+
     this.setState({
+      skill,
+      topic,
       details: result?.user || null,
       progress: {
         revision: result?.revision || revision,
         learning: result?.learning || learning,
       },
-      skills: [
-        {
-          rating: 9,
-          title: 'Vector Skills',
-          route: ROUTES.CONTENT_LEARNING,
-        },
-        {
-          rating: 7,
-          title: 'Polynomial Skills',
-          route: ROUTES.CONTENT_LEARNING,
-        },
-      ],
     });
   }
 
   render() {
-    const { details, skills, progress } = this.state;
+    const { details, topic, skill, progress } = this.state;
 
     return details ? (
       <View style={Styles.page}>
@@ -83,16 +118,22 @@ class MyAccount extends PureComponent {
             {details.name} {details.surname}
           </Text>
           <View style={LocalStyles.progress}>
-            {skills.map(skill => (
-              <Button
-                type="solid"
-                key={skill.title}
-                buttonStyle={LocalStyles.button}
-                titleStyle={Styles.button.title}
-                title={`${skill.title} ${skill.rating}`}
-                onPress={this.handleProgressClick(skill.route)}
-              />
-            ))}
+            <Button
+              type="solid"
+              key={skill.id}
+              onPress={this.handleSkillClick}
+              buttonStyle={LocalStyles.button}
+              titleStyle={Styles.button.title}
+              title={`${skill.name} ${skill.step}`}
+            />
+            <Button
+              type="solid"
+              key={topic.id}
+              title={topic.name}
+              onPress={this.handleTopicClick}
+              buttonStyle={LocalStyles.button}
+              titleStyle={Styles.button.title}
+            />
           </View>
           <View style={LocalStyles.divider} />
           <Text style={Styles.text.normalSize}>Progress:</Text>

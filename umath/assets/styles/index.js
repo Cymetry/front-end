@@ -11,7 +11,6 @@ import avatar from './global/avatar';
 import navigation from './navigation';
 
 const Styles = {
-
   // Glogal
 
   grid,

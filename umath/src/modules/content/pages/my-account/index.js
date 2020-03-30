@@ -69,36 +69,41 @@ class MyAccount extends PureComponent {
     } = this.state;
     const result = await AccountController.Details();
 
-    const {
-      lastSkill: { skillId, topicId },
-    } = result.recent;
+    if (result.recent?.lastSkill) {
+      const {
+        lastSkill: { skillId, topicId },
+      } = result.recent;
 
-    const [topics, skills] = await Promise.all([
-      TopicController.List(1),
-      SkillController.List(topicId),
-    ]);
+      const [topics, skills] = await Promise.all([
+        TopicController.List(1),
+        SkillController.List(topicId),
+      ]);
 
-    const topic = topics.find(({ id }) => id === Number(topicId));
+      const topic = topics.find(({ id }) => id === Number(topicId));
 
-    const retrieveSkill = () => {
-      const skillIndex = skills.findIndex(
-        skill => skill.id === Number(skillId),
-      );
+      const retrieveSkill = () => {
+        const skillIndex = skills.findIndex(
+          skill => skill.id === Number(skillId),
+        );
 
-      if (!skills[skillIndex].complete)
-        return { ...skills[skillIndex], step: skillIndex + 1 };
+        if (!skills[skillIndex].complete)
+          return { ...skills[skillIndex], step: skillIndex + 1 };
 
-      if (!skills[skillIndex + 1])
-        return { ...skills[skillIndex], redirectToTopic: true };
+        if (!skills[skillIndex + 1])
+          return { ...skills[skillIndex], redirectToTopic: true };
 
-      return { ...skills[skillIndex + 1], step: skillIndex + 2 };
-    };
+        return { ...skills[skillIndex + 1], step: skillIndex + 2 };
+      };
 
-    const skill = retrieveSkill();
+      const skill = retrieveSkill();
+
+      this.setState({
+        skill,
+        topic,
+      });
+    }
 
     this.setState({
-      skill,
-      topic,
       details: result?.user || null,
       progress: {
         revision: result?.revision || revision,
@@ -117,24 +122,26 @@ class MyAccount extends PureComponent {
           <Text style={LocalStyles.fullName}>
             {details.name} {details.surname}
           </Text>
-          <View style={LocalStyles.progress}>
-            <Button
-              type="solid"
-              key={skill.id}
-              onPress={this.handleSkillClick}
-              buttonStyle={LocalStyles.button}
-              titleStyle={Styles.button.title}
-              title={`${skill.name} ${skill.step}`}
-            />
-            <Button
-              type="solid"
-              key={topic.id}
-              title={topic.name}
-              onPress={this.handleTopicClick}
-              buttonStyle={LocalStyles.button}
-              titleStyle={Styles.button.title}
-            />
-          </View>
+          {skill.id && topic.id && (
+            <View style={LocalStyles.progress}>
+              <Button
+                type="solid"
+                key={skill.id}
+                onPress={this.handleSkillClick}
+                buttonStyle={LocalStyles.button}
+                titleStyle={Styles.button.title}
+                title={`${skill.name} ${skill.step}`}
+              />
+              <Button
+                type="solid"
+                key={topic.id}
+                title={topic.name}
+                onPress={this.handleTopicClick}
+                buttonStyle={LocalStyles.button}
+                titleStyle={Styles.button.title}
+              />
+            </View>
+          )}
           <View style={LocalStyles.divider} />
           <Text style={Styles.text.normalSize}>Progress:</Text>
           <View style={LocalStyles.progressItem}>

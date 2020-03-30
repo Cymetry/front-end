@@ -1,11 +1,12 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   classic: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: 'white',
+    marginVertical: 5,
     paddingVertical: 40,
+    alignItems: 'center',
     paddingHorizontal: 20,
+    flexDirection: 'column',
+    backgroundColor: 'white',
   },
 });

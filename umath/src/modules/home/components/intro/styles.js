@@ -6,26 +6,29 @@ import Variables from "../../../../../assets/styles/variables";
 const LocalStyles = StyleSheet.create({
   container: {
     ...Styles.card.classic,
-    marginVertical: 80,
+    marginTop: 35,
     marginHorizontal: 40,
-    backgroundColor: 'transparent', 
+    backgroundColor: "transparent"
   },
   button: {
     width: 150,
     marginTop: 10,
-    ...Styles.button.classic,
+    ...Styles.button.classic
   },
   subTitle: {
-    ...Styles.text.center, 
+    ...Styles.text.center,
     ...Styles.text.smallSize,
-    color: Variables.textGray, 
+    color: Variables.textGray
   },
   image: {
-      marginVertical: 60
+    marginTop: 57,
+    marginBottom: 68,
+    width: 205,
+    height: 203
   },
   skipButton: {
-      marginTop: 40,
-  },
+    marginTop: 40
+  }
 });
 
 export default LocalStyles;

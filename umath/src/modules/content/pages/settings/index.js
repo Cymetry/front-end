@@ -177,14 +177,17 @@ const MyAccountScreens = () => (
       options={{ title: "FAQ" }}
     />
     <Stack.Screen
+      options={{ title: "Feedback" }}
       component={HelpAndFeedback}
       name={ROUTES.CONTENT_SETTINGS_HELP}
     />
     <Stack.Screen
+      options={{ title: "Terms and Conditions" }}
       component={TermsAndConditions}
       name={ROUTES.CONTENT_SETTINGS_TERMS}
     />
     <Stack.Screen
+      options={{ title: "Privacy Policy" }}
       component={PrivacyPolicy}
       name={ROUTES.CONTENT_SETTINGS_PRIVACY}
     />

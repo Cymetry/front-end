@@ -106,7 +106,7 @@ const LearningScreens = () => (
       name={ROUTES.CONTENT_LEARNING_TOPICS}
       component={Topics}
       options={() => {
-        const { name } = navigationWrapper.navigation.state?.params || {};
+        const { name = 'TOPICS' } = navigationWrapper.navigation.state?.params || {};
         return { title: name };
       }}
     />
@@ -115,7 +115,7 @@ const LearningScreens = () => (
       name={ROUTES.CONTENT_LEARNING_SKILLS}
       component={Skills}
       options={() => {
-        const { name } = navigationWrapper.navigation.state?.params || {};
+        const { name = 'SKILLS' } = navigationWrapper.navigation.state?.params || {};
         return { title: name };
       }}
     />
@@ -124,7 +124,7 @@ const LearningScreens = () => (
       name={ROUTES.CONTENT_LEARNING_SKILL_ITEM}
       component={SkillItem}
       options={() => {
-        const { name } = navigationWrapper.navigation.state?.params || {};
+        const { name = 'SKILL' } = navigationWrapper.navigation.state?.params || {};
         return { title: name };
       }}
     />

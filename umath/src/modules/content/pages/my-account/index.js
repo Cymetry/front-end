@@ -172,7 +172,7 @@ const MyAccountScreens = () => (
     screenOptions={() => Styles.navigation}
     initialRouteName={ROUTES.CONTENT_MY_ACCOUNT}
   >
-    <Stack.Screen name={ROUTES.CONTENT_MY_ACCOUNT}>
+    <Stack.Screen name={ROUTES.CONTENT_MY_ACCOUNT} options={{ title: 'My Account' }}>
       {props => <MyAccount {...props} />}
     </Stack.Screen>
   </Stack.Navigator>

@@ -6,7 +6,7 @@ import { Video } from "expo-av";
 import { Html5Entities } from 'html-entities';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory'
 
-import MathJax from '../../../../../../components/mathjax';
+import MathJax from '../../../../../../components/math_jax';
 import DismissKeyboard from '../../../../../../components/dismiss-keyboard';
 import SkillLearningController from '../../../../../../platform/api/skillLearning';
 import ROUTES from '../../../../../../platform/constants/routes';

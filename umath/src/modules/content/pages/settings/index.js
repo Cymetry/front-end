@@ -107,7 +107,7 @@ class Settings extends Component {
     try {
       await AsyncStorage.multiRemove(["token", "premium"]);
       navigationWrapper.navigation.navigate(ROUTES.HOME);
-    } catch(e) {
+    } catch (e) {
       console.warn(e);
     }
   };
@@ -166,31 +166,37 @@ const MyAccountScreens = () => (
     screenOptions={() => Styles.navigation}
     initialRouteName={ROUTES.CONTENT_SETTINGS}
   >
-    <Stack.Screen 
-      component={Settings} 
-      name={ROUTES.CONTENT_SETTINGS} 
-      options={{ title: 'Settings' }}
-    />
-    <Stack.Screen 
-      component={FAQ} 
-      name={ROUTES.CONTENT_SETTINGS_FAQ}
-      options={{ title: 'FAQ' }}
+    <Stack.Screen
+      component={Settings}
+      name={ROUTES.CONTENT_SETTINGS}
+      options={{ title: "Settings" }}
     />
     <Stack.Screen
+      component={FAQ}
+      name={ROUTES.CONTENT_SETTINGS_FAQ}
+      options={{ title: "FAQ" }}
+    />
+    <Stack.Screen
+      options={{ title: "Feedback" }}
       component={HelpAndFeedback}
       name={ROUTES.CONTENT_SETTINGS_HELP}
     />
     <Stack.Screen
+      options={{ title: "Terms and Conditions" }}
       component={TermsAndConditions}
       name={ROUTES.CONTENT_SETTINGS_TERMS}
     />
     <Stack.Screen
+      options={{ title: "Privacy Policy" }}
       component={PrivacyPolicy}
       name={ROUTES.CONTENT_SETTINGS_PRIVACY}
     />
     <Stack.Screen
       component={PaymentScreen}
       name={ROUTES.CONTENT_SETTINGS_SUBSCRIPTION}
+      options={{
+        title: "Subscription"
+      }}
     />
   </Stack.Navigator>
 );

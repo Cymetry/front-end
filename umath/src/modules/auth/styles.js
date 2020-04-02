@@ -23,8 +23,19 @@ const LocalStyles = StyleSheet.create({
     paddingRight: 10,
   },
 
+  logo: {
+    marginBottom: 10
+  },
+
   suggestionButton: {
     color: Variables.blue,
+  },
+
+  forgotButton: {
+    display: 'flex',
+    flex: 1,
+    textAlign: 'right',
+    width: '100%',
   },
 
   datePicker: {

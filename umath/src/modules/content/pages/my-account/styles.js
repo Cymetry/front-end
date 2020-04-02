@@ -6,8 +6,10 @@ const LocalStyles = StyleSheet.create({
   profileImage: {
     width: 80,
     height: 80,
+    borderWidth: 12,
     borderRadius: 40,
     backgroundColor: 'gray',
+    borderColor: '#F8F8F8',
   },
 
   fullName: {
@@ -34,8 +36,8 @@ const LocalStyles = StyleSheet.create({
   },
 
   progress: {
-    width: 250,
-    height: 250,
+    width: '100%',
+    height: '40%',
     justifyContent: 'center',
   },
 
@@ -43,7 +45,7 @@ const LocalStyles = StyleSheet.create({
     height: 25,
     width: 400,
     backgroundColor: '#F8F8F8',
-    marginVertical: 20,
+    marginVertical: '5%',
   },
 });
 

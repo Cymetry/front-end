@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, AsyncStorage } from 'react-native';
+import { View, Text, Alert, AsyncStorage, Image } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 
 import ROUTES from '../../../../platform/constants/routes';
@@ -49,7 +49,11 @@ class SignIn extends Component {
     
     return (
       <View style={LocalStyles.container}>
-        <Text style={{ ...Styles.text.center, ...Styles.text.normalSize }}>Profile</Text>
+        <Image 
+          source={require('assets/images/logo.png')}
+          style={LocalStyles.logo}
+        />
+        <Text style={{ ...Styles.text.center, ...Styles.text.normalSize, marginBottom: 20 }}>Sign in to your existing account</Text>
         <Input
           containerStyle={Styles.input.classic}
           placeholder="Username"
@@ -61,14 +65,28 @@ class SignIn extends Component {
           onChangeText={value => this.change('password', value)}
           secureTextEntry
         />
-        {signUpActive && <Text style={LocalStyles.suggestionText}>
-          Not logined yet?&nbsp;
-          <Text
-            style={LocalStyles.suggestionButton}
-            accessibilityRole="button"
-            onPress={() => changeViewType(ViewTypeEnum.SignUp)}
-          >Sign up</Text>
-        </Text>}
+        <Text
+          style={{
+            ...LocalStyles.suggestionButton,
+            ...LocalStyles.forgotButton
+          }}
+          accessibilityRole="button"
+          onPress={() => navigationWrapper.navigation.navigate(ROUTES.FORGOT_EMAIL, { lastPath: ROUTES.AUTH })} 
+        >
+          Forgot password?
+        </Text>
+        {signUpActive && (
+          <Text style={LocalStyles.suggestionText}>
+            Not logged in yet?&nbsp;
+            <Text
+              style={LocalStyles.suggestionButton}
+              accessibilityRole="button"
+              onPress={() => changeViewType(ViewTypeEnum.SignUp)}
+            >
+              Sign up
+            </Text>
+          </Text>
+        )}
         <View style={{ ...LocalStyles.button, ...(!this.formValid ? Styles.button.disabled : {}) }}>
           <Button
             titleStyle={Styles.button.title} 

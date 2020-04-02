@@ -2,6 +2,11 @@ const ROUTES = {
   HOME: 'home',
   AUTH: 'auth',
 
+  FORGOT: 'forgot',
+  FORGOT_EMAIL: 'forgot/email',
+  FORGOT_VERIFY: 'forgot/verification',
+  FORGOT_RESET: 'forgot/reset',
+
   CONTENT: 'content',
   
   CONTENT_LEARNING: 'content/learning',

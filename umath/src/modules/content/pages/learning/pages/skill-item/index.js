@@ -106,7 +106,6 @@ class SkillItem extends Component {
     });
 
     await SkillLearningController.SaveProgress(body);
-    console.log(body);
     const response = await SkillLearningController.Resume(id);
     if (response.message  === 'Skill has been completed') return navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id: parentId });
 
@@ -115,7 +114,6 @@ class SkillItem extends Component {
       if (typeof result.body.content.content === 'string') result.body.content.videoUrl = result.body.content.content;
       
       result.body.content.steps = result.body.content.steps ? result.body.content.steps.map(item => Array.isArray(item) ? item[0] : item) : [];
-      console.log(result.body, 'ekav mihat');
       this.reamingMistakes = (result.body.maxMistakes || result.body.maxMistakes === 0) ? result.body.maxMistakes : 2;
       this.webViews = [createRef()];
       this.setState({ data: result.body.content, currentStep: 0, stepAnswers: [], showSolution: result.body.maxMistakes && result.body.maxMistakes > 100 });

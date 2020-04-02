@@ -22,7 +22,7 @@ class MathJax extends Component {
 
 	handleMessage = message => {
 		const { onMessage } = this.props;
-		const { data } = message.nativeEvent;	
+		const { data } = message.nativeEvent;
 		if (parseInt(data)) this.setState({ height: Number(data) });
 		else onMessage && onMessage(data);
 	}
@@ -40,11 +40,11 @@ class MathJax extends Component {
 				MathJax.Hub.Queue(function() {
 					var height = document.documentElement.scrollHeight;
 
-					window.postMessage(String(height));
+					window.ReactNativeWebView.postMessage(String(height));
 					Array.from(document.querySelectorAll("[id^='box-']")).map(function(item) {
 						item.onkeyup = item.keyup || function(e) {
 							const idNum = +e.target.id.replace('box-', '');
-							window.postMessage(JSON.stringify({ value: e.target.value, input: idNum - 1 }));
+							window.ReactNativeWebView.postMessage(JSON.stringify({ value: e.target.value, input: idNum - 1 }));
 						};
 					});
 				});
@@ -64,8 +64,8 @@ class MathJax extends Component {
 		delete props.onMessage;
 
 		return (
-      <View style={{ height: this.state.height, ...props.style }}>
-        <WebView
+			<View style={{ height: this.state.height, ...props.style }}>
+				<WebView
 					originWhitelist={['*']}
 					scrollEnabled={true}
 					onMessage={this.handleMessage}
@@ -73,9 +73,9 @@ class MathJax extends Component {
 					javaScriptEnabled={true}
 					source={{ html, baseUrl: '' }}
 					ref={this.props.webViewRef}
-          {...props}
-        />
-      </View>
+					{...props}
+				/>
+			</View>
 		);
 	}
 }

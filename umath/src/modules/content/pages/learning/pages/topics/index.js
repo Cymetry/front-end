@@ -20,7 +20,7 @@ class Topics extends PureComponent {
   async componentDidMount() {
     const { id } = this.props.route.params || {};
     this.fetchTopics(id);
-    this.setState({ userPremium: !!(await AsyncStorage.getItem("premium")) });
+    this.setState({ userPremium: !!(await AsyncStorage.getItem("isPremium")) });
     this.setState({ loggedIn: !!(await AsyncStorage.getItem("token")) });
   }
 

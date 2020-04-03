@@ -51,7 +51,7 @@ class SignUp extends Component {
       if (authResult) {
         await AsyncStorage.multiSet([
           ["token", authResult.jwt],
-          ["premium", authResult.isPremium ? "true" : ""]
+          ["isPremium", authResult.isPremium ? "true" : ""]
         ]);
 
         navigation.navigate(

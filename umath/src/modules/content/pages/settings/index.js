@@ -27,7 +27,7 @@ import HelpAndFeedback from "./pages/help-and-feedback";
 import FAQ from "./pages/faq";
 import TermsAndConditions from "./pages/terms-and-conditions";
 import PrivacyPolicy from "./pages/privacy-policy";
-import PaymentScreen from "./pages/payments";
+import SubscriptionScreen from "./pages/subscription";
 
 const Stack = createStackNavigator();
 
@@ -105,7 +105,7 @@ class Settings extends Component {
 
   signOut = async () => {
     try {
-      await AsyncStorage.multiRemove(["token", "premium"]);
+      await AsyncStorage.multiRemove(["token", "isPremium"]);
       navigationWrapper.navigation.navigate(ROUTES.HOME);
     } catch (e) {
       console.warn(e);
@@ -192,7 +192,7 @@ const MyAccountScreens = () => (
       name={ROUTES.CONTENT_SETTINGS_PRIVACY}
     />
     <Stack.Screen
-      component={PaymentScreen}
+      component={SubscriptionScreen}
       name={ROUTES.CONTENT_SETTINGS_SUBSCRIPTION}
       options={{
         title: "Subscription"

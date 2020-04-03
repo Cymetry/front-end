@@ -27,7 +27,8 @@ import HelpAndFeedback from "./pages/help-and-feedback";
 import FAQ from "./pages/faq";
 import TermsAndConditions from "./pages/terms-and-conditions";
 import PrivacyPolicy from "./pages/privacy-policy";
-import SubscriptionScreen from "./pages/subscription";
+import SubscriptionPage from "./pages/subscription";
+import PaymentPage from "./pages/payments";
 
 const Stack = createStackNavigator();
 
@@ -41,10 +42,15 @@ class Settings extends Component {
     )
   });
 
-  state = { token: null };
+  state = { token: null, isPremium: false };
 
   async componentDidMount() {
-    this.setState({ token: !!(await AsyncStorage.getItem("token")) });
+    const _isPremium = (await AsyncStorage.getItem("isPremium")) === "true";
+
+    this.setState({
+      token: !!(await AsyncStorage.getItem("token")),
+      isPremium: _isPremium
+    });
   }
 
   get list() {
@@ -76,7 +82,9 @@ class Settings extends Component {
         onPress: () =>
           token
             ? navigationWrapper.navigation.navigate(
-                ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
+                this.state.isPremium
+                  ? ROUTES.CONTENT_SETTINGS_PAYMENT
+                  : ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
               )
             : Alert.alert("Please sign in to be able to subscribe", "", [
                 {
@@ -192,10 +200,17 @@ const MyAccountScreens = () => (
       name={ROUTES.CONTENT_SETTINGS_PRIVACY}
     />
     <Stack.Screen
-      component={SubscriptionScreen}
+      component={SubscriptionPage}
       name={ROUTES.CONTENT_SETTINGS_SUBSCRIPTION}
       options={{
         title: "Subscription"
+      }}
+    />
+    <Stack.Screen
+      component={PaymentPage}
+      name={ROUTES.CONTENT_SETTINGS_PAYMENT}
+      options={{
+        title: "Payment"
       }}
     />
   </Stack.Navigator>

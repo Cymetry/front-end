@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView, Dimensions, AsyncStorage } from "react-native";
+
 import { Button } from "react-native-elements";
+import { StackActions } from "@react-navigation/native";
 
 import PaymentCard from "../../../../../../components/payment_card";
 
 import styles from "./styles";
+import { navigationWrapper } from "../../../../../../platform/services/navigation";
+import ROUTES from "../../../../../../platform/constants/routes";
 
 const SubscriptionScreen = () => {
   const window = Dimensions.get("window");
@@ -62,7 +66,9 @@ const SubscriptionScreen = () => {
   const _onSubmitPress = async () => {
     try {
       await AsyncStorage.setItem("isPremium", "true");
-      console.log("item set");
+      navigationWrapper.navigation.dispatch(
+        StackActions.replace(ROUTES.CONTENT_SETTINGS_PAYMENT)
+      );
     } catch (e) {
       console.log(e);
     }

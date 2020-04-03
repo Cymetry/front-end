@@ -14,22 +14,24 @@ class Topics extends PureComponent {
   state = {
     topics: [],
     loggedIn: false,
-    userPremium: false
+    userPremium: false,
   };
 
   async componentDidMount() {
     const { id } = this.props.route.params || {};
     this.fetchTopics(id);
-    this.setState({ userPremium: !!(await AsyncStorage.getItem("isPremium")) });
+    this.setState({
+      userPremium: (await AsyncStorage.getItem("isPremium")) === "true",
+    });
     this.setState({ loggedIn: !!(await AsyncStorage.getItem("token")) });
   }
 
-  fetchTopics = async id => {
+  fetchTopics = async (id) => {
     const result = await TopicController.List(1);
     result && result.length && this.setState({ topics: result });
   };
 
-  onTopicPress = item => {
+  onTopicPress = (item) => {
     const { loggedIn, userPremium } = this.state;
     const navigateToSkill = () =>
       navigationWrapper.navigation.navigate(
@@ -47,23 +49,23 @@ class Topics extends PureComponent {
 
     const cancelObj = {
       text: "Cancel",
-      style: "cancel"
+      style: "cancel",
     };
     const backObj = {
       text: "Back",
-      style: "cancel"
+      style: "cancel",
     };
     const purchaseObj = {
       text: "Purchase",
-      onPress: navigateToSubscribe
+      onPress: navigateToSubscribe,
     };
     const continueObj = {
       text: "Continue",
-      onPress: navigateToSkill
+      onPress: navigateToSkill,
     };
     const signInObj = {
       text: "Sign in",
-      onPress: navigateToLogin
+      onPress: navigateToLogin,
     };
 
     if (!loggedIn) {
@@ -93,7 +95,7 @@ class Topics extends PureComponent {
       <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
-            {topics.map(item => (
+            {topics.map((item) => (
               <ListItem
                 key={item.id}
                 // disabled={!!index && !userPremium}

@@ -22,27 +22,27 @@ const SubscriptionScreen = () => {
     {
       title: "69.420",
       description: "this is the description of the item",
-      id: "payment.something"
+      id: "payment.something",
     },
     {
       title: "69.420",
       description: "this is the description of the item",
-      id: "payment.another"
+      id: "payment.another",
     },
     {
       title: "69.420",
       description: "this is the description of the item",
-      id: "payment.bololoa"
+      id: "payment.bololoa",
     },
     {
       title: "69.420",
       description: "this is the description of the item",
-      id: "payment.something_else"
-    }
+      id: "payment.something_else",
+    },
   ];
 
   const renderPaymentCards = () =>
-    data.map(cardItem => (
+    data.map((cardItem) => (
       <PaymentCard
         key={cardItem.id}
         title={cardItem.title}

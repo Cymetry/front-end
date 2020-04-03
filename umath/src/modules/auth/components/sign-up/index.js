@@ -20,8 +20,8 @@ class SignUp extends Component {
       email: "",
       dob: null,
       role: "USER",
-      school: ""
-    }
+      school: "",
+    },
   };
 
   get disabled() {
@@ -46,12 +46,12 @@ class SignUp extends Component {
     if (result) {
       const authResult = await AuthController.Login({
         email: form.email,
-        password: form.password
+        password: form.password,
       });
       if (authResult) {
         await AsyncStorage.multiSet([
           ["token", authResult.jwt],
-          ["isPremium", authResult.isPremium ? "true" : ""]
+          ["isPremium", authResult.isPremium ? "true" : ""],
         ]);
 
         navigation.navigate(
@@ -81,26 +81,26 @@ class SignUp extends Component {
         </Text>
         <Input
           value={form.name}
-          onChangeText={value => this.change("name", value)}
+          onChangeText={(value) => this.change("name", value)}
           containerStyle={Styles.input.classic}
           placeholder="Name"
         />
         <Input
           value={form.surname}
-          onChangeText={value => this.change("surname", value)}
+          onChangeText={(value) => this.change("surname", value)}
           containerStyle={Styles.input.classic}
           placeholder="Surname"
         />
         <Input
           value={form.email}
-          onChangeText={value => this.change("email", value)}
+          onChangeText={(value) => this.change("email", value)}
           containerStyle={Styles.input.classic}
           autoCapitalize="none"
           placeholder="Email"
         />
         <Input
           value={form.password}
-          onChangeText={value => this.change("password", value)}
+          onChangeText={(value) => this.change("password", value)}
           containerStyle={Styles.input.classic}
           autoCapitalize="none"
           placeholder="Password"
@@ -111,17 +111,17 @@ class SignUp extends Component {
           customStyles={{
             placeholderText: Styles.text.smallSize,
             dateInput: LocalStyles.datePicker,
-            dateText: Styles.text.smallSize
+            dateText: Styles.text.smallSize,
           }}
           date={form.dob}
           mode="date"
-          onDateChange={value => this.change("dob", value)}
+          onDateChange={(value) => this.change("dob", value)}
           showIcon={false}
           placeholder="Date of Birth"
         />
         <Input
           value={form.school}
-          onChangeText={value => this.change("school", value)}
+          onChangeText={(value) => this.change("school", value)}
           containerStyle={Styles.input.classic}
           placeholder="School"
         />
@@ -138,7 +138,7 @@ class SignUp extends Component {
         <View
           style={{
             ...LocalStyles.button,
-            ...(this.disabled ? Styles.button.disabled : {})
+            ...(this.disabled ? Styles.button.disabled : {}),
           }}
         >
           <Button

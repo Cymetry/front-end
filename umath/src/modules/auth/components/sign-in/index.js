@@ -1,21 +1,20 @@
-import React, { Component } from 'react';
-import { View, Text, Alert, AsyncStorage, Image } from 'react-native';
-import { Input, Button } from 'react-native-elements';
+import React, { Component } from "react";
+import { View, Text, Alert, AsyncStorage, Image } from "react-native";
+import { Input, Button } from "react-native-elements";
 
-import ROUTES from '../../../../platform/constants/routes';
-import { withNavigation } from 'react-navigation';
-import AuthController from '../../../../platform/api/auth';
-import { ViewTypeEnum } from '../../constants/enums';
-import LocalStyles from '../../styles';
-import Styles from '../../../../../assets/styles';
-import { navigationWrapper } from '../../../../platform/services/navigation';
+import ROUTES from "../../../../platform/constants/routes";
+import { withNavigation } from "react-navigation";
+import AuthController from "../../../../platform/api/auth";
+import { ViewTypeEnum } from "../../constants/enums";
+import LocalStyles from "../../styles";
+import Styles from "../../../../../assets/styles";
+import { navigationWrapper } from "../../../../platform/services/navigation";
 
 class SignIn extends Component {
-
   state = {
     form: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   };
 
@@ -28,7 +27,7 @@ class SignIn extends Component {
     const { form } = this.state;
     form[name] = value;
     this.setState({ form });
-  }
+  };
 
   submit = async () => {
     if (this.formValid) {
@@ -36,42 +35,54 @@ class SignIn extends Component {
       const result = await AuthController.Login(form);
       if (result) {
         await AsyncStorage.multiSet([
-          ['token', result.jwt],
-          ['premium', result.isPremium ? 'true' : ''],
+          ["token", result.jwt],
+          ["isPremium", result.isPremium ? "true" : ""],
         ]);
         this.props.navigation.navigate(ROUTES.CONTENT, { loggedIn: true });
-      } else Alert.alert('Username or Password is incorrect!!');
+      } else Alert.alert("Username or Password is incorrect!!");
     }
-  }
-  
+  };
+
   render() {
     const { changeViewType, signUpActive } = this.props;
-    
+
     return (
       <View style={LocalStyles.container}>
-        <Image 
-          source={require('assets/images/logo.png')}
+        <Image
+          source={require("assets/images/logo.png")}
           style={LocalStyles.logo}
         />
-        <Text style={{ ...Styles.text.center, ...Styles.text.normalSize, marginBottom: 20 }}>Sign in to your existing account</Text>
+        <Text
+          style={{
+            ...Styles.text.center,
+            ...Styles.text.normalSize,
+            marginBottom: 20,
+          }}
+        >
+          Sign in to your existing account
+        </Text>
         <Input
           containerStyle={Styles.input.classic}
           placeholder="Username"
-          onChangeText={value => this.change('email', value)}
+          onChangeText={(value) => this.change("email", value)}
         />
         <Input
           containerStyle={Styles.input.classic}
           placeholder="Password"
-          onChangeText={value => this.change('password', value)}
+          onChangeText={(value) => this.change("password", value)}
           secureTextEntry
         />
         <Text
           style={{
             ...LocalStyles.suggestionButton,
-            ...LocalStyles.forgotButton
+            ...LocalStyles.forgotButton,
           }}
           accessibilityRole="button"
-          onPress={() => navigationWrapper.navigation.navigate(ROUTES.FORGOT_EMAIL, { lastPath: ROUTES.AUTH })} 
+          onPress={() =>
+            navigationWrapper.navigation.navigate(ROUTES.FORGOT_EMAIL, {
+              lastPath: ROUTES.AUTH,
+            })
+          }
         >
           Forgot password?
         </Text>
@@ -87,9 +98,14 @@ class SignIn extends Component {
             </Text>
           </Text>
         )}
-        <View style={{ ...LocalStyles.button, ...(!this.formValid ? Styles.button.disabled : {}) }}>
+        <View
+          style={{
+            ...LocalStyles.button,
+            ...(!this.formValid ? Styles.button.disabled : {}),
+          }}
+        >
           <Button
-            titleStyle={Styles.button.title} 
+            titleStyle={Styles.button.title}
             title="Sign in"
             type="clear"
             onPress={this.submit}

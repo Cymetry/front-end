@@ -3,7 +3,7 @@ import { View, Text, AsyncStorage, Alert } from "react-native";
 import { ListItem } from "react-native-elements";
 import {
   createStackNavigator,
-  HeaderBackButton
+  HeaderBackButton,
 } from "@react-navigation/stack";
 import { withNavigation } from "react-navigation";
 import { ScrollView } from "react-native-gesture-handler";
@@ -17,7 +17,7 @@ import SignOutIcon from "../../../../../assets/images/sign_out_icon.png";
 
 import {
   createTabNavigationOptions,
-  navigationWrapper
+  navigationWrapper,
 } from "../../../../platform/services/navigation";
 import Constants from "./../../../../platform/constants";
 import ROUTES from "./../../../../platform/constants/routes";
@@ -39,17 +39,23 @@ class Settings extends Component {
       <HeaderBackButton
         onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)}
       />
-    )
+    ),
   });
 
   state = { token: null, isPremium: false };
 
   async componentDidMount() {
-    const _isPremium = (await AsyncStorage.getItem("isPremium")) === "true";
+    this.props.navigation.addListener("focus", async () => {
+      // Listen to subscription changes on focus
+      const _isPremium = await AsyncStorage.getItem("isPremium");
+
+      this.setState({
+        isPremium: _isPremium === "true",
+      });
+    });
 
     this.setState({
       token: !!(await AsyncStorage.getItem("token")),
-      isPremium: _isPremium
     });
   }
 
@@ -60,28 +66,28 @@ class Settings extends Component {
       {
         name: "FAQ",
         url: ROUTES.CONTENT_SETTINGS_FAQ,
-        avatar_source: FaqIcon
+        avatar_source: FaqIcon,
       },
       {
         name: "Help & Feedback",
         url: ROUTES.CONTENT_SETTINGS_HELP,
-        avatar_source: HelpAndFeedbackIcon
+        avatar_source: HelpAndFeedbackIcon,
       },
       {
         name: "Terms & Conditions",
         url: ROUTES.CONTENT_SETTINGS_TERMS,
-        avatar_source: TermsAndConditionsIcon
+        avatar_source: TermsAndConditionsIcon,
       },
       {
         name: "Privacy Policy",
         url: ROUTES.CONTENT_SETTINGS_PRIVACY,
-        avatar_source: PrivacyPolicyIcon
+        avatar_source: PrivacyPolicyIcon,
       },
       {
         name: "Subscription",
         onPress: () =>
           token
-            ? navigationWrapper.navigation.navigate(
+            ? this.props.navigation.navigate(
                 this.state.isPremium
                   ? ROUTES.CONTENT_SETTINGS_PAYMENT
                   : ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
@@ -90,24 +96,24 @@ class Settings extends Component {
                 {
                   text: "Sign in",
                   onPress: () =>
-                    navigationWrapper.navigation.navigate(ROUTES.AUTH)
+                    navigationWrapper.navigation.navigate(ROUTES.AUTH),
                 },
                 {
                   text: "Cancel",
-                  style: "cancel"
-                }
+                  style: "cancel",
+                },
               ]),
-        avatar_source: SubscriptionIcon
+        avatar_source: SubscriptionIcon,
       },
       ...(token
         ? [
             {
               name: "Sign out",
               onPress: () => this.onSignOutPress(),
-              avatar_source: SignOutIcon
-            }
+              avatar_source: SignOutIcon,
+            },
           ]
-        : [])
+        : []),
     ];
   }
 
@@ -124,12 +130,12 @@ class Settings extends Component {
     Alert.alert("Are you sure you want to sign out?", "", [
       {
         text: "Confirm",
-        onPress: this.signOut
+        onPress: this.signOut,
       },
       {
         text: "Cancel",
-        style: "cancel"
-      }
+        style: "cancel",
+      },
     ]);
   };
 
@@ -138,7 +144,7 @@ class Settings extends Component {
       <ScrollView style={Styles.page}>
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
-            {this.list.map(item => (
+            {this.list.map((item) => (
               <ListItem
                 key={item.name}
                 title={item.name}
@@ -165,6 +171,14 @@ class Settings extends Component {
         </View>
       </ScrollView>
     );
+  }
+  /**
+   * To avoid using UNSAFE_componentWillUnmount this component
+   * should be refactored into a functional one
+   */
+
+  UNSAFE_componentWillMount() {
+    navigationWrapper.navigation.removeListener("focus");
   }
 }
 
@@ -203,14 +217,14 @@ const MyAccountScreens = () => (
       component={SubscriptionPage}
       name={ROUTES.CONTENT_SETTINGS_SUBSCRIPTION}
       options={{
-        title: "Subscription"
+        title: "Subscription",
       }}
     />
     <Stack.Screen
       component={PaymentPage}
       name={ROUTES.CONTENT_SETTINGS_PAYMENT}
       options={{
-        title: "Payment"
+        title: "Payment",
       }}
     />
   </Stack.Navigator>

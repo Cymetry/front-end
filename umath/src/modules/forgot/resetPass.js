@@ -54,20 +54,20 @@ class SignIn extends Component {
         <Text style={{ ...Styles.text.center, ...Styles.text.normalSize, marginBottom: 20 }}>Enter a new password</Text>
         <Input
           containerStyle={Styles.input.classic}
-          placeholder="Password"
+          placeholder="New Password (Required)"
           onChangeText={value => this.change('password', value)}
           secureTextEntry
         />
         <Input
           containerStyle={Styles.input.classic}
-          placeholder="Password"
+          placeholder="Confirm the Password (Required)"
           onChangeText={value => this.change('confirmPass', value)}
           secureTextEntry
         />
         <View style={{ ...LocalStyles.button, ...(!this.formValid ? Styles.button.disabled : {}) }}>
           <Button
             titleStyle={Styles.button.title} 
-            title="Continue"
+            title="Confirm"
             type="clear"
             onPress={this.submit}
           />

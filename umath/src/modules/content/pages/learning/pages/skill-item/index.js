@@ -123,6 +123,7 @@ class SkillItem extends Component {
   };
 
   finish = async (fullFinished) => {
+    const { id, parentId } = this.props.route.params || {};
     const { data, currentStep } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
@@ -164,10 +165,13 @@ class SkillItem extends Component {
             Array.isArray(item) ? item[0] : item
           )
         : [];
+
+      this.mistakeCount = 0;
       this.reamingMistakes =
         result.body.maxMistakes || result.body.maxMistakes === 0
           ? result.body.maxMistakes
           : 2;
+
       this.webViews = [createRef()];
       this.setState({
         data: result.body.content,

@@ -38,14 +38,20 @@ class MyAccount extends PureComponent {
     this.state.skill.redirectToTopic
       ? this.handleTopicClick()
       : navigationWrapper.navigation.navigate(
-          ROUTES.CONTENT_LEARNING_SKILL_ITEM,
-          this.state.skill,
+          ROUTES.CONTENT_LEARNING,
+          {
+            screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
+            params: this.state.skill,
+          }
         );
 
   handleTopicClick = () =>
     navigationWrapper.navigation.navigate(
-      ROUTES.CONTENT_LEARNING_SKILLS,
-      this.state.topic,
+      ROUTES.CONTENT_LEARNING,
+      {
+        screen: ROUTES.CONTENT_LEARNING_SKILLS,
+        params: this.state.topic,
+      }
     );
 
   getPercentage = (num) => Math.round(num * 100);

@@ -79,11 +79,11 @@ import LocalStyles from "./styles";
 
 const Stack = createStackNavigator();
 
-const LearningScreens = () => (
+const LearningScreens = ({ route }) => (
   <Stack.Navigator
     headerLayoutPreset="center"
     screenOptions={() => Styles.navigation}
-    initialRouteName={ROUTES.CONTENT_LEARNING_TOPICS}
+    initialRouteName={route.params.initialRouteName || ROUTES.CONTENT_LEARNING_TOPICS}
   >
     {/* <Stack.Screen
       name={ROUTES.CONTENT_LEARNING}

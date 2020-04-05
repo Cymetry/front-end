@@ -18,7 +18,7 @@ const ContentScreens = ({ route }) => {
   const { loggedIn } = route.params || { loggedIn: false };
 
   const myAccountTabPressListener = {
-    tabPress: event => {
+    tabPress: (event) => {
       if (!loggedIn) {
         Alert.alert('Please sign in to see your account', '', [
           {
@@ -45,9 +45,8 @@ const ContentScreens = ({ route }) => {
       <Tab.Screen
         name={ROUTES.CONTENT_LEARNING}
         component={Learning}
-        options={createTabNavigationOptions("Learning", "sunny")}
-      >
-      </Tab.Screen>
+        options={createTabNavigationOptions('Learning', 'sunny')}
+      ></Tab.Screen>
       <Tab.Screen
         component={MyAccount}
         name={ROUTES.CONTENT_MY_ACCOUNT}

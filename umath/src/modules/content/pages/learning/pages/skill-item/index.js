@@ -32,6 +32,7 @@ class SkillItem extends Component {
 
   webViews = [createRef()];
   reamingMistakes = 2;
+  mistakeCount = 0;
 
   async componentDidMount() {
     const { id } = this.props.route.params || {};
@@ -86,6 +87,7 @@ class SkillItem extends Component {
 
   nextStep = () => {
     if (!this.nextDisabled) {
+      const reamingMistakesSave = this.reamingMistakes;
       const { currentStep, stepAnswers, data } = this.state;
 
       const answer = stepAnswers[stepAnswers.length - 1];
@@ -101,13 +103,17 @@ class SkillItem extends Component {
           });
         else if (answer !== stepData.solution) correct = false;
 
-        if (!correct) this.reamingMistakes -= 1;
+        if (!correct) {
+          this.reamingMistakes--;
+          this.mistakeCount++;
+        }
       }
 
       if (this.reamingMistakes <= 0) this.finish(false);
-      else {
-        if (currentStep === data.steps.length - 1 || !data.steps.length)
-          this.finish(true);
+      else if (reamingMistakesSave !== this.reamingMistakes) {
+        //
+      } else {
+        if (currentStep === data.steps.length - 1 || !data.steps.length) this.finish(true);
         else {
           this.webViews.push(createRef());
           this.setState({ currentStep: currentStep + 1 });
@@ -117,28 +123,29 @@ class SkillItem extends Component {
   };
 
   finish = async (fullFinished) => {
-    const { data, stepAnswers, currentStep } = this.state;
+    const { id, parentId } = this.props.route.params || {};
+    const { data, currentStep } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
     const body = {
       skillId: id,
-      mistakeCount: 0,
+      mistakeCount: this.mistakeCount,
       correctCount: fullFinished ? stepsData.length : stepsData.length - 1,
     };
 
-    stepAnswers.map((item, index) => {
-      let correct = true;
-      const stepData = data.steps[index];
+    // stepAnswers.map((item, index) => {
+    //   let correct = true;
+    //   const stepData = data.steps[index];
 
-      if (stepData.fillIn)
-        Object.values(item).map((item, index) => {
-          if (!stepData.answer[index].find((sub) => sub === item))
-            correct = false;
-        });
-      else if (item !== stepData.solution) correct = false;
+    //   if (stepData.fillIn)
+    //     Object.values(item).map((item, index) => {
+    //       if (!stepData.answer[index].find((sub) => sub === item))
+    //         correct = false;
+    //     });
+    //   else if (item !== stepData.solution) correct = false;
 
-      if (!correct) body.mistakeCount += 1;
-    });
+    //   if (!correct) body.mistakeCount += 1;
+    // });
 
     await SkillLearningController.SaveProgress(body);
     const response = await SkillLearningController.Resume(id);
@@ -158,10 +165,13 @@ class SkillItem extends Component {
             Array.isArray(item) ? item[0] : item
           )
         : [];
+
+      this.mistakeCount = 0;
       this.reamingMistakes =
         result.body.maxMistakes || result.body.maxMistakes === 0
           ? result.body.maxMistakes
           : 2;
+
       this.webViews = [createRef()];
       this.setState({
         data: result.body.content,

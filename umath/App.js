@@ -7,6 +7,8 @@ import {
   HeaderBackButton,
 } from "@react-navigation/stack";
 
+import * as SplashScreen from "expo-splash-screen";
+
 import Modules from "./src/modules";
 import ROUTES from "./src/platform/constants/routes";
 import Styles from "./assets/styles";
@@ -41,6 +43,8 @@ class App extends Component {
   navigationRef = createRef();
 
   componentDidMount() {
+    // Hide splashscreen after component was mounted
+    SplashScreen.hideAsync();
     if (this.navigationRef.current) {
       navigationWrapper.navigation = this.navigationRef.current;
       this.setState({ rendered: true });

@@ -29,6 +29,8 @@ PODS:
   - EXPermissions (8.0.0):
     - UMCore
     - UMPermissionsInterface
+  - EXSplashScreen (0.1.1):
+    - UMCore
   - EXSQLite (8.0.0):
     - UMCore
     - UMFileSystemInterface
@@ -316,6 +318,7 @@ DEPENDENCIES:
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - EXLocation (from `../node_modules/expo-location/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
+  - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -409,6 +412,9 @@ EXTERNAL SOURCES:
   EXPermissions:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-permissions/ios"
+  EXSplashScreen:
+    :path: !ruby/object:Pathname
+    path: "../node_modules/expo-splash-screen/ios"
   EXSQLite:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-sqlite/ios"
@@ -530,6 +536,7 @@ SPEC CHECKSUMS:
   EXLinearGradient: d5c7fa637f82566318261b7614d325b334ceed08
   EXLocation: e994c186f94340caf1a9ace96b3458a72472553c
   EXPermissions: 3e58e0fbb2e9539ad1ef5617ff02c2356447421e
+  EXSplashScreen: 8e968ef37405e9e2eca47485b026ba40d91ebd16
   EXSQLite: 3297f74a9d36eb1eb1c2cd9b9037fe01170db15a
   EXWebBrowser: 7e1b05d3f517e685267d51971a21f635f2e6bf06
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f

@@ -46,7 +46,7 @@ const ContentScreens = ({ route }) => {
         name={ROUTES.CONTENT_LEARNING}
         component={Learning}
         options={createTabNavigationOptions('Learning', 'sunny')}
-      ></Tab.Screen>
+      />
       <Tab.Screen
         component={MyAccount}
         name={ROUTES.CONTENT_MY_ACCOUNT}

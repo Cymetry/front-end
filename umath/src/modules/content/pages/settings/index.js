@@ -182,11 +182,11 @@ class Settings extends Component {
   }
 }
 
-const MyAccountScreens = () => (
+const MyAccountScreens = ({ route }) => (
   <Stack.Navigator
     headerLayoutPreset="center"
     screenOptions={() => Styles.navigation}
-    initialRouteName={ROUTES.CONTENT_SETTINGS}
+    initialRouteName={route.params.initialRouteName || ROUTES.CONTENT_SETTINGS}
   >
     <Stack.Screen
       component={Settings}

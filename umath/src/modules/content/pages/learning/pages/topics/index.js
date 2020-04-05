@@ -42,7 +42,10 @@ class Topics extends PureComponent {
 
     const navigateToSubscribe = () =>
       navigationWrapper.navigation.navigate(
-        ROUTES.CONTENT_SETTINGS_SUBSCRIPTION,
+        ROUTES.CONTENT_SETTINGS,
+        {
+          initialRouteName: ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
+        }
       );
 
     const navigateToLogin = () =>

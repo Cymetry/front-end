@@ -48,7 +48,7 @@ class MyAccount extends PureComponent {
       this.state.topic,
     );
 
-  getPercentage = num => Math.round(num * 100);
+  getPercentage = (num) => Math.round(num * 100);
 
   BarItem = ({ percent }) => (
     <Bar
@@ -83,7 +83,7 @@ class MyAccount extends PureComponent {
 
       const retrieveSkill = () => {
         const skillIndex = skills.findIndex(
-          skill => skill.id === Number(skillId),
+          (skill) => skill.id === Number(skillId),
         );
 
         if (!skills[skillIndex].complete)
@@ -96,6 +96,17 @@ class MyAccount extends PureComponent {
       };
 
       const skill = retrieveSkill();
+
+      this.setState({
+        skill,
+        topic,
+      });
+    } else {
+      const topics = await TopicController.List(1);
+      const topic = topics[0];
+
+      const skills = await SkillController.List(topic.id);
+      const skill = { ...skills[0], step: 1 };
 
       this.setState({
         skill,
@@ -172,8 +183,11 @@ const MyAccountScreens = () => (
     screenOptions={() => Styles.navigation}
     initialRouteName={ROUTES.CONTENT_MY_ACCOUNT}
   >
-    <Stack.Screen name={ROUTES.CONTENT_MY_ACCOUNT} options={{ title: 'My Account' }}>
-      {props => <MyAccount {...props} />}
+    <Stack.Screen
+      name={ROUTES.CONTENT_MY_ACCOUNT}
+      options={{ title: 'My Account' }}
+    >
+      {(props) => <MyAccount {...props} />}
     </Stack.Screen>
   </Stack.Navigator>
 );

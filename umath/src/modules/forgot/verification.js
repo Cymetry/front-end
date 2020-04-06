@@ -11,11 +11,20 @@ import Variables from "assets/styles/variables";
 import { navigationWrapper } from 'src/platform/services/navigation';
 
 const Verification = ({ navigation, route }) => {
-  const CELL_COUNT = 4;
-  const [value, setValue] = useState('');
+  const CELL_COUNT = 6;
+  const [code, setCode] = useState('');
+  const email = route.params.email
 
   const submit = () => {
-    navigation.navigate(ROUTES.FORGOT_RESET, { success: true });
+    if (code.length === CELL_COUNT) {
+      navigation.navigate(ROUTES.FORGOT_RESET, { 
+        success: true, 
+        code,
+        email,
+    });
+    } else {
+      alert('Invalid code')
+    }
   }
 
   return (
@@ -36,12 +45,12 @@ const Verification = ({ navigation, route }) => {
         ...Styles.text.smallSize, 
         ...{color: Variables.textGray,}
       }}>
-        Sent to {route.params.email}
+        Sent to {email}
       </Text>
       <CodeInput
-        codeLength={4}
+        codeLength={CELL_COUNT}
         className="border-b"
-        onFulfill={() => {}}
+        onFulfill={(code) => { setCode(code) }}
         containerStyle={{ height: 40, flex: 'auto', marginBottom: 40 }}
         inactiveColor={Variables.textGray}
         activeColor="black"

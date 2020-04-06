@@ -32,14 +32,11 @@ class SignIn extends Component {
     // TODO: Change it
     if (this.formValid) {
       const { form } = this.state;
-    //   const result = await AuthController.Login(form);
-    //   if (result) {
-    //     await AsyncStorage.multiSet([
-    //       ['token', result.jwt],
-    //       ['premium', result.isPremium ? 'true' : ''],
-    //     ]);
+      const result = await AuthController.ForgotEmail(form);
+      if (result) {
         this.props.navigation.navigate(ROUTES.FORGOT_VERIFY, { email: form.email });
-      } else Alert.alert('Username or Password is incorrect!!');
+      }
+    } else Alert.alert('Username or Password is incorrect!!');
   }
   
   render() {

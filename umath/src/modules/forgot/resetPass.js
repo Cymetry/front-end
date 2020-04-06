@@ -32,15 +32,18 @@ class SignIn extends Component {
   submit = async () => {
     // TODO: Change it
     if (this.formValid) {
-      // const { form } = this.state;
-      // const result = await AuthController.Login(form);
-      // if (result) {
-      //   await AsyncStorage.multiSet([
-      //     ['token', result.jwt],
-      //     ['premium', result.isPremium ? 'true' : ''],
-      //   ]);
+      const { form } = this.state;
+      const { email, code } = this.props.route.params;
+      const payload = {
+        newPassword: form.password,
+        email,
+        token: code,
+      }
+      const result = await AuthController.ResetPass(payload);
+      if (result) {
         this.props.navigation.navigate(ROUTES.AUTH);
-      } else Alert.alert('Username or Password is incorrect!!');
+      } else Alert.alert('Something went wrong. Try again');
+    }
   }
   
   render() {

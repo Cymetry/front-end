@@ -48,10 +48,14 @@ class SignIn extends Component {
 
     return (
       <View style={LocalStyles.container}>
-        <Image
-          source={require("assets/images/logo.png")}
-          style={LocalStyles.logo}
-        />
+        <Text
+          style={{
+            ...LocalStyles.suggestionButton,
+            ...LocalStyles.logoTitle,
+          }}
+        >
+          umath
+        </Text>
         <Text
           style={{
             ...Styles.text.center,

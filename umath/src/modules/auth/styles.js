@@ -16,15 +16,15 @@ const LocalStyles = StyleSheet.create({
   },
 
   suggestionText: {
-    width: '100%',
+    width: "100%",
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: "center",
     paddingTop: 10,
     paddingRight: 10,
   },
 
   logo: {
-    marginBottom: 10
+    marginBottom: 10,
   },
 
   suggestionButton: {
@@ -32,18 +32,22 @@ const LocalStyles = StyleSheet.create({
   },
 
   forgotButton: {
-    display: 'flex',
+    display: "flex",
     flex: 1,
-    textAlign: 'right',
-    width: '100%',
+    textAlign: "right",
+    width: "100%",
   },
 
   datePicker: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     borderWidth: 0,
     marginVertical: 10,
     marginHorizontal: 10,
     borderBottomWidth: 1,
+  },
+  logoTitle: {
+    fontFamily: "Futura-PT",
+    fontSize: 32,
   },
 });
 

@@ -4,12 +4,12 @@ import { ListItem } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   createStackNavigator,
-  HeaderBackButton
+  HeaderBackButton,
 } from "@react-navigation/stack";
 
 import {
   createTabNavigationOptions,
-  navigationWrapper
+  navigationWrapper,
 } from "../../../../platform/services/navigation";
 import Topics from "./pages/topics";
 import Skills from "./pages/skills";
@@ -83,7 +83,9 @@ const LearningScreens = ({ route }) => (
   <Stack.Navigator
     headerLayoutPreset="center"
     screenOptions={() => Styles.navigation}
-    initialRouteName={route.params.initialRouteName || ROUTES.CONTENT_LEARNING_TOPICS}
+    initialRouteName={
+      route.params?.initialRouteName || ROUTES.CONTENT_LEARNING_TOPICS
+    }
   >
     {/* <Stack.Screen
       name={ROUTES.CONTENT_LEARNING}
@@ -106,7 +108,8 @@ const LearningScreens = ({ route }) => (
       name={ROUTES.CONTENT_LEARNING_TOPICS}
       component={Topics}
       options={() => {
-        const { name = 'Topics' } = navigationWrapper.navigation.state?.params || {};
+        const { name = "Topics" } =
+          navigationWrapper.navigation.state?.params || {};
         return { title: name };
       }}
     />
@@ -115,7 +118,8 @@ const LearningScreens = ({ route }) => (
       name={ROUTES.CONTENT_LEARNING_SKILLS}
       component={Skills}
       options={() => {
-        const { name = 'Skills' } = navigationWrapper.navigation.state?.params || {};
+        const { name = "Skills" } =
+          navigationWrapper.navigation.state?.params || {};
         return { title: name };
       }}
     />
@@ -124,7 +128,7 @@ const LearningScreens = ({ route }) => (
       name={ROUTES.CONTENT_LEARNING_SKILL_ITEM}
       component={SkillItem}
       options={() => {
-        const { name = 'Skill' } = route.params.params || {};
+        const { name = "Skill" } = route.params.params || {};
         return { title: name };
       }}
     />

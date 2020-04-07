@@ -39,6 +39,9 @@ class Skills extends PureComponent {
       skill => !skill.complete
     );
 
+    this.props.navigation.navigate(ROUTES.CONTENT_LEARNING_TESTING);
+    return;
+
     if (noCompleteSkills.length) {
       Alert.alert("Please complete all the skills to proceed to the Test", "");
     } else {

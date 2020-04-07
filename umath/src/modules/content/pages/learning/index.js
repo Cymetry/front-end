@@ -11,6 +11,7 @@ import {
   createTabNavigationOptions,
   navigationWrapper,
 } from "../../../../platform/services/navigation";
+import Testing from './pages/testing';
 import Topics from "./pages/topics";
 import Skills from "./pages/skills";
 import SkillItem from "./pages/skill-item";
@@ -132,6 +133,12 @@ const LearningScreens = ({ route }) => (
         return { title: name };
       }}
     />
+
+    <Stack.Screen
+      name={ROUTES.CONTENT_LEARNING_TESTING}
+      component={Testing}
+    />
+
   </Stack.Navigator>
 );
 

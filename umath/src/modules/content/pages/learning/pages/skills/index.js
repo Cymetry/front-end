@@ -95,8 +95,11 @@ class Skills extends PureComponent {
                 }
                 onPress={() =>
                   navigationWrapper.navigation.navigate(
-                    ROUTES.CONTENT_LEARNING_SKILL_ITEM,
-                    { ...item, parentId: id }
+                    ROUTES.CONTENT_LEARNING,
+                    {
+                      screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
+                      params: { ...item, parentId: id },
+                    }
                   )
                 }
                 roundAvatar

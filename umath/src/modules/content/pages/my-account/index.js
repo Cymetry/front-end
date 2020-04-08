@@ -16,6 +16,15 @@ import { navigationWrapper } from '../../../../platform/services/navigation';
 import LocalStyles from './styles';
 import Styles from '../../../../../assets/styles';
 import Variables from '../../../../../assets/styles/variables';
+import TestsIcon from '../../../../../assets/icons/test.svg';
+import ChaptersIcon from '../../../../../assets/icons/file.svg';
+import QuestionsIcon from '../../../../../assets/icons/tools.svg';
+
+const SVGIcon = ({ SVG }) => (
+  <View style={LocalStyles.iconWrapper}>
+    <SVG width={50} height={50} style={LocalStyles.icon} />
+  </View>
+);
 
 class MyAccount extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
@@ -37,22 +46,16 @@ class MyAccount extends PureComponent {
   handleSkillClick = () =>
     this.state.skill.redirectToTopic
       ? this.handleTopicClick()
-      : navigationWrapper.navigation.navigate(
-          ROUTES.CONTENT_LEARNING,
-          {
-            screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
-            params: this.state.skill,
-          }
-        );
+      : navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
+          screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
+          params: this.state.skill,
+        });
 
   handleTopicClick = () =>
-    navigationWrapper.navigation.navigate(
-      ROUTES.CONTENT_LEARNING,
-      {
-        screen: ROUTES.CONTENT_LEARNING_SKILLS,
-        params: this.state.topic,
-      }
-    );
+    navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
+      screen: ROUTES.CONTENT_LEARNING_SKILLS,
+      params: this.state.topic,
+    });
 
   getPercentage = (num) => Math.round(num * 100);
 
@@ -135,7 +138,7 @@ class MyAccount extends PureComponent {
     return details ? (
       <ScrollView style={Styles.page}>
         <View style={Styles.card.classic}>
-          <Image style={LocalStyles.profileImage} source={{}} />
+          <Image style={LocalStyles.image} source={{}} />
           <Text style={LocalStyles.fullName}>
             {details.name} {details.surname}
           </Text>
@@ -174,6 +177,23 @@ class MyAccount extends PureComponent {
             <Text style={Styles.text.smallSize}>
               {this.getPercentage(progress.revision)}%
             </Text>
+          </View>
+          <View style={LocalStyles.achievements}>
+            <View style={LocalStyles.achievementItem}>
+              <SVGIcon SVG={ChaptersIcon} />
+              <Text style={Styles.text.smallSize}>0/22</Text>
+              <Text style={Styles.text.smallSize}>Chapters</Text>
+            </View>
+            <View style={LocalStyles.achievementItem}>
+              <SVGIcon SVG={QuestionsIcon} />
+              <Text style={Styles.text.smallSize}>0/366</Text>
+              <Text style={Styles.text.smallSize}>Questions</Text>
+            </View>
+            <View style={LocalStyles.achievementItem}>
+              <SVGIcon SVG={TestsIcon} />
+              <Text style={Styles.text.smallSize}>0/22</Text>
+              <Text style={Styles.text.smallSize}>Tests</Text>
+            </View>
           </View>
         </View>
       </ScrollView>

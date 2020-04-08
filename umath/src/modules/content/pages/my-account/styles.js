@@ -3,13 +3,14 @@ import { StyleSheet } from 'react-native';
 import Variables from '../../../../../assets/styles/variables';
 
 const LocalStyles = StyleSheet.create({
-  profileImage: {
+  image: {
     width: 80,
     height: 80,
     borderWidth: 12,
     borderRadius: 40,
-    backgroundColor: 'gray',
+    marginBottom: 10,
     borderColor: '#F8F8F8',
+    backgroundColor: 'gray',
   },
 
   fullName: {
@@ -37,15 +38,43 @@ const LocalStyles = StyleSheet.create({
 
   progress: {
     width: '100%',
-    height: '40%',
+    height: '25%',
     justifyContent: 'center',
   },
 
   divider: {
-    height: 25,
+    height: '5%',
     width: 400,
     backgroundColor: '#F8F8F8',
     marginVertical: '5%',
+  },
+
+  achievements: {
+    width: '100%',
+    marginVertical: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  achievementItem: {
+    alignItems: 'center',
+    marginHorizontal: 15,
+    justifyContent: 'center',
+  },
+
+  icon: {
+    marginVertical: 10,
+  },
+
+  iconWrapper: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F8F8F8',
+    marginBottom: 5,
   },
 });
 

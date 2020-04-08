@@ -39,7 +39,10 @@ class MyAccount extends PureComponent {
   state = {
     skill: {},
     topic: {},
+    tests: null,
     details: null,
+    chapters: null,
+    questions: null,
     progress: { revision: 0, learning: 0 },
   };
 
@@ -77,6 +80,10 @@ class MyAccount extends PureComponent {
       progress: { learning, revision },
     } = this.state;
     const result = await AccountController.Details();
+
+    const { tests, chapters, questions } = result;
+
+    this.setState({ tests, chapters, questions });
 
     if (result.recent?.lastSkill) {
       const {
@@ -133,7 +140,15 @@ class MyAccount extends PureComponent {
   }
 
   render() {
-    const { details, topic, skill, progress } = this.state;
+    const {
+      tests,
+      topic,
+      skill,
+      details,
+      chapters,
+      progress,
+      questions,
+    } = this.state;
 
     return details ? (
       <ScrollView style={Styles.page}>
@@ -179,21 +194,33 @@ class MyAccount extends PureComponent {
             </Text>
           </View>
           <View style={LocalStyles.achievements}>
-            <View style={LocalStyles.achievementItem}>
-              <SVGIcon SVG={ChaptersIcon} />
-              <Text style={Styles.text.smallSize}>0/22</Text>
-              <Text style={Styles.text.smallSize}>Chapters</Text>
-            </View>
-            <View style={LocalStyles.achievementItem}>
-              <SVGIcon SVG={QuestionsIcon} />
-              <Text style={Styles.text.smallSize}>0/366</Text>
-              <Text style={Styles.text.smallSize}>Questions</Text>
-            </View>
-            <View style={LocalStyles.achievementItem}>
-              <SVGIcon SVG={TestsIcon} />
-              <Text style={Styles.text.smallSize}>0/22</Text>
-              <Text style={Styles.text.smallSize}>Tests</Text>
-            </View>
+            {chapters && (
+              <View style={LocalStyles.achievementItem}>
+                <SVGIcon SVG={ChaptersIcon} />
+                <Text style={Styles.text.smallSize}>
+                  {chapters.attempted}/{chapters.total}
+                </Text>
+                <Text style={Styles.text.smallSize}>Chapters</Text>
+              </View>
+            )}
+            {questions && (
+              <View style={LocalStyles.achievementItem}>
+                <SVGIcon SVG={QuestionsIcon} />
+                <Text style={Styles.text.smallSize}>
+                  {questions.completed}/{questions.total}
+                </Text>
+                <Text style={Styles.text.smallSize}>Questions</Text>
+              </View>
+            )}
+            {tests && (
+              <View style={LocalStyles.achievementItem}>
+                <SVGIcon SVG={TestsIcon} />
+                <Text style={Styles.text.smallSize}>
+                  {tests.completed}/{tests.total}
+                </Text>
+                <Text style={Styles.text.smallSize}>Tests</Text>
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>

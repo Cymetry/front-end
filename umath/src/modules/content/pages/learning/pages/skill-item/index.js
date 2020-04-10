@@ -1,24 +1,22 @@
 import React, { Component, createRef } from "react";
-import {
-  View,
-  Text,
-  TouchableHighlight,
-  Keyboard,
-  Alert,
-} from "react-native";
+import { View, Text, TouchableHighlight, Keyboard, Alert } from "react-native";
 import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Video } from "expo-av";
+import { withNavigation } from "react-navigation";
 import { Html5Entities } from "html-entities";
 // import KeyboardAccessory from "react-native-sticky-keyboard-accessory";
+
+import * as AlertMessage from "../../../../../../const/alert";
 
 import MathJax from "../../../../../../components/math_jax";
 import DismissKeyboard from "../../../../../../components/dismiss-keyboard";
 import SkillLearningController from "../../../../../../platform/api/skillLearning";
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from "./styles";
-import { withNavigation } from "react-navigation";
 import { parseLatex } from "../../../../../../platform/services/latex";
+import { getAppLoadingLifecycleEmitter } from "expo/build/launch/AppLoading";
+import AsyncAlert from "../../../../../../components/async_alert";
 
 const htmlEntities = new Html5Entities();
 
@@ -86,7 +84,20 @@ class SkillItem extends Component {
     return false;
   }
 
-  nextStep = () => {
+  nextStep = async () => {
+    if (this.state.data.videoUrl) {
+      const dialogResult = await AsyncAlert(
+        AlertMessage.videoRedirectWarning,
+        "",
+        {
+          confirmText: "Continue",
+          cancelText: "Cancel",
+        }
+      );
+
+      if (!dialogResult) return null;
+    }
+
     if (!this.nextDisabled) {
       const reamingMistakesSave = this.reamingMistakes;
       const { currentStep, stepAnswers, data } = this.state;
@@ -138,8 +149,9 @@ class SkillItem extends Component {
             })();
           `);
 
-          if (currentStep === data.steps.length - 1 || !data.steps.length) this.finish(true);
-          else {
+          if (currentStep === data.steps.length - 1 || !data.steps.length) {
+            this.finish(true);
+          } else {
             this.webViews.push(createRef());
             this.setState({ currentStep: currentStep + 1 });
           }
@@ -174,16 +186,21 @@ class SkillItem extends Component {
     // });
 
     await SkillLearningController.SaveProgress(body);
+
     const response = await SkillLearningController.Resume(id);
 
     try {
       const result = JSON.parse(response);
 
-      if (result.body.reentered)
-        return Alert.alert('Reentered (Complete)');
+      if (result.body.reentered) return Alert.alert("Reentered (Complete)");
 
-      if (typeof result.body.content.content === "string")
+      if (typeof result.body.content.content === "string") {
         result.body.content.videoUrl = result.body.content.content;
+      } else {
+        fullFinished
+          ? await AsyncAlert(AlertMessage.completeSkill)
+          : await AsyncAlert(AlertMessage.nextSkill);
+      }
 
       result.body.content.steps = result.body.content.steps
         ? result.body.content.steps.map((item) =>
@@ -217,8 +234,7 @@ class SkillItem extends Component {
     if (splitted.length > 1) {
       splitted.map((item, index) => {
         if (index === splitted.length - 1) {
-          if (splitted[index])
-            splitted[index] = parseLatex(splitted[index]);
+          if (splitted[index]) splitted[index] = parseLatex(splitted[index]);
           return;
         }
         splitted[index] = `${parseLatex(splitted[index])} <img src="${
@@ -298,7 +314,9 @@ class SkillItem extends Component {
             Object.keys(stepAnswers[index]).map((sub) => {
               item.current.injectJavaScript(`
                 (() => {
-                  const activeElement = document.getElementById('box-' + '${+sub + 1}');             
+                  const activeElement = document.getElementById('box-' + '${
+                    +sub + 1
+                  }');             
                   if (activeElement) {
                     activeElement.value = '${stepAnswers[index][sub]}';
                     const idNum = +activeElement.id.replace('box-', '');

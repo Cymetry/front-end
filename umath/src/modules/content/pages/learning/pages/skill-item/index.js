@@ -4,21 +4,21 @@ import {
   Text,
   TouchableHighlight,
   Keyboard,
-  Dimensions,
+  Alert,
 } from "react-native";
 import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Video } from "expo-av";
 import { Html5Entities } from "html-entities";
-import KeyboardAccessory from "react-native-sticky-keyboard-accessory";
+// import KeyboardAccessory from "react-native-sticky-keyboard-accessory";
 
 import MathJax from "../../../../../../components/math_jax";
 import DismissKeyboard from "../../../../../../components/dismiss-keyboard";
 import SkillLearningController from "../../../../../../platform/api/skillLearning";
-import ROUTES from "../../../../../../platform/constants/routes";
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from "./styles";
 import { withNavigation } from "react-navigation";
+import { parseLatex } from "../../../../../../platform/services/latex";
 
 const htmlEntities = new Html5Entities();
 
@@ -45,13 +45,14 @@ class SkillItem extends Component {
     )
       response = await SkillLearningController.Start(id);
     const result = JSON.parse(response);
+    console.log(result);
 
     if (result?.body?.content) {
       if (typeof result.body.content.content === "string")
         result.body.content.videoUrl = result.body.content.content;
       this.reamingMistakes =
         result.body.maxMistakes || result.body.maxMistakes === 0
-          ? result.body.maxMistakes
+          ? result.body.maxMistakes + 1
           : 2;
       result.body.content.steps = result.body.content.steps
         ? result.body.content.steps.map((item) =>
@@ -109,21 +110,46 @@ class SkillItem extends Component {
         }
       }
 
-      if (this.reamingMistakes <= 0) this.finish(false);
-      else if (reamingMistakesSave !== this.reamingMistakes) {
-        //
-      } else {
-        if (currentStep === data.steps.length - 1 || !data.steps.length) this.finish(true);
-        else {
-          this.webViews.push(createRef());
-          this.setState({ currentStep: currentStep + 1 });
+      const lastWebview = this.webViews[this.webViews.length - 1];
+      if (lastWebview.current) {
+        if (this.reamingMistakes <= 0) this.finish(false);
+        else if (reamingMistakesSave !== this.reamingMistakes) {
+          lastWebview.current.injectJavaScript(`
+            (() => {
+              const inputs = document.querySelectorAll('[id^="box-"]');             
+              Array.from(inputs).forEach(item => {
+                item.value = '';
+                item.style.border = '1px solid red';
+              });
+
+              return;
+            })();
+          `);
+        } else {
+          lastWebview.current.injectJavaScript(`
+            (() => {
+              const inputs = document.querySelectorAll('[id^="box-"]');             
+              Array.from(inputs).forEach(item => {
+                item.value = '';
+                item.style.border = '1px solid red';
+              });
+
+              return;
+            })();
+          `);
+
+          if (currentStep === data.steps.length - 1 || !data.steps.length) this.finish(true);
+          else {
+            this.webViews.push(createRef());
+            this.setState({ currentStep: currentStep + 1 });
+          }
         }
       }
     }
   };
 
   finish = async (fullFinished) => {
-    const { id, parentId } = this.props.route.params || {};
+    const { id } = this.props.route.params || {};
     const { data, currentStep } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
@@ -149,14 +175,13 @@ class SkillItem extends Component {
 
     await SkillLearningController.SaveProgress(body);
     const response = await SkillLearningController.Resume(id);
-    if (response.message === "Skill has been completed")
-      return navigationWrapper.navigation.navigate(
-        ROUTES.CONTENT_LEARNING_SKILLS,
-        { id: parentId }
-      );
 
     try {
       const result = JSON.parse(response);
+
+      if (result.body.reentered)
+        return Alert.alert('Reentered (Complete)');
+
       if (typeof result.body.content.content === "string")
         result.body.content.videoUrl = result.body.content.content;
 
@@ -169,7 +194,7 @@ class SkillItem extends Component {
       this.mistakeCount = 0;
       this.reamingMistakes =
         result.body.maxMistakes || result.body.maxMistakes === 0
-          ? result.body.maxMistakes
+          ? result.body.maxMistakes + 1
           : 2;
 
       this.webViews = [createRef()];
@@ -184,8 +209,6 @@ class SkillItem extends Component {
     }
   };
 
-  normalLatex = (latex) => latex.split(" ").join("~");
-
   prepareGraphs = (index, latex) => {
     const { data } = this.state;
     const splitted = latex.split("[()]");
@@ -195,14 +218,14 @@ class SkillItem extends Component {
       splitted.map((item, index) => {
         if (index === splitted.length - 1) {
           if (splitted[index])
-            splitted[index] = this.normalLatex(splitted[index]);
+            splitted[index] = parseLatex(splitted[index]);
           return;
         }
-        splitted[index] = `${this.normalLatex(splitted[index])} <img src="${
+        splitted[index] = `${parseLatex(splitted[index])} <img src="${
           activeStep.graphs[index]
         }" style="width: 100%; height: 400px" alt="graph" />`;
       });
-    } else return this.normalLatex(splitted[0]);
+    } else return parseLatex(splitted[0]);
 
     return splitted.join("");
   };
@@ -237,19 +260,19 @@ class SkillItem extends Component {
 
     currents.map((item) =>
       item.injectJavaScript(`
-      (() => {
-        if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-          const { activeElement } = document;
-          const splitted = activeElement.value.split('');
-          splitted[activeElement.selectionStart] = '${content}' + (splitted[activeElement.selectionStart] || '');
-          activeElement.value = splitted.join('');
-          const idNum = +activeElement.id.replace('box-', '');
-          window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
-        }
+        (() => {
+          if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+            const { activeElement } = document;
+            const splitted = activeElement.value.split('');
+            splitted[activeElement.selectionStart] = '${content}' + (splitted[activeElement.selectionStart] || '');
+            activeElement.value = splitted.join('');
+            const idNum = +activeElement.id.replace('box-', '');
+            window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
+          }
 
-        return;
-      })();
-    `)
+          return;
+        })(); 
+      `)
     );
   };
 
@@ -275,11 +298,11 @@ class SkillItem extends Component {
             Object.keys(stepAnswers[index]).map((sub) => {
               item.current.injectJavaScript(`
                 (() => {
-                  const activeElement = document.getElementById('box-' + '${sub}');             
+                  const activeElement = document.getElementById('box-' + '${+sub + 1}');             
                   if (activeElement) {
                     activeElement.value = '${stepAnswers[index][sub]}';
                     const idNum = +activeElement.id.replace('box-', '');
-                    window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
+                    window.postMessage(JSON.stringify({ value: activeElement.value, input: ${+sub} }));
                   }
   
                   return;
@@ -321,7 +344,7 @@ class SkillItem extends Component {
               {data.question && (
                 <View style={LocalStyles.container}>
                   <View style={LocalStyles.questionWrapper}>
-                    <MathJax html={this.normalLatex(data.question)} />
+                    <MathJax html={parseLatex(data.question)} />
                   </View>
                 </View>
               )}
@@ -338,7 +361,7 @@ class SkillItem extends Component {
                         html={
                           item.graphs.length
                             ? this.prepareGraphs(index, item.instruction)
-                            : this.normalLatex(item.instruction)
+                            : parseLatex(item.instruction)
                         }
                         onMessage={
                           item.fillIn
@@ -361,7 +384,7 @@ class SkillItem extends Component {
                               stepAnswers[index] === item.index
                                 ? "color: green"
                                 : ""
-                            }">(${item.index}) ${this.normalLatex(
+                            }">(${item.index}) ${parseLatex(
                               item.content
                             )}</span>`}
                             style={{ width: "100%" }}
@@ -372,7 +395,7 @@ class SkillItem extends Component {
                 </View>
               ))}
             </KeyboardAwareScrollView>
-            <KeyboardAccessory>
+            {/* <KeyboardAccessory>
               <View
                 style={{
                   flexDirection: "row",
@@ -448,7 +471,7 @@ class SkillItem extends Component {
                   />
                 </View>
               </View>
-            </KeyboardAccessory>
+            </KeyboardAccessory> */}
             <View style={LocalStyles.buttonWrapper}>
               <View
                 style={{

@@ -1,5 +1,4 @@
 import { Alert } from "react-native";
-import { navigationWrapper } from "../platform/services/navigation";
 
 const AsyncAlert = (title = "", message = "", actionItem) => {
   return new Promise((resolve, _) => {

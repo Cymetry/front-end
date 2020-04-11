@@ -32,6 +32,7 @@ const LocalStyles = StyleSheet.create({
 
   button: {
     padding: 15,
+    width: 250,
     borderRadius: 8,
     marginVertical: 5,
   },
@@ -39,6 +40,7 @@ const LocalStyles = StyleSheet.create({
   progress: {
     width: '100%',
     height: '25%',
+    alignItems: 'center',
     justifyContent: 'center',
   },
 

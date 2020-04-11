@@ -7,6 +7,8 @@ import {
 } from '@react-navigation/stack';
 import { Button } from 'react-native-elements';
 
+import truncate from '../../../../utils/truncate';
+
 import ROUTES from '../../../../platform/constants/routes';
 import SkillController from '../../../../platform/api/skill';
 import TopicController from '../../../../platform/api/topic';
@@ -165,12 +167,12 @@ class MyAccount extends PureComponent {
                 onPress={this.handleSkillClick}
                 buttonStyle={LocalStyles.button}
                 titleStyle={Styles.button.title}
-                title={`${skill.name} ${skill.step}`}
+                title={truncate(`${skill.name} ${skill.step}`)}
               />
               <Button
                 type="solid"
                 key={topic.id}
-                title={topic.name}
+                title={truncate(topic.name)}
                 onPress={this.handleTopicClick}
                 buttonStyle={LocalStyles.button}
                 titleStyle={Styles.button.title}

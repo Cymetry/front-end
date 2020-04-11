@@ -9,30 +9,30 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "white",
-    paddingVertical: 20
+    paddingVertical: 20,
   },
   scrollview_wrapper: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   text: {
     fontSize: 24,
     color: Variables.textGray,
     textAlign: "center",
-    paddingHorizontal: 50
+    paddingHorizontal: 50,
   },
   card_wrapper: {
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
     flexWrap: "wrap",
-    margin: 15
+    margin: 15,
   },
   button: {
     ...Styles.button.classic,
     width: 278,
     height: 60,
-    color: Variables.vividBlue
-  }
+    backgroundColor: Variables.vividBlue,
+  },
 });
 
 export default styles;

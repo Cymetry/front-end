@@ -82,13 +82,12 @@ const SubscriptionScreen = () => {
     >
       <View style={styles.content_wrapper}>
         <Text style={styles.text}>
-          {" "}
-          Please select the right subscription plan for you{" "}
+          Please select the right subscription plan for you
         </Text>
         <View style={styles.card_wrapper}>{renderPaymentCards()}</View>
         <Button
           onPress={_onSubmitPress}
-          style={styles.button}
+          buttonStyle={styles.button}
           title="Continue"
         />
       </View>

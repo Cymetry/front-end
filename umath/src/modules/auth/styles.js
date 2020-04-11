@@ -47,6 +47,7 @@ const LocalStyles = StyleSheet.create({
   },
   logoTitle: {
     fontFamily: "Futura-PT",
+    fontWeight: "bold",
     fontSize: 32,
   },
 });

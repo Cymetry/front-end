@@ -28,10 +28,11 @@ const styles = StyleSheet.create({
     margin: 15,
   },
   button: {
-    ...Styles.button.classic,
     width: 278,
     height: 60,
     backgroundColor: Variables.vividBlue,
+    paddingVertical: 5,
+    borderRadius: 8,
   },
 });
 

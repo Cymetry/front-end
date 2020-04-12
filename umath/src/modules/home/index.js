@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { AsyncStorage } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { AsyncStorage, View } from "react-native";
 import { StackActions } from "@react-navigation/native";
 
 import Programs from "./components/programs";
@@ -43,9 +42,9 @@ class Home extends Component {
     const { loggedIn } = this.state;
 
     return (
-      <ScrollView style={Styles.page}>
+      <View style={Styles.page}>
         {!loggedIn ? <Intro skip={this.skip} /> : <AuthReminder />}
-      </ScrollView>
+      </View>
     );
   }
 }

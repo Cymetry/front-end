@@ -129,16 +129,18 @@ class SignUp extends Component {
           containerStyle={Styles.input.classic}
           placeholder="School"
         />
-        <Text style={LocalStyles.suggestionText}>
-          Already a member?&nbsp;
-          <Text
-            style={LocalStyles.suggestionButton}
-            onPress={() => changeViewType(ViewTypeEnum.SignIn)}
-            accessibilityRole="button"
-          >
-            Sign in
+        <View style={LocalStyles.signUpPromptWrapper}>
+          <Text style={LocalStyles.suggestionText}>
+            Already a member?&nbsp;
           </Text>
-        </Text>
+          <Button
+            title="Sign In"
+            type="clear"
+            titleStyle={LocalStyles.signUpTitle}
+            buttonStyle={LocalStyles.suggestionButton}
+            onPress={() => changeViewType(ViewTypeEnum.SignIn)}
+          />
+        </View>
         <View
           style={{
             ...LocalStyles.button,
@@ -148,6 +150,7 @@ class SignUp extends Component {
           <Button
             disabled={this.disabled}
             titleStyle={Styles.button.title}
+            disabledTitleStyle={{ color: "white" }}
             title="Sign up"
             type="clear"
             onPress={this.submit}

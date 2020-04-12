@@ -91,16 +91,19 @@ class SignIn extends Component {
           Forgot password?
         </Text>
         {signUpActive && (
-          <Text style={LocalStyles.suggestionText}>
-            Not logged in yet?&nbsp;
-            <Text
-              style={LocalStyles.suggestionButton}
-              accessibilityRole="button"
-              onPress={() => changeViewType(ViewTypeEnum.SignUp)}
-            >
-              Sign up
+          <View style={LocalStyles.signUpPromptWrapper}>
+            <Text style={LocalStyles.suggestionText}>
+              Not logged in yet?&nbsp;
             </Text>
-          </Text>
+            <Button
+              type="clear"
+              accessibilityRole="button"
+              buttonStyle={LocalStyles.suggestionButton}
+              title="Sign Up"
+              titleStyle={LocalStyles.signUpTitle}
+              onPress={() => changeViewType(ViewTypeEnum.SignUp)}
+            />
+          </View>
         )}
         <View
           style={{

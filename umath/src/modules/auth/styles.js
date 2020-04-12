@@ -16,11 +16,11 @@ const LocalStyles = StyleSheet.create({
   },
 
   suggestionText: {
-    width: "100%",
+    // width: "100%",
     fontSize: 18,
     textAlign: "center",
     paddingTop: 10,
-    paddingRight: 10,
+    // paddingRight: 10,
   },
 
   logo: {
@@ -36,6 +36,15 @@ const LocalStyles = StyleSheet.create({
     flex: 1,
     textAlign: "right",
     width: "100%",
+  },
+
+  // Change the name
+  signUpPromptWrapper: {
+    flexDirection: "row",
+  },
+
+  signUpTitle: {
+    color: Variables.blue,
   },
 
   datePicker: {

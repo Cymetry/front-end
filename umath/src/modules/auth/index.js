@@ -10,21 +10,31 @@ import { navigationWrapper } from "../../platform/services/navigation";
 
 class Auth extends PureComponent {
   state = {
-    viewType: ViewTypeEnum.SignIn
+    viewType: null,
   };
 
-  changeViewType = viewType => this.setState({ viewType });
+  changeViewType = (viewType) => {
+    this.setState({ viewType });
+  };
+
+  componentDidMount() {
+    const isSignUpScreen = this.props.route.params?.signUp;
+    console.log(isSignUpScreen);
+
+    this.setState({
+      viewType: isSignUpScreen ? ViewTypeEnum.SignUp : ViewTypeEnum.SignIn,
+    });
+  }
 
   render() {
     const { viewType } = this.state;
     const { navigation } = this.props;
-    const signUp = true;
 
     return (
       <KeyboardAwareScrollView style={Styles.page} enableOnAndroid>
-        {viewType === ViewTypeEnum.SignIn ? (
+        {viewType == ViewTypeEnum.SignIn ? (
           <SignIn
-            signUpActive={signUp}
+            signUpActive
             navigation={navigation}
             changeViewType={this.changeViewType}
           />

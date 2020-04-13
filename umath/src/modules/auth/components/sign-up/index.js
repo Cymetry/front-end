@@ -126,11 +126,14 @@ class SignUp extends Component {
             dateInput: LocalStyles.datePicker,
             dateText: Styles.text.smallSize,
           }}
-          date={form.dob}
           mode="date"
-          onDateChange={(value) => this.change('dob', value)}
+          date={form.dob}
+          locale={'en_us'}
           showIcon={false}
+          cancelBtnText="Cancel"
+          confirmBtnText="Confirm"
           placeholder="Date of Birth"
+          onDateChange={(value) => this.change('dob', value)}
         />
         <Input
           value={form.school}
@@ -143,10 +146,9 @@ class SignUp extends Component {
             Already a member?&nbsp;
           </Text>
           <Button
-            title="Sign In"
             type="clear"
+            title="Sign In"
             titleStyle={LocalStyles.signUpTitle}
-            buttonStyle={LocalStyles.suggestionButton}
             onPress={() => changeViewType(ViewTypeEnum.SignIn)}
           />
         </View>

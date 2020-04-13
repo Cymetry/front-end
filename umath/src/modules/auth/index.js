@@ -19,7 +19,6 @@ class Auth extends PureComponent {
 
   componentDidMount() {
     const isSignUpScreen = this.props.route.params?.signUp;
-    console.log(isSignUpScreen);
 
     this.setState({
       viewType: isSignUpScreen ? ViewTypeEnum.SignUp : ViewTypeEnum.SignIn,

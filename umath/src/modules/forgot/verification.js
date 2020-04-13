@@ -61,7 +61,7 @@ const Verification = ({ navigation, route }) => {
         onFulfill={(code) => {
           setCode(code);
         }}
-        containerStyle={{ height: 40, flex: "auto", marginBottom: 40 }}
+        containerStyle={{ height: 40, flex: 1, marginBottom: 40 }}
         inactiveColor={Variables.textGray}
         activeColor="black"
       />

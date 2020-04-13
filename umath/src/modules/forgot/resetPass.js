@@ -40,10 +40,8 @@ class SignIn extends Component {
         email,
         token: code,
       };
-      const result = await AuthController.ResetPass(payload);
-      if (result) {
-        this.props.navigation.navigate(ROUTES.AUTH);
-      } else Alert.alert("Something went wrong. Try again");
+      await AuthController.ResetPass(payload);
+      this.props.navigation.navigate(ROUTES.AUTH);
     }
   };
 

@@ -25,6 +25,7 @@ class SignUp extends Component {
       school: '',
     },
     emailValid: true,
+    passwordValid: true,
   };
 
   get disabled() {
@@ -47,6 +48,13 @@ class SignUp extends Component {
     if (name == 'email') {
       const emailValid = isEmailValid(value);
       this.setState({ emailValid });
+    }
+
+    if (name === 'password') {
+      if (value.length < 4)
+        this.setState({ passwordValid: false });
+      else
+        this.setState({ passwordValid: true });
     }
   };
 
@@ -81,7 +89,7 @@ class SignUp extends Component {
   };
 
   render() {
-    const { form, emailValid } = this.state;
+    const { form, emailValid, passwordValid } = this.state;
     const { changeViewType } = this.props;
 
     return (
@@ -123,6 +131,8 @@ class SignUp extends Component {
           containerStyle={Styles.input.classic}
           autoCapitalize="none"
           placeholder="Password"
+          errorMessage={passwordValid ? '' : 'Password too short!'}
+          inputContainerStyle={passwordValid ? {} : { borderColor: 'red' }}
           secureTextEntry
         />
         <DatePicker

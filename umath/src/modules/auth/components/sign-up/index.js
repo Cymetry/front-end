@@ -28,9 +28,14 @@ class SignUp extends Component {
   };
 
   get disabled() {
-    const { form } = this.state;
+    const { emailValid, form } = this.state;
     return (
-      !form.name || !form.surname || !form.password || !form.email || !form.dob
+      !form.dob ||
+      !form.name ||
+      !emailValid ||
+      !form.email ||
+      !form.surname ||
+      !form.password
     );
   }
 
@@ -51,6 +56,7 @@ class SignUp extends Component {
     const { lastPath, lastParams } = navigation.state?.params || {};
 
     const result = await UserController.Create(form);
+
     if (result) {
       const authResult = await AuthController.Login({
         email: form.email,

@@ -1,32 +1,40 @@
-import React, { Component } from "react";
-import { View, Text, Alert, AsyncStorage, Image } from "react-native";
-import { Input, Button } from "react-native-elements";
+import React, { Component } from 'react';
+import { View, Text, Alert, AsyncStorage, Image } from 'react-native';
+import { Input, Button } from 'react-native-elements';
 import { CommonActions } from '@react-navigation/native';
 
-import ROUTES from "../../../../platform/constants/routes";
-import AuthController from "../../../../platform/api/auth";
-import { ViewTypeEnum } from "../../constants/enums";
-import LocalStyles from "../../styles";
-import Styles from "../../../../../assets/styles";
-import { navigationWrapper } from "../../../../platform/services/navigation";
+import ROUTES from '../../../../platform/constants/routes';
+import AuthController from '../../../../platform/api/auth';
+import { ViewTypeEnum } from '../../constants/enums';
+import LocalStyles from '../../styles';
+import Styles from '../../../../../assets/styles';
+import { navigationWrapper } from '../../../../platform/services/navigation';
+
+import isEmailValid from '../../../../utils/validateEmail';
 
 class SignIn extends Component {
   state = {
+    emailValid: true,
     form: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   };
 
   get formValid() {
-    const { form } = this.state;
-    return form.email && form.password;
+    const { emailValid, form } = this.state;
+    return emailValid && form.email && form.password;
   }
 
   change = (name, value) => {
     const { form } = this.state;
     form[name] = value;
     this.setState({ form });
+
+    if (name === 'email') {
+      const emailValid = isEmailValid(value);
+      this.setState({ emailValid });
+    }
   };
 
   submit = async () => {
@@ -35,8 +43,8 @@ class SignIn extends Component {
       const result = await AuthController.Login(form);
       if (result) {
         await AsyncStorage.multiSet([
-          ["token", result.jwt],
-          ["isPremium", result.isPremium ? "true" : ""],
+          ['token', result.jwt],
+          ['isPremium', result.isPremium ? 'true' : ''],
         ]);
         this.props.navigation.dispatch(
           CommonActions.reset({
@@ -47,13 +55,14 @@ class SignIn extends Component {
                 params: { loggedIn: true },
               },
             ],
-          })
+          }),
         );
-      } else Alert.alert("Username or Password is incorrect!!");
+      } else Alert.alert('Username or Password is incorrect!!');
     }
   };
 
   render() {
+    const { emailValid } = this.state;
     const { changeViewType, signUpActive } = this.props;
 
     return (
@@ -76,15 +85,16 @@ class SignIn extends Component {
           Sign in to your existing account
         </Text>
         <Input
+          placeholder="Email"
           containerStyle={Styles.input.classic}
-          placeholder="Username"
-          onChangeText={(value) => this.change("email", value)}
+          onChangeText={(value) => this.change('email', value)}
+          errorMessage={!emailValid ? 'invalid email' : undefined}
         />
         <Input
-          containerStyle={Styles.input.classic}
-          placeholder="Password"
-          onChangeText={(value) => this.change("password", value)}
           secureTextEntry
+          placeholder="Password"
+          containerStyle={Styles.input.classic}
+          onChangeText={(value) => this.change('password', value)}
         />
         <Text
           style={{
@@ -108,7 +118,6 @@ class SignIn extends Component {
             <Button
               type="clear"
               accessibilityRole="button"
-              buttonStyle={LocalStyles.suggestionButton}
               title="Sign Up"
               titleStyle={LocalStyles.signUpTitle}
               onPress={() => changeViewType(ViewTypeEnum.SignUp)}

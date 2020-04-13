@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { View, Text, Alert, AsyncStorage, Image } from "react-native";
 import { Input, Button } from "react-native-elements";
+import { CommonActions } from '@react-navigation/native';
 
 import ROUTES from "../../../../platform/constants/routes";
-import { withNavigation } from "react-navigation";
 import AuthController from "../../../../platform/api/auth";
 import { ViewTypeEnum } from "../../constants/enums";
 import LocalStyles from "../../styles";
@@ -38,7 +38,17 @@ class SignIn extends Component {
           ["token", result.jwt],
           ["isPremium", result.isPremium ? "true" : ""],
         ]);
-        this.props.navigation.navigate(ROUTES.CONTENT, { loggedIn: true });
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              {
+                name: ROUTES.CONTENT,
+                params: { loggedIn: true },
+              },
+            ],
+          })
+        );
       } else Alert.alert("Username or Password is incorrect!!");
     }
   };

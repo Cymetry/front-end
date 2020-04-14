@@ -24,6 +24,7 @@ class SkillItem extends Component {
   state = {
     data: null,
     showSolution: false,
+    erroredChoices: false,
     currentStep: 0,
     stepAnswers: [],
   };
@@ -43,7 +44,6 @@ class SkillItem extends Component {
     )
       response = await SkillLearningController.Start(id);
     const result = JSON.parse(response);
-    console.log(result);
 
     if (result?.body?.content) {
       if (typeof result.body.content.content === "string")
@@ -122,10 +122,10 @@ class SkillItem extends Component {
       }
 
       const lastWebview = this.webViews[this.webViews.length - 1];
-      if (lastWebview.current) {
-        if (this.reamingMistakes <= 0) this.finish(false);
+      if (lastWebview.current || data.videoUrl) {
+        if (this.reamingMistakes <= 0) this.setState({ erroredChoices: true }, () => this.finish(false));
         else if (reamingMistakesSave !== this.reamingMistakes) {
-          lastWebview.current.injectJavaScript(`
+          lastWebview.current && lastWebview.current.injectJavaScript(`
             (() => {
               const inputs = document.querySelectorAll('[id^="box-"]');             
               Array.from(inputs).forEach(item => {
@@ -136,18 +136,21 @@ class SkillItem extends Component {
               return;
             })();
           `);
+
+          this.setState({ erroredChoices: true });
         } else {
-          lastWebview.current.injectJavaScript(`
+          lastWebview.current && lastWebview.current.injectJavaScript(`
             (() => {
               const inputs = document.querySelectorAll('[id^="box-"]');             
               Array.from(inputs).forEach(item => {
-                item.value = '';
-                item.style.border = '1px solid red';
+                delete item.style.border;
               });
 
               return;
             })();
           `);
+
+          this.setState({ erroredChoices: false });
 
           if (currentStep === data.steps.length - 1 || !data.steps.length) {
             this.finish(true);
@@ -171,35 +174,20 @@ class SkillItem extends Component {
       correctCount: fullFinished ? stepsData.length : stepsData.length - 1,
     };
 
-    // stepAnswers.map((item, index) => {
-    //   let correct = true;
-    //   const stepData = data.steps[index];
-
-    //   if (stepData.fillIn)
-    //     Object.values(item).map((item, index) => {
-    //       if (!stepData.answer[index].find((sub) => sub === item))
-    //         correct = false;
-    //     });
-    //   else if (item !== stepData.solution) correct = false;
-
-    //   if (!correct) body.mistakeCount += 1;
-    // });
-
     await SkillLearningController.SaveProgress(body);
 
     const response = await SkillLearningController.Resume(id);
+    if (response && response.message) await AsyncAlert(response.message);
 
     try {
       const result = JSON.parse(response);
-
-      if (result.body.reentered) return Alert.alert("Reentered (Complete)");
-
+      
       if (typeof result.body.content.content === "string") {
         result.body.content.videoUrl = result.body.content.content;
       } else {
-        fullFinished
-          ? await AsyncAlert(AlertMessage.completeSkill)
-          : await AsyncAlert(AlertMessage.nextSkill);
+        // fullFinished
+        //   ? await AsyncAlert(AlertMessage.completeSkill)
+        //   : await AsyncAlert(AlertMessage.nextSkill);
       }
 
       result.body.content.steps = result.body.content.steps
@@ -220,6 +208,7 @@ class SkillItem extends Component {
         currentStep: 0,
         stepAnswers: [],
         showSolution: result.body.maxMistakes && result.body.maxMistakes > 100,
+        erroredChoices: false,
       });
     } catch (e) {
       /* */
@@ -260,14 +249,14 @@ class SkillItem extends Component {
     }
   };
 
-  nonFillInAnswer = (index, item) => {
+  nonFillInAnswer = (index, item) => this.setState({ erroredChoices: false }, async () => {
     const { stepAnswers, currentStep } = this.state;
 
     if (!stepAnswers[index] || index === currentStep) {
       stepAnswers[index] = item.index;
       this.setState({ stepAnswers });
     }
-  };
+  });
 
   keyboardType = (content) => {
     const currents = this.webViews
@@ -334,7 +323,7 @@ class SkillItem extends Component {
   };
 
   render() {
-    const { data, currentStep, stepAnswers, showSolution } = this.state;
+    const { data, erroredChoices, currentStep, stepAnswers, showSolution } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
     return data ? (
@@ -400,7 +389,7 @@ class SkillItem extends Component {
                           <MathJax
                             html={`<span style="${
                               stepAnswers[index] === item.index
-                                ? "color: green"
+                                ? `color: ${erroredChoices && index === stepsData.length - 1 ? 'red' : 'green'}`
                                 : ""
                             }">(${item.index}) ${parseLatex(
                               item.content

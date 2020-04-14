@@ -19,7 +19,7 @@
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
-    "react-native-collapsible": "^1.5.1",
+    "react-native-collapsible": "^1.5.2",
     "react-native-confirmation-code-input": "^1.0.4",
     "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^1.2.7",

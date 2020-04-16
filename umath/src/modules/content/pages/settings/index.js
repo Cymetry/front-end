@@ -5,7 +5,7 @@ import {
   createStackNavigator,
   HeaderBackButton,
 } from "@react-navigation/stack";
-import { withNavigation } from "react-navigation";
+import { CommonActions } from '@react-navigation/native';
 import { ScrollView } from "react-native-gesture-handler";
 
 import FaqIcon from "../../../../../assets/images/faq_icon.png";
@@ -120,7 +120,16 @@ class Settings extends Component {
   signOut = async () => {
     try {
       await AsyncStorage.multiRemove(["token", "isPremium"]);
-      navigationWrapper.navigation.navigate(ROUTES.HOME);
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: ROUTES.HOME,
+            },
+          ],
+        }),
+      );
     } catch (e) {
       console.warn(e);
     }

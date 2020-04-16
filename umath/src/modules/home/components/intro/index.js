@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { Button } from 'react-native-elements';
-import { withNavigation } from 'react-navigation';
 
 import Variables from '../../../../../assets/styles/variables';
 import ROUTES from '../../../../platform/constants/routes';

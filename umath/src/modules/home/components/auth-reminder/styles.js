@@ -1,17 +1,17 @@
 import { StyleSheet } from "react-native";
 
-import Styles from "../../../../../assets/styles";
-
 const LocalStyles = StyleSheet.create({
   container: {
-    ...Styles.card.classic,
-    marginBottom: 40,
+    flex: 1,
+    marginTop: "5%",
+    alignItems: "center",
+    flexDirection: "column",
+    backgroundColor: "transparent",
+    justifyContent: "space-around",
   },
-
-  button: {
-    width: 150,
-    marginTop: 40,
-    ...Styles.button.classic,
+  image: {
+    height: "30%",
+    resizeMode: "contain",
   },
 });
 

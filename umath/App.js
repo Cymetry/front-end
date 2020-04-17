@@ -114,7 +114,7 @@ class App extends Component {
 
 const AppWrapper = () => {
   let [fontsLoaded] = useFonts({
-    "Futura-PT": require("./assets/fonts/Futura_PT.otf"),
+    "Futura-PT": require("./assets/fonts/Futura_PT.ttf"),
   });
 
   if (!fontsLoaded) {

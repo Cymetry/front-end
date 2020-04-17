@@ -5,7 +5,7 @@ import {
   createStackNavigator,
   HeaderBackButton,
 } from "@react-navigation/stack";
-import { withNavigation } from "react-navigation";
+import { CommonActions } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 
 import FaqIcon from "../../../../../assets/images/faq_icon.png";

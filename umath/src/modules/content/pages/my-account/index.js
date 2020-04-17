@@ -52,9 +52,9 @@ class MyAccount extends PureComponent {
     this.state.skill.redirectToTopic
       ? this.handleTopicClick()
       : navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
-          screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
-          params: this.state.skill,
-        });
+        screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
+        params: this.state.skill,
+      });
 
   handleTopicClick = () =>
     navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
@@ -77,7 +77,7 @@ class MyAccount extends PureComponent {
     />
   );
 
-  async componentDidMount() {
+  updateState = async () => {
     const {
       progress: { learning, revision },
     } = this.state;
@@ -139,6 +139,10 @@ class MyAccount extends PureComponent {
         learning: result?.learning || learning,
       },
     });
+  }
+
+  async componentDidMount() {
+    this.props.navigation.addListener('focus', this.updateState);
   }
 
   render() {
@@ -211,7 +215,7 @@ class MyAccount extends PureComponent {
                 <Text style={Styles.text.smallSize}>
                   {questions.completed}/{questions.total}
                 </Text>
-                <Text style={Styles.text.smallSize}>Questions</Text>
+                <Text style={Styles.text.smallSize}>Skills</Text>
               </View>
             )}
             {tests && (

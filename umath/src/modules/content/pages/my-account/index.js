@@ -215,7 +215,7 @@ class MyAccount extends PureComponent {
                 <Text style={Styles.text.smallSize}>
                   {questions.completed}/{questions.total}
                 </Text>
-                <Text style={Styles.text.smallSize}>Questions</Text>
+                <Text style={Styles.text.smallSize}>Skills</Text>
               </View>
             )}
             {tests && (

@@ -1,26 +1,26 @@
-import React, { PureComponent } from 'react';
-import { View, ScrollView, Text, Image } from 'react-native';
-import { Bar } from 'react-native-progress';
+import React, { PureComponent } from "react";
+import { View, ScrollView, Text, Image } from "react-native";
+import { Bar } from "react-native-progress";
 import {
   createStackNavigator,
   HeaderBackButton,
-} from '@react-navigation/stack';
-import { Button } from 'react-native-elements';
+} from "@react-navigation/stack";
+import { Button } from "react-native-elements";
 
-import truncate from '../../../../utils/truncate';
+import truncate from "../../../../utils/truncate";
 
-import ROUTES from '../../../../platform/constants/routes';
-import SkillController from '../../../../platform/api/skill';
-import TopicController from '../../../../platform/api/topic';
-import AccountController from '../../../../platform/api/account';
-import { navigationWrapper } from '../../../../platform/services/navigation';
+import ROUTES from "../../../../platform/constants/routes";
+import SkillController from "../../../../platform/api/skill";
+import TopicController from "../../../../platform/api/topic";
+import AccountController from "../../../../platform/api/account";
+import { navigationWrapper } from "../../../../platform/services/navigation";
 
-import LocalStyles from './styles';
-import Styles from '../../../../../assets/styles';
-import Variables from '../../../../../assets/styles/variables';
-import TestsIcon from '../../../../../assets/icons/test.svg';
-import ChaptersIcon from '../../../../../assets/icons/file.svg';
-import QuestionsIcon from '../../../../../assets/icons/tools.svg';
+import LocalStyles from "./styles";
+import Styles from "../../../../../assets/styles";
+import Variables from "../../../../../assets/styles/variables";
+import TestsIcon from "../../../../../assets/icons/test.svg";
+import ChaptersIcon from "../../../../../assets/icons/file.svg";
+import QuestionsIcon from "../../../../../assets/icons/tools.svg";
 
 const SVGIcon = ({ SVG }) => (
   <View style={LocalStyles.iconWrapper}>
@@ -30,7 +30,7 @@ const SVGIcon = ({ SVG }) => (
 
 class MyAccount extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
-    title: 'My Account',
+    title: "My Account",
     headerLeft: () => (
       <HeaderBackButton
         onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)}
@@ -52,9 +52,9 @@ class MyAccount extends PureComponent {
     this.state.skill.redirectToTopic
       ? this.handleTopicClick()
       : navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
-        screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
-        params: this.state.skill,
-      });
+          screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
+          params: this.state.skill,
+        });
 
   handleTopicClick = () =>
     navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
@@ -101,7 +101,7 @@ class MyAccount extends PureComponent {
 
       const retrieveSkill = () => {
         const skillIndex = skills.findIndex(
-          (skill) => skill.id === Number(skillId),
+          (skill) => skill.id === Number(skillId)
         );
 
         if (!skills[skillIndex].complete)
@@ -139,10 +139,10 @@ class MyAccount extends PureComponent {
         learning: result?.learning || learning,
       },
     });
-  }
+  };
 
   async componentDidMount() {
-    this.props.navigation.addListener('focus', this.updateState);
+    this.props.navigation.addListener("focus", this.updateState);
   }
 
   render() {
@@ -159,7 +159,10 @@ class MyAccount extends PureComponent {
     return details ? (
       <ScrollView style={Styles.page}>
         <View style={Styles.card.classic}>
-          <Image style={LocalStyles.image} source={{}} />
+          <Image
+            style={LocalStyles.image}
+            source={require("../../../../../assets/images/user.png")}
+          />
           <Text style={LocalStyles.fullName}>
             {details.name} {details.surname}
           </Text>
@@ -244,7 +247,7 @@ const MyAccountScreens = () => (
   >
     <Stack.Screen
       name={ROUTES.CONTENT_MY_ACCOUNT}
-      options={{ title: 'My Account' }}
+      options={{ title: "My Account" }}
     >
       {(props) => <MyAccount {...props} />}
     </Stack.Screen>

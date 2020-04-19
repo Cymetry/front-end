@@ -42,7 +42,7 @@ class MyAccount extends PureComponent {
     skill: {},
     topic: {},
     tests: null,
-    details: null,
+    details: {},
     chapters: null,
     questions: null,
     progress: { revision: 0, learning: 0 },
@@ -52,9 +52,9 @@ class MyAccount extends PureComponent {
     this.state.skill.redirectToTopic
       ? this.handleTopicClick()
       : navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
-          screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
-          params: this.state.skill,
-        });
+        screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
+        params: this.state.skill,
+      });
 
   handleTopicClick = () =>
     navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
@@ -142,6 +142,7 @@ class MyAccount extends PureComponent {
   };
 
   async componentDidMount() {
+    this.updateState();
     this.props.navigation.addListener("focus", this.updateState);
   }
 
@@ -156,9 +157,9 @@ class MyAccount extends PureComponent {
       questions,
     } = this.state;
 
-    return details ? (
+    return (
       <ScrollView style={Styles.page}>
-        <View style={Styles.card.classic}>
+        <View style={LocalStyles.container}>
           <Image
             style={LocalStyles.image}
             source={require("../../../../../assets/images/user.png")}
@@ -233,7 +234,7 @@ class MyAccount extends PureComponent {
           </View>
         </View>
       </ScrollView>
-    ) : null;
+    );
   }
 }
 

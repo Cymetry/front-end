@@ -1,10 +1,10 @@
 import React, { Component, createRef } from "react";
-import { View, Text, TouchableHighlight, Keyboard, Alert } from "react-native";
+import { View, Text, TouchableHighlight, Keyboard, TouchableOpacity } from "react-native";
 import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Video } from "expo-av";
 import { withNavigation } from "react-navigation";
-import { Html5Entities } from "html-entities";
+// import { Html5Entities } from "html-entities";
 // import KeyboardAccessory from "react-native-sticky-keyboard-accessory";
 
 import * as AlertMessage from "../../../../../../const/alert";
@@ -15,16 +15,18 @@ import SkillLearningController from "../../../../../../platform/api/skillLearnin
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from "./styles";
 import { parseLatex } from "../../../../../../platform/services/latex";
-import { getAppLoadingLifecycleEmitter } from "expo/build/launch/AppLoading";
 import AsyncAlert from "../../../../../../components/async_alert";
+import ExpandContent from "./components/expand-content";
 
-const htmlEntities = new Html5Entities();
+// const htmlEntities = new Html5Entities();
 
 class SkillItem extends Component {
   state = {
     data: null,
     showSolution: false,
     erroredChoices: false,
+    expandOpened: false,
+    expandData: null,
     currentStep: 0,
     stepAnswers: [],
   };
@@ -59,6 +61,7 @@ class SkillItem extends Component {
         : [];
       this.setState({
         data: result.body.content,
+        expandData: result.body.given,
         currentStep: 0,
         stepAnswers: [],
         showSolution: result.body.maxMistakes && result.body.maxMistakes > 100,
@@ -82,6 +85,13 @@ class SkillItem extends Component {
     }
 
     return false;
+  }
+
+  toggleExpand = () => {
+    const { expandOpened } = this.state;
+    this.setState({ expandOpened: !expandOpened }, () => {
+      setTimeout(() => this.scrollView.scrollTo({ y: 0 }), 0);
+    });
   }
 
   nextStep = async () => {
@@ -163,7 +173,7 @@ class SkillItem extends Component {
     }
   };
 
-  finish = async (fullFinished) => {
+  finish = fullFinished => this.setState({ expandData: null }, async () => {
     const { id } = this.props.route.params || {};
     const { data, currentStep } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
@@ -205,6 +215,7 @@ class SkillItem extends Component {
       this.webViews = [createRef()];
       this.setState({
         data: result.body.content,
+        expandData: result.body.given,
         currentStep: 0,
         stepAnswers: [],
         showSolution: result.body.maxMistakes && result.body.maxMistakes > 100,
@@ -213,7 +224,7 @@ class SkillItem extends Component {
     } catch (e) {
       /* */
     }
-  };
+  });
 
   prepareGraphs = (index, latex) => {
     const { data } = this.state;
@@ -258,28 +269,28 @@ class SkillItem extends Component {
     }
   });
 
-  keyboardType = (content) => {
-    const currents = this.webViews
-      .filter((item) => item.current)
-      .map((item) => item.current);
+  // keyboardType = (content) => {
+  //   const currents = this.webViews
+  //     .filter((item) => item.current)
+  //     .map((item) => item.current);
 
-    currents.map((item) =>
-      item.injectJavaScript(`
-        (() => {
-          if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-            const { activeElement } = document;
-            const splitted = activeElement.value.split('');
-            splitted[activeElement.selectionStart] = '${content}' + (splitted[activeElement.selectionStart] || '');
-            activeElement.value = splitted.join('');
-            const idNum = +activeElement.id.replace('box-', '');
-            window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
-          }
+  //   currents.map((item) =>
+  //     item.injectJavaScript(`
+  //       (() => {
+  //         if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+  //           const { activeElement } = document;
+  //           const splitted = activeElement.value.split('');
+  //           splitted[activeElement.selectionStart] = '${content}' + (splitted[activeElement.selectionStart] || '');
+  //           activeElement.value = splitted.join('');
+  //           const idNum = +activeElement.id.replace('box-', '');
+  //           window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
+  //         }
 
-          return;
-        })(); 
-      `)
-    );
-  };
+  //         return;
+  //       })(); 
+  //     `)
+  //   );
+  // };
 
   showSolution = () => {
     const { data } = this.state;
@@ -323,7 +334,7 @@ class SkillItem extends Component {
   };
 
   render() {
-    const { data, erroredChoices, currentStep, stepAnswers, showSolution } = this.state;
+    const { data, erroredChoices, expandOpened, expandData, currentStep, stepAnswers, showSolution } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
     return data ? (
@@ -336,9 +347,22 @@ class SkillItem extends Component {
               innerRef={(ref) => (this.scrollView = ref)}
               onPress={() => Keyboard.dismiss()}
               onContentSizeChange={(width, height) =>
-                this.scrollView.scrollTo({ y: height })
+                !expandOpened && this.scrollView.scrollTo({ y: height })
               }
             >
+              {expandOpened && expandData && <ExpandContent data={expandData} />}
+              {expandData && <TouchableOpacity
+                onPress={this.toggleExpand}
+                style={{
+                  ...LocalStyles.expandToggle,
+                  ...(expandOpened ? LocalStyles.expandToggleOpened : {})
+                }}
+              >
+                <Text style={LocalStyles.expandToggleText}>
+                  {expandOpened ? '-' : '+'} Solution of the previous problem
+                </Text>
+              </TouchableOpacity>}
+
               {data.videoUrl && (
                 <Video
                   source={{ uri: data.videoUrl }}

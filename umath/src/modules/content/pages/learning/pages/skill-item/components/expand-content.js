@@ -25,8 +25,11 @@ class ExpandContent extends Component {
   webViews = [createRef()];
 
   async componentDidMount() {
-    const { data } = this.props;
-    if (data && data.steps && data.steps[0]) {
+    const data = {...this.props.data};
+
+    if (data && data.steps) {
+      data.steps = data.steps.map(item => item[0]);
+      
       this.setState({
         data,
         currentStep: data.steps.length - 1,
@@ -71,7 +74,7 @@ class ExpandContent extends Component {
 
   showSolution = () => {
     const { data } = this.state;
-    const stepAnswers = data.steps[0].map((item) => {
+    const stepAnswers = data.steps.map((item) => {
       if (item.fillIn) {
         const obj = {};
         item.answer.map((sub, subIndex) => {
@@ -121,7 +124,7 @@ class ExpandContent extends Component {
 
   render() {
     const { data, erroredChoices, currentStep, stepAnswers } = this.state;
-    const stepsData = data && data.steps && data.steps[0].slice(0, currentStep + 1);
+    const stepsData = data && data.steps && data.steps.slice(0, currentStep + 1);
 
     return data ? (
       <View style={Styles.page}>
@@ -178,7 +181,7 @@ class ExpandContent extends Component {
                     </View>
 
                     {!item.fillIn &&
-                      item.options.map((item) => (
+                      item.options.map(item => (
                         <TouchableHighlight
                           key={item._id}
                           style={Styles.latexWrapper}

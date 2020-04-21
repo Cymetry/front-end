@@ -1,5 +1,5 @@
 import React, { Component, createRef } from "react";
-import { View, Text, TouchableHighlight, Keyboard, TouchableOpacity } from "react-native";
+import { View, Text, TouchableHighlight, Keyboard, TouchableOpacity, Alert } from "react-native";
 import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Video } from "expo-av";
@@ -17,6 +17,7 @@ import LocalStyles from "./styles";
 import { parseLatex } from "../../../../../../platform/services/latex";
 import AsyncAlert from "../../../../../../components/async_alert";
 import ExpandContent from "./components/expand-content";
+import { navigationWrapper } from "../../../../../../platform/services/navigation";
 
 // const htmlEntities = new Html5Entities();
 
@@ -187,11 +188,22 @@ class SkillItem extends Component {
     await SkillLearningController.SaveProgress(body);
 
     const response = await SkillLearningController.Resume(id);
-    if (response && response.message) await AsyncAlert(response.message);
+
+    if (response && response.message) Alert.alert(response.message, '', [{
+        text: 'Back',
+        onPress: () => navigationWrapper.navigation.goBack(),
+    }]);
 
     try {
       const result = JSON.parse(response);
-      
+
+      if (result && result.message) Alert.alert(result.message, '', [{
+        text: 'Back',
+        onPress: () => navigationWrapper.navigation.goBack(),
+      }]); else if (data && !data.videoUrl) Alert.alert(AlertMessage.stepRedirectWarning, '', [{
+        text: 'Continue',
+      }]);
+
       if (typeof result.body.content.content === "string") {
         result.body.content.videoUrl = result.body.content.content;
       } else {

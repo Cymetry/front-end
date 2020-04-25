@@ -136,7 +136,13 @@ const LearningScreens = ({ route }) => (
       }}
     />
 
-    <Stack.Screen name={ROUTES.CONTENT_LEARNING_TESTING} component={Testing} />
+    <Stack.Screen
+      name={ROUTES.CONTENT_LEARNING_TESTING}
+      component={Testing}
+      options={() => {
+        return { title: 'Testing' };
+      }}
+    />
   </Stack.Navigator>
 );
 

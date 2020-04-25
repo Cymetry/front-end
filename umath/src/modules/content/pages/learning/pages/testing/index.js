@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Keyboard, TouchableHighlight } from "react-native";
+import { View } from "react-native";
 import { Button } from "react-native-elements";
 
 import LocalStyles from "./styles";

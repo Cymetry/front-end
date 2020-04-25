@@ -1,21 +1,27 @@
-import React from "react";
-import { Text, View, Keyboard } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, View, Keyboard, TouchableHighlight } from "react-native";
 import { Button } from "react-native-elements";
 
 import LocalStyles from "./styles";
 import Styles from "../../../../../../../assets/styles";
 import DismissKeyboard from "../../../../../../components/dismiss-keyboard";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import MathJax from "../../../../../../components/math_jax";
-import { parseLatex } from "../../../../../../platform/services/latex";
+import TestingController from "../../../../../../platform/api/skillTesting";
+import TestingItem from "./item";
 
-import FeedBackPage from "./components/feedback/index";
+const Testing = ({ route }) => {
+  const { id } = route.params;
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
 
-const exampleLatex =
-  "$\\text{Find} \\text{one} \\text{solution} \\text{using} \\text{trial} \\text{and} \\text{error}$:$\\text{A} \\text{solution} \\text{is} x=\\FormInput[2]{box-1}.                                                       $";
-let scrollView = null;
+  const startTesting = async (id) => {
+    const result = await TestingController.Start(id);
+    setQuestions(result);
+  };
 
-const Testing = () => {
+  useEffect(() => {
+    startTesting(id);
+  }, [id]);
+
   return (
     <View stlye={Styles.page}>
       <DismissKeyboard>

@@ -39,7 +39,10 @@ class Skills extends PureComponent {
       skill => !skill.complete
     );
 
-    this.props.navigation.navigate(ROUTES.CONTENT_LEARNING_TESTING);
+    this.props.navigation.navigate(
+      ROUTES.CONTENT_LEARNING_TESTING,
+      { id: this.props.route.params.id }
+    );
     return;
 
     if (noCompleteSkills.length) {

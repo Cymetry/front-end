@@ -416,7 +416,7 @@ class SkillItem extends Component {
                     </View>
 
                     {!item.fillIn &&
-                      item.options.map((item) => (
+                      item.options.map((item) => console.warn(item) || (
                         <TouchableHighlight
                           key={item._id}
                           style={Styles.latexWrapper}

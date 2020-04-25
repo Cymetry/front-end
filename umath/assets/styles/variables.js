@@ -1,12 +1,10 @@
-import { PixelRatio } from "react-native";
-
-const PixelRatioValue = PixelRatio.get() <= 2;
+import { verticalScale } from "../../src/utils/sacling";
 
 const Variables = {
-  titleFontSize: PixelRatioValue ? 28 : 32,
-  smallFontSize: PixelRatioValue ? 14 : 18,
-  normalFontSize: PixelRatioValue ? 18 : 22,
-  smallestFontSize: PixelRatioValue ? 12 : 16,
+  titleFontSize: verticalScale(32),
+  smallFontSize: verticalScale(18),
+  normalFontSize: verticalScale(22),
+  smallestFontSize: verticalScale(12),
 
   blue: "#0880FA",
   vividBlue: "#0091FF",

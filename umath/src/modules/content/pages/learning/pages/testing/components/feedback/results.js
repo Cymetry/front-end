@@ -12,7 +12,11 @@ const Results = ({ answers }) => {
       return (
         <View key={index} style={ResultStyles.questionWrapper}>
           <Text style={ResultStyles.questionText}>Question {index + 1} </Text>
-          {answer.isRight ? <CheckMark /> : <WrongIcon />}
+          {answer.isRight ? (
+            <CheckMark height={10} />
+          ) : (
+            <WrongIcon height={10} />
+          )}
         </View>
       );
     });
@@ -33,7 +37,7 @@ const ResultStyles = StyleSheet.create({
     alignItems: "center",
   },
   questionText: {
-    fontSize: Variables.smallFontSize,
+    fontSize: Variables.smallestFontSize,
   },
 });
 

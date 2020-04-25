@@ -7,6 +7,7 @@ const FeedbackPageStyles = StyleSheet.create({
   resultContainer: {
     flex: 1,
     justifyContent: "space-evenly",
+    alignItems: "center",
   },
   percent: {
     color: Variables.blue,

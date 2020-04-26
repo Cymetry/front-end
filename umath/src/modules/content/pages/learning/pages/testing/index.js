@@ -24,13 +24,29 @@ const Testing = ({ route }) => {
     setQuestions(result);
   };
 
+  const resumeTesting = async (id) => {
+    const result = await TestingController.Resume(id);
+    setQuestions(result);
+  };
+
+  const testAction = async (id) => {
+    const result = await TestingController.CheckStatus(id);
+    if (result.task === 'start') {
+      startTesting(id);
+    }
+    else {
+      resumeTesting(id);
+    }
+  }
+
   useEffect(() => {
-    startTesting(id);
+    testAction(id);
   }, [id]);
 
   const nextStep = () => {
     setUserAnswers([...userAnswers, {
       id: currentQuestion,
+      uid: questions[currentQuestion].id,
       isRight: questions[currentQuestion].answers[0] === numToLetter[selectedAnswer],
     }]);
     setSelectedAnswer(null);
@@ -44,6 +60,11 @@ const Testing = ({ route }) => {
 
     setCurrentQuestion(currentQuestion + 1);
   };
+
+  useEffect(() => {
+    if (questions.length === userAnswers.length && userAnswers.length !== 0)
+      TestingController.SaveProgress(userAnswers, id);
+  }, [showFeedback]);
 
   const calculatePercent = () => {
     const totalScore = questions.reduce((score, question) => score + question.score, 0);

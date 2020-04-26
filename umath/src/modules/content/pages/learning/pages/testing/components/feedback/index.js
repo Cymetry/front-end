@@ -11,50 +11,26 @@ const FeedbackTypeEnum = Object.freeze({
   Test: 1,
 });
 
-const questions = [
-  {
-    id: 1,
-    isRight: false,
-  },
-  {
-    id: 2,
-    isRight: true,
-  },
-  {
-    id: 3,
-    isRight: true,
-  },
-  {
-    id: 4,
-    isRight: true,
-  },
-  {
-    id: 5,
-    isRight: true,
-  },
-  {
-    id: 6,
-    isRight: true,
-  },
-  {
-    id: 7,
-    isRight: false,
-  },
-];
+const percentToSentiment = (percent) => {
+  if (percent >= 90) return 'excellent!';
+  if (percent >= 80) return 'very good!';
+  if (percent >= 60) return 'good!';
+  return 'revision needed!';
+};
 
 const FeedBackPage = ({
-  percent = "70%",
-  sentiment = "Very good !",
+  percent,
+  answers,
   feedbackType = FeedbackTypeEnum.Revision,
 }) => {
   return (
     <>
       <Section style={FeedbackPageStyles.resultContainer}>
         <View style={FeedbackPageStyles.resultTextWrapper}>
-          <Text style={FeedbackPageStyles.percent}> {percent} </Text>
-          <Text style={FeedbackPageStyles.sentimentText}> {sentiment} </Text>
+          <Text style={FeedbackPageStyles.percent}> {percent}% </Text>
+          <Text style={FeedbackPageStyles.sentimentText}> {percentToSentiment(percent)} </Text>
         </View>
-        <Results answers={questions} />
+        <Results answers={answers} />
         {feedbackType === FeedbackTypeEnum.Test ? (
           <Button style={FeedbackPageStyles.button} title="See the solutions" />
         ) : null}

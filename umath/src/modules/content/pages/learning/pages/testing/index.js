@@ -7,15 +7,17 @@ import Styles from "../../../../../../../assets/styles";
 import DismissKeyboard from "../../../../../../components/dismiss-keyboard";
 import TestingController from "../../../../../../platform/api/skillTesting";
 import TestingItem from "./item";
+import FeedBackPage from "./components/feedback";
 
 const numToLetter = ['a', 'b', 'c', 'd'];
 
 const Testing = ({ route }) => {
   const { id } = route.params;
   const [questions, setQuestions] = useState([]);
+  const [userAnswers, setUserAnswers] = useState([]);
+  const [showFeedback, setShowFeedback] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [userAnswers, setUserAnswers] = useState([]);
 
   const startTesting = async (id) => {
     const result = await TestingController.Start(id);
@@ -26,16 +28,43 @@ const Testing = ({ route }) => {
     startTesting(id);
   }, [id]);
 
-  nextStep = () => {
+  const nextStep = () => {
     setUserAnswers([...userAnswers, {
       id: currentQuestion,
       isRight: questions[currentQuestion].answers[0] === numToLetter[selectedAnswer],
     }]);
-    setCurrentQuestion(currentQuestion + 1);
     setSelectedAnswer(null);
+
+    const isLastPage = !questions[currentQuestion + 1];
+
+    if (isLastPage) {
+      setShowFeedback(true);
+      return;
+    }
+
+    setCurrentQuestion(currentQuestion + 1);
   };
 
-  console.log(userAnswers);
+  const calculatePercent = () => {
+    const totalScore = questions.reduce((score, question) => score + question.score, 0);
+    const percent = userAnswers.reduce((percent, answer, answerIndex) => {
+      if (answer.isRight)
+        return percent + (questions[answerIndex].score / totalScore) * 100;
+      return percent;
+    }, 0);
+    return Math.floor(percent);
+  };
+
+  if (showFeedback) {
+    return (
+      <View style={Styles.page}>
+        <FeedBackPage
+          answers={userAnswers}
+          percent={calculatePercent()}
+        />
+      </View>
+    );
+  }
 
   return (
     <View stlye={Styles.page}>

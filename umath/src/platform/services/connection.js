@@ -23,6 +23,7 @@ class Connection {
   static createHeaders = async isUpload => {
     const HEADERS = new Headers();
     const token = await AsyncStorage.getItem('token');
+    console.log(token);
     token && HEADERS.append('auth', token);
     !isUpload && HEADERS.append('Content-Type', 'application/json');
     return HEADERS;

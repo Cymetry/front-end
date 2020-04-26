@@ -6,11 +6,6 @@ import FeedbackPageStyles from "./styles";
 import Section from "../../../../../../../../components/section";
 import Results from "./results";
 
-const FeedbackTypeEnum = Object.freeze({
-  Revision: 0,
-  Test: 1,
-});
-
 const percentToSentiment = (percent) => {
   if (percent >= 90) return 'excellent!';
   if (percent >= 80) return 'very good!';
@@ -19,9 +14,10 @@ const percentToSentiment = (percent) => {
 };
 
 const FeedBackPage = ({
+  round,
   percent,
   answers,
-  feedbackType = FeedbackTypeEnum.Revision,
+  resumeTest
 }) => {
   return (
     <>
@@ -31,15 +27,13 @@ const FeedBackPage = ({
           <Text style={FeedbackPageStyles.sentimentText}> {percentToSentiment(percent)} </Text>
         </View>
         <Results answers={answers} />
-        {feedbackType === FeedbackTypeEnum.Test ? (
-          <Button style={FeedbackPageStyles.button} title="See the solutions" />
-        ) : null}
       </Section>
       <Section style={FeedbackPageStyles.buttonContainer}>
         <Button
           style={FeedbackPageStyles.button}
+          onPress={resumeTest}
           title={
-            feedbackType === FeedbackTypeEnum.Revision
+            round === 'round1'
               ? "Mistake Revision"
               : "Proceed to tests"
           }

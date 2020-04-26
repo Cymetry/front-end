@@ -6,6 +6,7 @@ import LocalStyles from "./styles";
 import Styles from "../../../../../../../assets/styles";
 import DismissKeyboard from "../../../../../../components/dismiss-keyboard";
 import TestingController from "../../../../../../platform/api/skillTesting";
+import VideoController from "../../../../../../platform/api/video";
 import TestingItem from "./item";
 import FeedBackPage from "./components/feedback";
 
@@ -13,6 +14,7 @@ const numToLetter = ['a', 'b', 'c', 'd'];
 
 const Testing = ({ route }) => {
   const { id } = route.params;
+  const [round, setRound] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -20,17 +22,33 @@ const Testing = ({ route }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
   const startTesting = async (id) => {
-    const result = await TestingController.Start(id);
-    setQuestions(result);
+    const {body, round} = await TestingController.Start(id);
+    setQuestions(body);
+    setRound(round);
   };
 
   const resumeTesting = async (id) => {
-    const result = await TestingController.Resume(id);
-    setQuestions(result);
+    const {body, round, weakSet} = await TestingController.Resume(id);
+    console.log('I AM HEREEEEEEEE');
+    console.log({body, round, weakSet})
+    if (weakSet && weakSet.length) {
+      const vides = await VideoController.getVideos(weakSet);
+      console.log('videosssss');
+      console.log(vides);
+      console.log(round);
+    }
+
+    setRound(round);
+    setUserAnswers([]);
+    setQuestions(body);
+    setCurrentQuestion(0);
+    setShowFeedback(false);
+    setSelectedAnswer(null);
   };
 
   const testAction = async (id) => {
     const result = await TestingController.CheckStatus(id);
+    console.log(result);
     if (result.task === 'start') {
       startTesting(id);
     }
@@ -80,8 +98,10 @@ const Testing = ({ route }) => {
     return (
       <View style={Styles.page}>
         <FeedBackPage
+          round={round}
           answers={userAnswers}
           percent={calculatePercent()}
+          resumeTest={resumeTesting}
         />
       </View>
     );
@@ -118,13 +138,15 @@ const Testing = ({ route }) => {
               />
             </View>
 
-            <View style={{ ...LocalStyles.button, ...LocalStyles.lastButtons }}>
-              <Button
-                titleStyle={LocalStyles.buttonTitle}
-                title="Solution"
-                type="clear"
-              />
-            </View>
+            { round === 'round1' ? null :
+              <View style={{ ...LocalStyles.button, ...LocalStyles.lastButtons }}>
+                <Button
+                  titleStyle={LocalStyles.buttonTitle}
+                  title="Solution"
+                  type="clear"
+                />
+              </View>
+            }
           </View>
         </>
       </DismissKeyboard>

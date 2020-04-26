@@ -11,14 +11,12 @@ class SkillTestingController {
 
   static Start = async id => {
     const request = await Connection.GET(controller, 'start', { topicId: id });
-    
-    return JSON.parse(request).body;
+    return JSON.parse(request);
   }
 
   static Resume = async id => {
-    const request = await Connection.GET(controller, 'start', { topicId: id });
-    
-    return JSON.parse(request).body;
+    const request = await Connection.GET(controller, 'resume', { topicId: id });
+    return JSON.parse(request);
   };
 
   static SaveProgress = async (answers, topicId) => {

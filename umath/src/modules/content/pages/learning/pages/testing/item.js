@@ -7,9 +7,7 @@ import LocalStyles from './styles';
 
 let scrollView = null;
 
-const TestingItem = ({ question }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-
+const TestingItem = ({ question, selectedAnswer, setSelectedAnswer }) => {
   if (!question) return null;
 
   return (

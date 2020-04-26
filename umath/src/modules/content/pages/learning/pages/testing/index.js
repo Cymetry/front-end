@@ -8,10 +8,14 @@ import DismissKeyboard from "../../../../../../components/dismiss-keyboard";
 import TestingController from "../../../../../../platform/api/skillTesting";
 import TestingItem from "./item";
 
+const numToLetter = ['a', 'b', 'c', 'd'];
+
 const Testing = ({ route }) => {
   const { id } = route.params;
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [userAnswers, setUserAnswers] = useState([]);
 
   const startTesting = async (id) => {
     const result = await TestingController.Start(id);
@@ -22,23 +26,45 @@ const Testing = ({ route }) => {
     startTesting(id);
   }, [id]);
 
+  nextStep = () => {
+    setUserAnswers([...userAnswers, {
+      id: currentQuestion,
+      isRight: questions[currentQuestion].answers[0] === numToLetter[selectedAnswer],
+    }]);
+    setCurrentQuestion(currentQuestion + 1);
+    setSelectedAnswer(null);
+  };
+
+  console.log(userAnswers);
+
   return (
     <View stlye={Styles.page}>
       <DismissKeyboard>
         <>
-          <TestingItem question={questions[currentQuestion]} />
+          <TestingItem
+            selectedAnswer={selectedAnswer}
+            setSelectedAnswer={setSelectedAnswer}
+            question={questions[currentQuestion]}
+          />
           <View style={LocalStyles.buttonWrapper}>
             <View
-              style={{
+              style={
+                selectedAnswer !== null ?
+                {
                 ...LocalStyles.button,
                 ...LocalStyles.lastButtons,
-                ...Styles.button.disabled,
-              }}
+                } : {
+                  ...LocalStyles.button,
+                  ...Styles.button.disabled,
+                  ...LocalStyles.lastButtons,
+                }
+              }
             >
               <Button
-                titleStyle={LocalStyles.disabledButtonTitle}
                 title="Next"
                 type="clear"
+                onPress={ selectedAnswer !== null ? nextStep : null }
+                titleStyle={ selectedAnswer !== null ? LocalStyles.buttonTitle : LocalStyles.disabledButtonTitle }
               />
             </View>
 

@@ -14,6 +14,12 @@ import Videos from './components/videos';
 import ROUTES from "../../../../../../platform/constants/routes";
 
 const numToLetter = ['a', 'b', 'c', 'd'];
+const letterToNum = {
+  a: 0,
+  b: 1,
+  c: 2,
+  d: 3
+};
 
 const Testing = ({ route, navigation }) => {
   const { id } = route.params;
@@ -22,6 +28,7 @@ const Testing = ({ route, navigation }) => {
   const [questions, setQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [solutionShown, setSolutionShown] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
@@ -56,6 +63,7 @@ const Testing = ({ route, navigation }) => {
     setCurrentQuestion(0);
     setShowFeedback(false);
     setSelectedAnswer(null);
+    setSolutionShown(false);
   };
 
   const testAction = async (id) => {
@@ -76,7 +84,7 @@ const Testing = ({ route, navigation }) => {
     setUserAnswers([...userAnswers, {
       id: currentQuestion,
       uid: questions[currentQuestion].id,
-      isRight: questions[currentQuestion].answers[0] === numToLetter[selectedAnswer],
+      isRight: !solutionShown ? questions[currentQuestion].answers[0] === numToLetter[selectedAnswer] : false,
     }]);
     setSelectedAnswer(null);
 
@@ -88,6 +96,7 @@ const Testing = ({ route, navigation }) => {
     }
 
     setCurrentQuestion(currentQuestion + 1);
+    setSolutionShown(false);
   };
 
   useEffect(() => {
@@ -103,6 +112,11 @@ const Testing = ({ route, navigation }) => {
       return percent;
     }, 0);
     return Math.floor(percent);
+  };
+
+  const showSolution = () => {
+    setSolutionShown(true);
+    setSelectedAnswer(letterToNum[questions[currentQuestion].answers[0]]);
   };
 
   const clearVideos = () => {
@@ -176,9 +190,10 @@ const Testing = ({ route, navigation }) => {
             { round === 'round1' ? null :
               <View style={{ ...LocalStyles.button, ...LocalStyles.lastButtons }}>
                 <Button
-                  titleStyle={LocalStyles.buttonTitle}
-                  title="Solution"
+                  onPress={showSolution}
                   type="clear"
+                  title="Solution"
+                  titleStyle={LocalStyles.buttonTitle}
                 />
               </View>
             }

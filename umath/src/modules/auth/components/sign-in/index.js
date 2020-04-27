@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import { View, Text, Alert, AsyncStorage, Image } from 'react-native';
-import { Input, Button } from 'react-native-elements';
-import { CommonActions } from '@react-navigation/native';
+import React, { Component } from "react";
+import { View, Text, Alert, AsyncStorage, Image } from "react-native";
+import { Input, Button } from "react-native-elements";
+import { CommonActions } from "@react-navigation/native";
 
-import ROUTES from '../../../../platform/constants/routes';
-import AuthController from '../../../../platform/api/auth';
-import { ViewTypeEnum } from '../../constants/enums';
-import LocalStyles from '../../styles';
-import Styles from '../../../../../assets/styles';
-import { navigationWrapper } from '../../../../platform/services/navigation';
+import ROUTES from "../../../../platform/constants/routes";
+import AuthController from "../../../../platform/api/auth";
+import { ViewTypeEnum } from "../../constants/enums";
+import LocalStyles from "../../styles";
+import Styles from "../../../../../assets/styles";
+import { navigationWrapper } from "../../../../platform/services/navigation";
 
-import isEmailValid from '../../../../utils/validateEmail';
+import isEmailValid from "../../../../utils/validateEmail";
 
 class SignIn extends Component {
   state = {
     emailValid: true,
     form: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   };
 
@@ -31,7 +31,7 @@ class SignIn extends Component {
     form[name] = value;
     this.setState({ form });
 
-    if (name === 'email') {
+    if (name === "email") {
       const emailValid = isEmailValid(value);
       this.setState({ emailValid });
     }
@@ -43,8 +43,8 @@ class SignIn extends Component {
       const result = await AuthController.Login(form);
       if (result) {
         await AsyncStorage.multiSet([
-          ['token', result.jwt],
-          ['isPremium', result.isPremium ? 'true' : ''],
+          ["token", result.jwt],
+          ["isPremium", result.isPremium ? "true" : ""],
         ]);
         this.props.navigation.dispatch(
           CommonActions.reset({
@@ -55,9 +55,9 @@ class SignIn extends Component {
                 params: { loggedIn: true },
               },
             ],
-          }),
+          })
         );
-      } else Alert.alert('Username or Password is incorrect!!');
+      } else Alert.alert("Username or Password is incorrect!!");
     }
   };
 
@@ -86,15 +86,16 @@ class SignIn extends Component {
         </Text>
         <Input
           placeholder="Email"
+          autoCapitalize={false}
           containerStyle={Styles.input.classic}
-          onChangeText={(value) => this.change('email', value)}
-          errorMessage={!emailValid ? 'invalid email' : undefined}
+          onChangeText={(value) => this.change("email", value)}
+          errorMessage={!emailValid ? "invalid email" : undefined}
         />
         <Input
           secureTextEntry
           placeholder="Password"
           containerStyle={Styles.input.classic}
-          onChangeText={(value) => this.change('password', value)}
+          onChangeText={(value) => this.change("password", value)}
         />
         <Text
           style={{

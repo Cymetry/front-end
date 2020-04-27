@@ -1,28 +1,28 @@
-import React, { Component } from 'react';
-import { View, Text, AsyncStorage, Image, Alert } from 'react-native';
-import { Input, Button } from 'react-native-elements';
-import DatePicker from 'react-native-datepicker';
+import React, { Component } from "react";
+import { View, Text, AsyncStorage, Image, Alert } from "react-native";
+import { Input, Button } from "react-native-elements";
+import DatePicker from "react-native-datepicker";
 
-import ROUTES from '../../../../platform/constants/routes';
-import UserController from '../../../../platform/api/user';
-import AuthController from '../../../../platform/api/auth';
-import LocalStyles from '../../styles';
-import { ViewTypeEnum } from '../../constants/enums';
-import Styles from '../../../../../assets/styles';
+import ROUTES from "../../../../platform/constants/routes";
+import UserController from "../../../../platform/api/user";
+import AuthController from "../../../../platform/api/auth";
+import LocalStyles from "../../styles";
+import { ViewTypeEnum } from "../../constants/enums";
+import Styles from "../../../../../assets/styles";
 
-import isEmailValid from '../../../../utils/validateEmail';
+import isEmailValid from "../../../../utils/validateEmail";
 
 class SignUp extends Component {
   state = {
     submited: false,
     form: {
-      name: '',
-      surname: '',
-      password: '',
-      email: '',
+      name: "",
+      surname: "",
+      password: "",
+      email: "",
       dob: null,
-      role: 'USER',
-      school: '',
+      role: "USER",
+      school: "",
     },
     emailValid: true,
     passwordValid: true,
@@ -45,16 +45,14 @@ class SignUp extends Component {
     form[name] = value;
     this.setState({ form });
 
-    if (name == 'email') {
+    if (name == "email") {
       const emailValid = isEmailValid(value);
       this.setState({ emailValid });
     }
 
-    if (name === 'password') {
-      if (value.length < 4)
-        this.setState({ passwordValid: false });
-      else
-        this.setState({ passwordValid: true });
+    if (name === "password") {
+      if (value.length < 4) this.setState({ passwordValid: false });
+      else this.setState({ passwordValid: true });
     }
   };
 
@@ -72,19 +70,19 @@ class SignUp extends Component {
       });
       if (authResult) {
         await AsyncStorage.multiSet([
-          ['token', authResult.jwt],
-          ['isPremium', authResult.isPremium ? 'true' : ''],
+          ["token", authResult.jwt],
+          ["isPremium", authResult.isPremium ? "true" : ""],
         ]);
 
         navigation.navigate(
           lastPath || ROUTES.CONTENT,
-          lastParams || { loggedIn: true },
+          lastParams || { loggedIn: true }
         );
       } else {
-        Alert.alert('Something is wrong!!');
+        Alert.alert("Something is wrong!!");
       }
     } else {
-      Alert.alert('Something is wrong!!');
+      Alert.alert("Something is wrong!!");
     }
   };
 
@@ -107,36 +105,37 @@ class SignUp extends Component {
         </Text>
         <Input
           value={form.name}
-          onChangeText={(value) => this.change('name', value)}
+          onChangeText={(value) => this.change("name", value)}
           containerStyle={Styles.input.classic}
           placeholder="Name"
         />
         <Input
           value={form.surname}
-          onChangeText={(value) => this.change('surname', value)}
+          onChangeText={(value) => this.change("surname", value)}
           containerStyle={Styles.input.classic}
           placeholder="Surname"
         />
         <Input
-          errorMessage={!emailValid ? 'invalid email' : undefined}
+          autoCapitalize={false}
+          errorMessage={!emailValid ? "invalid email" : undefined}
           value={form.email}
-          onChangeText={(value) => this.change('email', value)}
+          onChangeText={(value) => this.change("email", value)}
           containerStyle={Styles.input.classic}
           autoCapitalize="none"
           placeholder="Email"
         />
         <Input
           value={form.password}
-          onChangeText={(value) => this.change('password', value)}
+          onChangeText={(value) => this.change("password", value)}
           containerStyle={Styles.input.classic}
           autoCapitalize="none"
           placeholder="Password"
-          errorMessage={passwordValid ? '' : 'Password too short!'}
-          inputContainerStyle={passwordValid ? {} : { borderColor: 'red' }}
+          errorMessage={passwordValid ? "" : "Password too short!"}
+          inputContainerStyle={passwordValid ? {} : { borderColor: "red" }}
           secureTextEntry
         />
         <DatePicker
-          style={{ ...Styles.input.classic, width: '100%' }}
+          style={{ ...Styles.input.classic, width: "100%" }}
           customStyles={{
             placeholderText: Styles.text.smallSize,
             dateInput: LocalStyles.datePicker,
@@ -144,16 +143,16 @@ class SignUp extends Component {
           }}
           mode="date"
           date={form.dob}
-          locale={'en_us'}
+          locale={"en_us"}
           showIcon={false}
           cancelBtnText="Cancel"
           confirmBtnText="Confirm"
           placeholder="Date of Birth"
-          onDateChange={(value) => this.change('dob', value)}
+          onDateChange={(value) => this.change("dob", value)}
         />
         <Input
           value={form.school}
-          onChangeText={(value) => this.change('school', value)}
+          onChangeText={(value) => this.change("school", value)}
           containerStyle={Styles.input.classic}
           placeholder="School"
         />
@@ -177,7 +176,7 @@ class SignUp extends Component {
           <Button
             disabled={this.disabled}
             titleStyle={Styles.button.title}
-            disabledTitleStyle={{ color: 'white' }}
+            disabledTitleStyle={{ color: "white" }}
             title="Sign up"
             type="clear"
             onPress={this.submit}

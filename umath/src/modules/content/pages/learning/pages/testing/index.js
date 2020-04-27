@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import { Button } from "react-native-elements";
 
 import LocalStyles from "./styles";
+import { withNavigation } from "react-navigation";
 import Styles from "../../../../../../../assets/styles";
 import DismissKeyboard from "../../../../../../components/dismiss-keyboard";
 import TestingController from "../../../../../../platform/api/skillTesting";
@@ -10,10 +11,11 @@ import VideoController from "../../../../../../platform/api/video";
 import TestingItem from "./item";
 import FeedBackPage from "./components/feedback";
 import Videos from './components/videos';
+import ROUTES from "../../../../../../platform/constants/routes";
 
 const numToLetter = ['a', 'b', 'c', 'd'];
 
-const Testing = ({ route }) => {
+const Testing = ({ route, navigation }) => {
   const { id } = route.params;
   const [round, setRound] = useState(null);
   const [videos, setVideos] = useState([]);
@@ -30,7 +32,16 @@ const Testing = ({ route }) => {
   };
 
   const resumeTesting = async (id) => {
-    const {body, round, weakSet} = await TestingController.Resume(id);
+    const {body, round, weakSet, message} = await TestingController.Resume(id);
+
+    if (message === "SkillTest has been completed") {
+      navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id });
+      Alert.alert(
+        'Skill Testing',
+        'The test has been completed',
+      );
+      return;
+    }
 
     if (weakSet && weakSet.length) {
       const {body} = await VideoController.getVideos(weakSet);
@@ -178,4 +189,4 @@ const Testing = ({ route }) => {
   );
 };
 
-export default Testing;
+export default withNavigation(Testing);

@@ -34,7 +34,7 @@ const Testing = ({ route, navigation }) => {
   const resumeTesting = async (id) => {
     const {body, round, weakSet, message} = await TestingController.Resume(id);
 
-    if (message === "SkillTest has been completed") {
+    if (["SkillTest has been completed", "SkillTest Complete!"].includes(message)) {
       navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id });
       Alert.alert(
         'Skill Testing',
@@ -116,7 +116,7 @@ const Testing = ({ route, navigation }) => {
           round={round}
           answers={userAnswers}
           percent={calculatePercent()}
-          resumeTest={resumeTesting}
+          resumeTest={() => resumeTesting(id)}
         />
       </View>
     );

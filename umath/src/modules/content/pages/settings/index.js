@@ -50,7 +50,16 @@ const Settings = ({ navigation }) => {
   const signOut = async () => {
     try {
       await AsyncStorage.multiRemove(["token", "isPremium"]);
-      navigation.navigate(ROUTES.HOME);
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: ROUTES.HOME,
+            },
+          ],
+        }),
+      );
     } catch (e) {
       console.warn(e);
     }

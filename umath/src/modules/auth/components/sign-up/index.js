@@ -116,7 +116,6 @@ class SignUp extends Component {
           placeholder="Surname"
         />
         <Input
-          autoCapitalize={false}
           errorMessage={!emailValid ? "invalid email" : undefined}
           value={form.email}
           onChangeText={(value) => this.change("email", value)}

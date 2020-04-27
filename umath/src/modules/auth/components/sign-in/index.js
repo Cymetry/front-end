@@ -86,7 +86,7 @@ class SignIn extends Component {
         </Text>
         <Input
           placeholder="Email"
-          autoCapitalize={false}
+          autoCapitalize="none"
           containerStyle={Styles.input.classic}
           onChangeText={(value) => this.change("email", value)}
           errorMessage={!emailValid ? "invalid email" : undefined}

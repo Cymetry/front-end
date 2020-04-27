@@ -1,9 +1,9 @@
-import { verticalScale } from "../../src/utils/sacling";
+import { verticalScale, scale } from "../../src/utils/sacling";
 
 const Variables = {
-  titleFontSize: verticalScale(32),
-  smallFontSize: verticalScale(18),
-  normalFontSize: verticalScale(22),
+  titleFontSize: scale(32),
+  smallFontSize: scale(18),
+  normalFontSize: scale(22),
   smallestFontSize: verticalScale(12),
 
   blue: "#0880FA",

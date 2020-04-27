@@ -16,6 +16,7 @@ class SkillTestingController {
 
   static Resume = async id => {
     const request = await Connection.GET(controller, 'resume', { topicId: id });
+    console.log(await JSON.parse(request))
     return JSON.parse(request);
   };
 

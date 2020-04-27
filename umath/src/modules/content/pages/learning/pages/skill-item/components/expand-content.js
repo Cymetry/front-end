@@ -58,7 +58,6 @@ class ExpandContent extends Component {
   };
 
   fillInAnswer = (index, postData) => {
-    console.log('mtavvvv');
     if (postData && !parseInt(postData)) {
       const message = JSON.parse(postData);
       const { stepAnswers, currentStep } = this.state;

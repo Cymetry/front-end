@@ -9,12 +9,14 @@ import TestingController from "../../../../../../platform/api/skillTesting";
 import VideoController from "../../../../../../platform/api/video";
 import TestingItem from "./item";
 import FeedBackPage from "./components/feedback";
+import Videos from './components/videos';
 
 const numToLetter = ['a', 'b', 'c', 'd'];
 
 const Testing = ({ route }) => {
   const { id } = route.params;
   const [round, setRound] = useState(null);
+  const [videos, setVideos] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -29,13 +31,12 @@ const Testing = ({ route }) => {
 
   const resumeTesting = async (id) => {
     const {body, round, weakSet} = await TestingController.Resume(id);
-    console.log('I AM HEREEEEEEEE');
-    console.log({body, round, weakSet})
+
     if (weakSet && weakSet.length) {
-      const vides = await VideoController.getVideos(weakSet);
-      console.log('videosssss');
-      console.log(vides);
-      console.log(round);
+      const {body} = await VideoController.getVideos(weakSet);
+      setVideos(body);
+    } else {
+      setVideos([]);
     }
 
     setRound(round);
@@ -48,7 +49,6 @@ const Testing = ({ route }) => {
 
   const testAction = async (id) => {
     const result = await TestingController.CheckStatus(id);
-    console.log(result);
     if (result.task === 'start') {
       startTesting(id);
     }
@@ -102,6 +102,16 @@ const Testing = ({ route }) => {
           answers={userAnswers}
           percent={calculatePercent()}
           resumeTest={resumeTesting}
+        />
+      </View>
+    );
+  }
+
+  if (videos.length) {
+    return (
+      <View style={Styles.page}>
+        <Videos
+          videos={videos}
         />
       </View>
     );

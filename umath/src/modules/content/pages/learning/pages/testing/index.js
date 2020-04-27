@@ -94,6 +94,10 @@ const Testing = ({ route }) => {
     return Math.floor(percent);
   };
 
+  const clearVideos = () => {
+    setVideos([]);
+  };
+
   if (showFeedback) {
     return (
       <View style={Styles.page}>
@@ -113,6 +117,16 @@ const Testing = ({ route }) => {
         <Videos
           videos={videos}
         />
+        <View style={LocalStyles.buttonWrapper}>
+          <View style={{ ...LocalStyles.button, ...LocalStyles.lastButtons }}>
+            <Button
+              title="Done"
+              type="clear"
+              onPress={ clearVideos }
+              titleStyle={ LocalStyles.buttonTitle }
+            />
+          </View>
+        </View>
       </View>
     );
   }

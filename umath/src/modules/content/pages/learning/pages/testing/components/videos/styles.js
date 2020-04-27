@@ -6,4 +6,11 @@ export default StyleSheet.create({
     height: 300,
     marginBottom: 20,
   },
+  container: {
+    alignItems: 'center'
+  },
+  text: {
+    marginTop: 10,
+    marginBottom: 10,
+  }
 });

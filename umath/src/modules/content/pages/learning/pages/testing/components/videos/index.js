@@ -10,8 +10,11 @@ const Videos = ({ videos }) => {
       {
         videos.map(
           ((url, idx) => (
-            <View key={idx}>
-              <Text>HELLO</Text>
+            <View
+              key={idx}
+              style={LocalStyles.container}
+            >
+              <Text style={LocalStyles.text}>Video {idx+1}</Text>
               <Video
                 source={{ uri: url }}
                 style={LocalStyles.video}

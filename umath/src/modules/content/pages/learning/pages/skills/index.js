@@ -66,7 +66,6 @@ class Skills extends PureComponent {
             <View
               style={{
                 ...LocalStyles.button,
-                ...(this.completePercent < 100 ? Styles.button.disabled : {})
               }}
             >
               <Button

@@ -13,6 +13,24 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
 
   const webView = createRef();
 
+  const prepareGraphs = (latex) => {
+    const splitted = latex.split("[()]");
+
+    if (splitted.length > 1) {
+      splitted.map((item, index) => {
+        if (index === splitted.length - 1) {
+          if (splitted[index]) splitted[index] = parseLatex(splitted[index]);
+          return;
+        }
+        splitted[index] = `${parseLatex(splitted[index])} <img src="${
+          question.graphs[index]
+        }" style="width: 100%; height: 400px" alt="graph" />`;
+      });
+    } else return parseLatex(splitted[0]);
+
+    return splitted.join("");
+  };
+
   const showSolution = (solution) => {
     if (!showAnswer || !question.fillIn)
       return;
@@ -44,7 +62,9 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
           <View style={LocalStyles.latexWrapper}>
             {
               <MathJax
-                html={parseLatex(question.question)}
+                html={question.graphs.length
+                  ? parseLatex(question.question)
+                  : parseLatex(question.question)}
                 webViewRef={webView}
                 onMessage={onMessage}
               />

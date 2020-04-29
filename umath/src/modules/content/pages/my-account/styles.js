@@ -21,7 +21,6 @@ const LocalStyles = StyleSheet.create({
     borderColor: "#F8F8F8",
     backgroundColor: "gray",
     marginTop: "8%",
-    marginBottom: "8%",
   },
 
   fullName: {
@@ -44,7 +43,7 @@ const LocalStyles = StyleSheet.create({
   },
 
   button: {
-    width: "60%",
+    minWidth: "60%",
     height: height / 14,
     marginVertical: 5,
     borderRadius: 8,
@@ -76,6 +75,7 @@ const LocalStyles = StyleSheet.create({
     marginVertical: 30,
     flexDirection: "row",
     justifyContent: "center",
+    marginTop: "10%",
   },
 
   achievementItem: {

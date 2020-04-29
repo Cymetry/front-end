@@ -52,9 +52,9 @@ class MyAccount extends PureComponent {
     this.state.skill.redirectToTopic
       ? this.handleTopicClick()
       : navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
-        screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
-        params: this.state.skill,
-      });
+          screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
+          params: this.state.skill,
+        });
 
   handleTopicClick = () =>
     navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
@@ -174,7 +174,7 @@ class MyAccount extends PureComponent {
                 key={skill.id}
                 onPress={this.handleSkillClick}
                 buttonStyle={LocalStyles.button}
-                titleStyle={Styles.button.title}
+                titleStyle={Styles.button.myAccountButtonTitle}
                 title={truncate(`${skill.name} ${skill.step}`)}
               />
               <Button
@@ -183,7 +183,7 @@ class MyAccount extends PureComponent {
                 title={truncate(topic.name)}
                 onPress={this.handleTopicClick}
                 buttonStyle={LocalStyles.button}
-                titleStyle={Styles.button.title}
+                titleStyle={Styles.button.myAccountButtonTitle}
               />
             </View>
           )}

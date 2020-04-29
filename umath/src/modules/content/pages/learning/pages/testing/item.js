@@ -3,13 +3,12 @@ import {View, Text, TouchableHighlight} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import MathJax from '../../../../../../components/math_jax';
 import { parseLatex } from '../../../../../../platform/services/latex';
+import Styles from '../../../../../../../assets/styles';
 import LocalStyles from './styles';
 
 let scrollView = null;
 
-const TestingItem = ({ question }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-
+const TestingItem = ({ question, selectedAnswer, setSelectedAnswer }) => {
   if (!question) return null;
 
   return (
@@ -39,9 +38,17 @@ const TestingItem = ({ question }) => {
           question.options.map((option, idx) => (
             <TouchableHighlight
               key={`${idx}-${option}`}
+              style={Styles.latexWrapper}
               onPress={() => setSelectedAnswer(idx)}
             >
-              <Text style={idx === selectedAnswer ? { color: 'red' } : {}}>{option}</Text>
+              <MathJax
+                html={`<span style="${
+                  idx === selectedAnswer
+                    ? `color: green`
+                    : ""
+                }">(${idx}) ${parseLatex(option)}</span>`}
+                style={{ width: "100%" }}
+              />
             </TouchableHighlight>
           ))
         }

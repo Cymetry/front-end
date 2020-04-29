@@ -8,6 +8,7 @@ class SkillController {
     const request = Connection.GET(controller, '', { topicId: id });
     return request;
   }
+
 };
 
 export default SkillController;

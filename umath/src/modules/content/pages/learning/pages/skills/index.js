@@ -39,6 +39,12 @@ class Skills extends PureComponent {
       skill => !skill.complete
     );
 
+    this.props.navigation.navigate(
+      ROUTES.CONTENT_LEARNING_TESTING,
+      { id: this.props.route.params.id }
+    );
+    return;
+
     if (noCompleteSkills.length) {
       Alert.alert("Please complete all the skills to proceed to the Test", "");
     } else {
@@ -95,8 +101,11 @@ class Skills extends PureComponent {
                 }
                 onPress={() =>
                   navigationWrapper.navigation.navigate(
-                    ROUTES.CONTENT_LEARNING_SKILL_ITEM,
-                    { ...item, parentId: id }
+                    ROUTES.CONTENT_LEARNING,
+                    {
+                      screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
+                      params: { ...item, parentId: id },
+                    }
                   )
                 }
                 roundAvatar

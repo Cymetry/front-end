@@ -1,7 +1,7 @@
 {
   "name": "react-native-webview",
-  "version": "7.4.3",
-  "summary": "React Native WebView component for iOS, Android, and Windows 10 (coming soon)",
+  "version": "9.3.0",
+  "summary": "React Native WebView component for iOS, Android, macOS, and Windows",
   "license": "MIT",
   "authors": {
     "name": "Jamon Holmgren",
@@ -9,13 +9,14 @@
   },
   "homepage": "https://github.com/react-native-community/react-native-webview#readme",
   "platforms": {
-    "ios": "9.0"
+    "ios": "9.0",
+    "osx": "10.14"
   },
   "source": {
     "git": "https://github.com/react-native-community/react-native-webview.git",
-    "tag": "v7.4.3"
+    "tag": "v9.3.0"
   },
-  "source_files": "ios/**/*.{h,m}",
+  "source_files": "apple/**/*.{h,m}",
   "dependencies": {
     "React": [
 

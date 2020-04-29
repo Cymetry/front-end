@@ -1,31 +1,33 @@
 import React, { Component, createRef } from "react";
-import {
-  View,
-  Text,
-  TouchableHighlight,
-  Keyboard,
-  Dimensions,
-} from "react-native";
+import { View, Text, TouchableHighlight, Keyboard, TouchableOpacity, Alert } from "react-native";
 import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Video } from "expo-av";
-import { Html5Entities } from "html-entities";
-import KeyboardAccessory from "react-native-sticky-keyboard-accessory";
+import { withNavigation } from "react-navigation";
+// import { Html5Entities } from "html-entities";
+// import KeyboardAccessory from "react-native-sticky-keyboard-accessory";
+
+import * as AlertMessage from "../../../../../../const/alert";
 
 import MathJax from "../../../../../../components/math_jax";
 import DismissKeyboard from "../../../../../../components/dismiss-keyboard";
 import SkillLearningController from "../../../../../../platform/api/skillLearning";
-import ROUTES from "../../../../../../platform/constants/routes";
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from "./styles";
-import { withNavigation } from "react-navigation";
+import { parseLatex } from "../../../../../../platform/services/latex";
+import AsyncAlert from "../../../../../../components/async_alert";
+import ExpandContent from "./components/expand-content";
+import { navigationWrapper } from "../../../../../../platform/services/navigation";
 
-const htmlEntities = new Html5Entities();
+// const htmlEntities = new Html5Entities();
 
 class SkillItem extends Component {
   state = {
     data: null,
     showSolution: false,
+    erroredChoices: false,
+    expandOpened: false,
+    expandData: null,
     currentStep: 0,
     stepAnswers: [],
   };
@@ -51,7 +53,7 @@ class SkillItem extends Component {
         result.body.content.videoUrl = result.body.content.content;
       this.reamingMistakes =
         result.body.maxMistakes || result.body.maxMistakes === 0
-          ? result.body.maxMistakes
+          ? result.body.maxMistakes + 1
           : 2;
       result.body.content.steps = result.body.content.steps
         ? result.body.content.steps.map((item) =>
@@ -60,6 +62,7 @@ class SkillItem extends Component {
         : [];
       this.setState({
         data: result.body.content,
+        expandData: result.body.given,
         currentStep: 0,
         stepAnswers: [],
         showSolution: result.body.maxMistakes && result.body.maxMistakes > 100,
@@ -85,7 +88,27 @@ class SkillItem extends Component {
     return false;
   }
 
-  nextStep = () => {
+  toggleExpand = () => {
+    const { expandOpened } = this.state;
+    this.setState({ expandOpened: !expandOpened }, () => {
+      setTimeout(() => this.scrollView.scrollTo({ y: 0 }), 0);
+    });
+  }
+
+  nextStep = async () => {
+    if (this.state.data.videoUrl) {
+      const dialogResult = await AsyncAlert(
+        AlertMessage.videoRedirectWarning,
+        "",
+        {
+          confirmText: "Continue",
+          cancelText: "Cancel",
+        }
+      );
+
+      if (!dialogResult) return null;
+    }
+
     if (!this.nextDisabled) {
       const reamingMistakesSave = this.reamingMistakes;
       const { currentStep, stepAnswers, data } = this.state;
@@ -109,21 +132,50 @@ class SkillItem extends Component {
         }
       }
 
-      if (this.reamingMistakes <= 0) this.finish(false);
-      else if (reamingMistakesSave !== this.reamingMistakes) {
-        //
-      } else {
-        if (currentStep === data.steps.length - 1 || !data.steps.length) this.finish(true);
-        else {
-          this.webViews.push(createRef());
-          this.setState({ currentStep: currentStep + 1 });
+      const lastWebview = this.webViews[this.webViews.length - 1];
+      if (lastWebview.current || data.videoUrl) {
+        if (this.reamingMistakes <= 0) this.setState({ erroredChoices: true }, () => this.finish(false));
+        else if (reamingMistakesSave !== this.reamingMistakes) {
+          lastWebview.current && lastWebview.current.injectJavaScript(`
+            (() => {
+              const inputs = document.querySelectorAll('[id^="box-"]');             
+              Array.from(inputs).forEach(item => {
+                item.value = '';
+                item.style.border = '1px solid red';
+              });
+
+              return;
+            })();
+          `);
+
+          this.setState({ erroredChoices: true });
+        } else {
+          lastWebview.current && lastWebview.current.injectJavaScript(`
+            (() => {
+              const inputs = document.querySelectorAll('[id^="box-"]');             
+              Array.from(inputs).forEach(item => {
+                delete item.style.border;
+              });
+
+              return;
+            })();
+          `);
+
+          this.setState({ erroredChoices: false });
+
+          if (currentStep === data.steps.length - 1 || !data.steps.length) {
+            this.finish(true);
+          } else {
+            this.webViews.push(createRef());
+            this.setState({ currentStep: currentStep + 1 });
+          }
         }
       }
     }
   };
 
-  finish = async (fullFinished) => {
-    const { id, parentId } = this.props.route.params || {};
+  finish = fullFinished => this.setState({ expandData: null }, async () => {
+    const { id } = this.props.route.params || {};
     const { data, currentStep } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
@@ -133,32 +185,32 @@ class SkillItem extends Component {
       correctCount: fullFinished ? stepsData.length : stepsData.length - 1,
     };
 
-    // stepAnswers.map((item, index) => {
-    //   let correct = true;
-    //   const stepData = data.steps[index];
-
-    //   if (stepData.fillIn)
-    //     Object.values(item).map((item, index) => {
-    //       if (!stepData.answer[index].find((sub) => sub === item))
-    //         correct = false;
-    //     });
-    //   else if (item !== stepData.solution) correct = false;
-
-    //   if (!correct) body.mistakeCount += 1;
-    // });
-
     await SkillLearningController.SaveProgress(body);
+
     const response = await SkillLearningController.Resume(id);
-    if (response.message === "Skill has been completed")
-      return navigationWrapper.navigation.navigate(
-        ROUTES.CONTENT_LEARNING_SKILLS,
-        { id: parentId }
-      );
+
+    if (response && response.message) Alert.alert(response.message, '', [{
+        text: 'Back',
+        onPress: () => navigationWrapper.navigation.goBack(),
+    }]);
 
     try {
       const result = JSON.parse(response);
-      if (typeof result.body.content.content === "string")
+
+      if (result && result.message) Alert.alert(result.message, '', [{
+        text: 'Back',
+        onPress: () => navigationWrapper.navigation.goBack(),
+      }]); else if (data && !data.videoUrl) Alert.alert(AlertMessage.stepRedirectWarning, '', [{
+        text: 'Continue',
+      }]);
+
+      if (typeof result.body.content.content === "string") {
         result.body.content.videoUrl = result.body.content.content;
+      } else {
+        // fullFinished
+        //   ? await AsyncAlert(AlertMessage.completeSkill)
+        //   : await AsyncAlert(AlertMessage.nextSkill);
+      }
 
       result.body.content.steps = result.body.content.steps
         ? result.body.content.steps.map((item) =>
@@ -169,22 +221,22 @@ class SkillItem extends Component {
       this.mistakeCount = 0;
       this.reamingMistakes =
         result.body.maxMistakes || result.body.maxMistakes === 0
-          ? result.body.maxMistakes
+          ? result.body.maxMistakes + 1
           : 2;
 
       this.webViews = [createRef()];
       this.setState({
         data: result.body.content,
+        expandData: result.body.given,
         currentStep: 0,
         stepAnswers: [],
         showSolution: result.body.maxMistakes && result.body.maxMistakes > 100,
+        erroredChoices: false,
       });
     } catch (e) {
       /* */
     }
-  };
-
-  normalLatex = (latex) => latex.split(" ").join("~");
+  });
 
   prepareGraphs = (index, latex) => {
     const { data } = this.state;
@@ -194,15 +246,14 @@ class SkillItem extends Component {
     if (splitted.length > 1) {
       splitted.map((item, index) => {
         if (index === splitted.length - 1) {
-          if (splitted[index])
-            splitted[index] = this.normalLatex(splitted[index]);
+          if (splitted[index]) splitted[index] = parseLatex(splitted[index]);
           return;
         }
-        splitted[index] = `${this.normalLatex(splitted[index])} <img src="${
+        splitted[index] = `${parseLatex(splitted[index])} <img src="${
           activeStep.graphs[index]
         }" style="width: 100%; height: 400px" alt="graph" />`;
       });
-    } else return this.normalLatex(splitted[0]);
+    } else return parseLatex(splitted[0]);
 
     return splitted.join("");
   };
@@ -221,37 +272,37 @@ class SkillItem extends Component {
     }
   };
 
-  nonFillInAnswer = (index, item) => {
+  nonFillInAnswer = (index, item) => this.setState({ erroredChoices: false }, async () => {
     const { stepAnswers, currentStep } = this.state;
 
     if (!stepAnswers[index] || index === currentStep) {
       stepAnswers[index] = item.index;
       this.setState({ stepAnswers });
     }
-  };
+  });
 
-  keyboardType = (content) => {
-    const currents = this.webViews
-      .filter((item) => item.current)
-      .map((item) => item.current);
+  // keyboardType = (content) => {
+  //   const currents = this.webViews
+  //     .filter((item) => item.current)
+  //     .map((item) => item.current);
 
-    currents.map((item) =>
-      item.injectJavaScript(`
-      (() => {
-        if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-          const { activeElement } = document;
-          const splitted = activeElement.value.split('');
-          splitted[activeElement.selectionStart] = '${content}' + (splitted[activeElement.selectionStart] || '');
-          activeElement.value = splitted.join('');
-          const idNum = +activeElement.id.replace('box-', '');
-          window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
-        }
+  //   currents.map((item) =>
+  //     item.injectJavaScript(`
+  //       (() => {
+  //         if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+  //           const { activeElement } = document;
+  //           const splitted = activeElement.value.split('');
+  //           splitted[activeElement.selectionStart] = '${content}' + (splitted[activeElement.selectionStart] || '');
+  //           activeElement.value = splitted.join('');
+  //           const idNum = +activeElement.id.replace('box-', '');
+  //           window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
+  //         }
 
-        return;
-      })();
-    `)
-    );
-  };
+  //         return;
+  //       })(); 
+  //     `)
+  //   );
+  // };
 
   showSolution = () => {
     const { data } = this.state;
@@ -275,11 +326,13 @@ class SkillItem extends Component {
             Object.keys(stepAnswers[index]).map((sub) => {
               item.current.injectJavaScript(`
                 (() => {
-                  const activeElement = document.getElementById('box-' + '${sub}');             
+                  const activeElement = document.getElementById('box-' + '${
+                    +sub + 1
+                  }');             
                   if (activeElement) {
                     activeElement.value = '${stepAnswers[index][sub]}';
                     const idNum = +activeElement.id.replace('box-', '');
-                    window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
+                    window.postMessage(JSON.stringify({ value: activeElement.value, input: ${+sub} }));
                   }
   
                   return;
@@ -293,7 +346,7 @@ class SkillItem extends Component {
   };
 
   render() {
-    const { data, currentStep, stepAnswers, showSolution } = this.state;
+    const { data, erroredChoices, expandOpened, expandData, currentStep, stepAnswers, showSolution } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
 
     return data ? (
@@ -306,9 +359,22 @@ class SkillItem extends Component {
               innerRef={(ref) => (this.scrollView = ref)}
               onPress={() => Keyboard.dismiss()}
               onContentSizeChange={(width, height) =>
-                this.scrollView.scrollTo({ y: height })
+                !expandOpened && this.scrollView.scrollTo({ y: height })
               }
             >
+              {expandOpened && expandData && <ExpandContent data={expandData} />}
+              {expandData && <TouchableOpacity
+                onPress={this.toggleExpand}
+                style={{
+                  ...LocalStyles.expandToggle,
+                  ...(expandOpened ? LocalStyles.expandToggleOpened : {})
+                }}
+              >
+                <Text style={LocalStyles.expandToggleText}>
+                  {expandOpened ? '-' : '+'} Solution of the previous problem
+                </Text>
+              </TouchableOpacity>}
+
               {data.videoUrl && (
                 <Video
                   source={{ uri: data.videoUrl }}
@@ -321,7 +387,7 @@ class SkillItem extends Component {
               {data.question && (
                 <View style={LocalStyles.container}>
                   <View style={LocalStyles.questionWrapper}>
-                    <MathJax html={this.normalLatex(data.question)} />
+                    <MathJax html={parseLatex(data.question)} />
                   </View>
                 </View>
               )}
@@ -338,7 +404,7 @@ class SkillItem extends Component {
                         html={
                           item.graphs.length
                             ? this.prepareGraphs(index, item.instruction)
-                            : this.normalLatex(item.instruction)
+                            : parseLatex(item.instruction)
                         }
                         onMessage={
                           item.fillIn
@@ -350,7 +416,7 @@ class SkillItem extends Component {
                     </View>
 
                     {!item.fillIn &&
-                      item.options.map((item) => (
+                      item.options.map((item) => console.warn(item) || (
                         <TouchableHighlight
                           key={item._id}
                           style={Styles.latexWrapper}
@@ -359,9 +425,9 @@ class SkillItem extends Component {
                           <MathJax
                             html={`<span style="${
                               stepAnswers[index] === item.index
-                                ? "color: green"
+                                ? `color: ${erroredChoices && index === stepsData.length - 1 ? 'red' : 'green'}`
                                 : ""
-                            }">(${item.index}) ${this.normalLatex(
+                            }">(${item.index}) ${parseLatex(
                               item.content
                             )}</span>`}
                             style={{ width: "100%" }}
@@ -372,7 +438,7 @@ class SkillItem extends Component {
                 </View>
               ))}
             </KeyboardAwareScrollView>
-            <KeyboardAccessory>
+            {/* <KeyboardAccessory>
               <View
                 style={{
                   flexDirection: "row",
@@ -448,7 +514,7 @@ class SkillItem extends Component {
                   />
                 </View>
               </View>
-            </KeyboardAccessory>
+            </KeyboardAccessory> */}
             <View style={LocalStyles.buttonWrapper}>
               <View
                 style={{

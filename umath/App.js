@@ -1,3 +1,4 @@
+import { useFonts } from "@use-expo/font";
 import React, { Component, createRef } from "react";
 // import { createAppContainer } from 'react-navigation';
 import { StatusBar } from "react-native";
@@ -125,4 +126,16 @@ class App extends Component {
   }
 }
 
-export default App;
+const AppWrapper = () => {
+  let [fontsLoaded] = useFonts({
+    "Futura-PT": require("./assets/fonts/Futura_PT.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  } else {
+    return <App />;
+  }
+};
+
+export default AppWrapper;

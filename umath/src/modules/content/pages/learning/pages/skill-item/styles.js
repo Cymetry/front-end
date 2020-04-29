@@ -14,6 +14,22 @@ const LocalStyles = StyleSheet.create({
     marginBottom: 20,
   },
 
+  expandToggle: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: Variables.gray,
+  },
+
+  expandToggleOpened: {
+    borderTopWidth: 1,
+    borderTopColor: Variables.gray,
+  },
+
+  expandToggleText: {
+    fontSize: 16,
+  },
+
   questionWrapper: {
     backgroundColor: 'white', 
     paddingVertical: 20,

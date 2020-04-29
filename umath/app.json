@@ -24,8 +24,9 @@
     "android": {
       "package": "com.umath.umath"
     },
-    "entryPoint": "node_modules/expo/AppEntry.js"
-  },
-  "displayName": "umath",
-  "name": "umath"
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": ["js", "jsx", "svg", "ts", "tsx"]
+    }
+  }
 }

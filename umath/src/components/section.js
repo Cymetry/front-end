@@ -14,12 +14,12 @@ const styles = StyleSheet.create({
     color: Variables.gray,
     fontSize: 14,
     paddingVertical: 10,
-    paddingLeft: 5
+    paddingLeft: 5,
   },
   wrapper: {
     backgroundColor: "white",
-    marginBottom: 20
-  }
+    marginBottom: 20,
+  },
 });
 
 export default Section;

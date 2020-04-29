@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 import { View, Text, Alert, AsyncStorage, Image } from "react-native";
 import { Input, Button } from "react-native-elements";
+import { CommonActions } from "@react-navigation/native";
 
 import ROUTES from "../../../../platform/constants/routes";
-import { withNavigation } from "react-navigation";
 import AuthController from "../../../../platform/api/auth";
 import { ViewTypeEnum } from "../../constants/enums";
 import LocalStyles from "../../styles";
 import Styles from "../../../../../assets/styles";
 import { navigationWrapper } from "../../../../platform/services/navigation";
 
+import isEmailValid from "../../../../utils/validateEmail";
+
 class SignIn extends Component {
   state = {
+    emailValid: true,
     form: {
       email: "",
       password: "",
@@ -19,14 +22,19 @@ class SignIn extends Component {
   };
 
   get formValid() {
-    const { form } = this.state;
-    return form.email && form.password;
+    const { emailValid, form } = this.state;
+    return emailValid && form.email && form.password;
   }
 
   change = (name, value) => {
     const { form } = this.state;
     form[name] = value;
     this.setState({ form });
+
+    if (name === "email") {
+      const emailValid = isEmailValid(value);
+      this.setState({ emailValid });
+    }
   };
 
   submit = async () => {
@@ -38,39 +46,55 @@ class SignIn extends Component {
           ["token", result.jwt],
           ["isPremium", result.isPremium ? "true" : ""],
         ]);
-        this.props.navigation.navigate(ROUTES.CONTENT, { loggedIn: true });
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              {
+                name: ROUTES.CONTENT,
+                params: { loggedIn: true },
+              },
+            ],
+          })
+        );
       } else Alert.alert("Username or Password is incorrect!!");
     }
   };
 
   render() {
+    const { emailValid } = this.state;
     const { changeViewType, signUpActive } = this.props;
 
     return (
       <View style={LocalStyles.container}>
-        <Image
-          source={require("assets/images/logo.png")}
-          style={LocalStyles.logo}
-        />
+        <Text
+          style={{
+            ...LocalStyles.suggestionButton,
+            ...LocalStyles.logoTitle,
+          }}
+        >
+          umath
+        </Text>
         <Text
           style={{
             ...Styles.text.center,
-            ...Styles.text.normalSize,
+            ...Styles.text.smallSize,
             marginBottom: 20,
           }}
         >
           Sign in to your existing account
         </Text>
         <Input
+          placeholder="Email"
           containerStyle={Styles.input.classic}
-          placeholder="Username"
           onChangeText={(value) => this.change("email", value)}
+          errorMessage={!emailValid ? "invalid email" : undefined}
         />
         <Input
-          containerStyle={Styles.input.classic}
-          placeholder="Password"
-          onChangeText={(value) => this.change("password", value)}
           secureTextEntry
+          placeholder="Password"
+          containerStyle={Styles.input.classic}
+          onChangeText={(value) => this.change("password", value)}
         />
         <Text
           style={{
@@ -87,16 +111,18 @@ class SignIn extends Component {
           Forgot password?
         </Text>
         {signUpActive && (
-          <Text style={LocalStyles.suggestionText}>
-            Not logged in yet?&nbsp;
-            <Text
-              style={LocalStyles.suggestionButton}
-              accessibilityRole="button"
-              onPress={() => changeViewType(ViewTypeEnum.SignUp)}
-            >
-              Sign up
+          <View style={LocalStyles.signUpPromptWrapper}>
+            <Text style={LocalStyles.suggestionText}>
+              Not logged in yet?&nbsp;
             </Text>
-          </Text>
+            <Button
+              type="clear"
+              accessibilityRole="button"
+              title="Sign Up"
+              titleStyle={LocalStyles.signUpTitle}
+              onPress={() => changeViewType(ViewTypeEnum.SignUp)}
+            />
+          </View>
         )}
         <View
           style={{

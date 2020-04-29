@@ -5,15 +5,17 @@ import Variables from "../../../../../assets/styles/variables";
 
 const LocalStyles = StyleSheet.create({
   container: {
-    ...Styles.card.classic,
-    marginTop: 35,
-    marginHorizontal: 40,
-    backgroundColor: "transparent"
+    flex: 1,
+    marginTop: '5%',
+    alignItems: 'center',
+    flexDirection: 'column',
+    backgroundColor: 'transparent',
+    justifyContent: 'space-around'
   },
   button: {
+    ...Styles.button.classic,
+    marginTop: 5,
     width: 150,
-    marginTop: 10,
-    ...Styles.button.classic
   },
   subTitle: {
     ...Styles.text.center,
@@ -21,13 +23,8 @@ const LocalStyles = StyleSheet.create({
     color: Variables.textGray
   },
   image: {
-    marginTop: 57,
-    marginBottom: 68,
-    width: 205,
-    height: 203
-  },
-  skipButton: {
-    marginTop: 40
+    height: '30%',
+    resizeMode: 'contain'
   }
 });
 

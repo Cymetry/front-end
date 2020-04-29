@@ -1,23 +1,26 @@
-import React, { PureComponent } from "react";
-import { View } from "react-native";
-import { ListItem } from "react-native-elements";
-import { ScrollView } from "react-native-gesture-handler";
+import React, { PureComponent } from 'react';
+import { View } from 'react-native';
+import { ListItem } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
 import {
   createStackNavigator,
-  HeaderBackButton
-} from "@react-navigation/stack";
+  HeaderBackButton,
+} from '@react-navigation/stack';
 
 import {
   createTabNavigationOptions,
-  navigationWrapper
-} from "../../../../platform/services/navigation";
-import Topics from "./pages/topics";
-import Skills from "./pages/skills";
-import SkillItem from "./pages/skill-item";
-import ROUTES from "../../../../platform/constants/routes";
-import CurriculumController from "../../../../platform/api/curriculum";
-import Styles from "../../../../../assets/styles";
-import LocalStyles from "./styles";
+  navigationWrapper,
+} from '../../../../platform/services/navigation';
+import Testing from './pages/testing';
+import Topics from './pages/topics';
+import Skills from './pages/skills';
+import SkillItem from './pages/skill-item';
+import ROUTES from '../../../../platform/constants/routes';
+import CurriculumController from '../../../../platform/api/curriculum';
+import Styles from '../../../../../assets/styles';
+import LocalStyles from './styles';
+
+import truncate from '../../../../utils/truncate';
 
 // class Learning extends PureComponent {
 //   static navigationOptions = ({ navigation }) => {
@@ -79,11 +82,13 @@ import LocalStyles from "./styles";
 
 const Stack = createStackNavigator();
 
-const LearningScreens = () => (
+const LearningScreens = ({ route }) => (
   <Stack.Navigator
     headerLayoutPreset="center"
     screenOptions={() => Styles.navigation}
-    initialRouteName={ROUTES.CONTENT_LEARNING_TOPICS}
+    initialRouteName={
+      route.params?.initialRouteName || ROUTES.CONTENT_LEARNING_TOPICS
+    }
   >
     {/* <Stack.Screen
       name={ROUTES.CONTENT_LEARNING}
@@ -106,8 +111,9 @@ const LearningScreens = () => (
       name={ROUTES.CONTENT_LEARNING_TOPICS}
       component={Topics}
       options={() => {
-        const { name = 'TOPICS' } = navigationWrapper.navigation.state?.params || {};
-        return { title: name };
+        const { name = 'Topics' } =
+          navigationWrapper.navigation.state?.params || {};
+        return { title: truncate(name, 15) };
       }}
     />
 
@@ -115,8 +121,9 @@ const LearningScreens = () => (
       name={ROUTES.CONTENT_LEARNING_SKILLS}
       component={Skills}
       options={() => {
-        const { name = 'SKILLS' } = navigationWrapper.navigation.state?.params || {};
-        return { title: name };
+        const { name = 'Skills' } =
+          navigationWrapper.navigation.state?.params || {};
+        return { title: truncate(name, 15) };
       }}
     />
 
@@ -124,8 +131,16 @@ const LearningScreens = () => (
       name={ROUTES.CONTENT_LEARNING_SKILL_ITEM}
       component={SkillItem}
       options={() => {
-        const { name = 'SKILL' } = navigationWrapper.navigation.state?.params || {};
-        return { title: name };
+        const { name = 'Skill' } = route.params.params || {};
+        return { title: truncate(name, 15) };
+      }}
+    />
+
+    <Stack.Screen
+      name={ROUTES.CONTENT_LEARNING_TESTING}
+      component={Testing}
+      options={() => {
+        return { title: 'Testing' };
       }}
     />
   </Stack.Navigator>

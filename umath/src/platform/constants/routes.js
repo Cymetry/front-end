@@ -13,6 +13,7 @@ const ROUTES = {
   CONTENT_LEARNING_TOPICS: "content/learning/topics",
   CONTENT_LEARNING_SKILLS: "content/learning/skills",
   CONTENT_LEARNING_SKILL_ITEM: "content/learning/skill-item",
+  CONTENT_LEARNING_TESTING: "content/learning/testing",
 
   CONTENT_SETTINGS: "content/settings",
   CONTENT_SETTINGS_FAQ: "content/settings/faq",

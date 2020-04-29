@@ -1,56 +1,59 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Dimensions, AsyncStorage } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+  AsyncStorage,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 
 import { Button } from "react-native-elements";
 import { StackActions } from "@react-navigation/native";
+import * as InAppPurchases from "expo-in-app-purchases";
 
 import PaymentCard from "../../../../../../components/payment_card";
 
 import styles from "./styles";
 import { navigationWrapper } from "../../../../../../platform/services/navigation";
 import ROUTES from "../../../../../../platform/constants/routes";
+import { useSubscriptionChangeListener } from "../../../../../../utils/hooks_util";
+import { changeOrPurchase } from "../../../../../../platform/services/payments";
+import Variables from "../../../../../../../assets/styles/variables";
 
-const SubscriptionScreen = () => {
+const _products = {
+  ios: ["umathapp01", "umathapp02", "umathapp03", "umathapp04"],
+};
+
+const SubscriptionInfo = ({ subscriptionData, activeItem, setActiveItem }) =>
+  subscriptionData.map((cardItem) => (
+    <PaymentCard
+      key={cardItem.productId}
+      title={cardItem.price}
+      onPress={() => setActiveItem(cardItem.productId)}
+      isSelected={cardItem.productId === activeItem}
+      description={cardItem.description}
+    />
+  ));
+
+const SubscriptionScreen = (props) => {
   const window = Dimensions.get("window");
 
   const [activeItem, setActiveItem] = useState(null);
+  const [subscriptionData, setSubscriptionData] = useState(null);
   const [shouldScroll, setShouldScroll] = useState(false);
-  /**
-   * This data should contain the subscription id's and details
-   */
-  const data = [
-    {
-      title: "69.420",
-      description: "this is the description of the item",
-      id: "payment.something",
-    },
-    {
-      title: "69.420",
-      description: "this is the description of the item",
-      id: "payment.another",
-    },
-    {
-      title: "69.420",
-      description: "this is the description of the item",
-      id: "payment.bololoa",
-    },
-    {
-      title: "69.420",
-      description: "this is the description of the item",
-      id: "payment.something_else",
-    },
-  ];
+  const [isLoading, setLoading] = useState(false);
+  const subscriptionStatus = useSubscriptionChangeListener();
 
-  const renderPaymentCards = () =>
-    data.map((cardItem) => (
-      <PaymentCard
-        key={cardItem.id}
-        title={cardItem.title}
-        onPress={() => setActiveItem(cardItem.id)}
-        isSelected={cardItem.id === activeItem}
-        description={cardItem.description}
-      />
-    ));
+  const _getProducts = async () => {
+    const products = await InAppPurchases.getProductsAsync(_products.ios);
+    if (products.responseCode == InAppPurchases.IAPResponseCode.OK) {
+      setSubscriptionData(products.results);
+    } else {
+      Alert.alert("Something went wrong while fetching subscription data");
+    }
+  };
 
   const _onContentSizeChange = (_, contentHeight) => {
     /**
@@ -63,15 +66,26 @@ const SubscriptionScreen = () => {
     setShouldScroll(_shouldScroll);
   };
 
+  useEffect(() => {
+    _getProducts();
+  }, []);
+
   const _onSubmitPress = async () => {
-    try {
-      await AsyncStorage.setItem("isPremium", "true");
+    setLoading(true);
+
+    const { oldSubscription } = props.route.params || {};
+
+    await changeOrPurchase(activeItem, oldSubscription);
+
+    AsyncStorage.setItem("subscriptionId", activeItem);
+
+    if (subscriptionStatus === InAppPurchases.IAPResponseCode.OK) {
       navigationWrapper.navigation.dispatch(
         StackActions.replace(ROUTES.CONTENT_SETTINGS_PAYMENT)
       );
-    } catch (e) {
-      console.log(e);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -82,13 +96,26 @@ const SubscriptionScreen = () => {
     >
       <View style={styles.content_wrapper}>
         <Text style={styles.text}>
-          {" "}
-          Please select the right subscription plan for you{" "}
+          Please select the right subscription plan for you
         </Text>
-        <View style={styles.card_wrapper}>{renderPaymentCards()}</View>
+        <View style={styles.card_wrapper}>
+          {subscriptionData == null ? (
+            <View style={styles.activityIndicatorWrapper}>
+              <ActivityIndicator size="large" color={Variables.blue} />
+            </View>
+          ) : (
+            <SubscriptionInfo
+              subscriptionData={subscriptionData}
+              activeItem={activeItem}
+              setActiveItem={setActiveItem}
+            />
+          )}
+        </View>
         <Button
-          onPress={_onSubmitPress}
-          style={styles.button}
+          onPress={activeItem == null ? null : _onSubmitPress}
+          buttonStyle={styles.button}
+          disabled={activeItem === null}
+          loading={isLoading}
           title="Continue"
         />
       </View>

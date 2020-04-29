@@ -14,10 +14,11 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
   const webView = createRef();
 
   const showSolution = (solution) => {
+    if (!showAnswer)
+      return;
     webView.current.injectJavaScript(`
       (() => {
         const activeElement = document.getElementById('box-1');
-        alert(activeElement);
         activeElement.value = ${solution}
       })();
     `);
@@ -51,9 +52,6 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
           </View>
         </View>
       </View>
-      {
-        question.fillIn && showAnswer ? <Text>{question.answers[0]}</Text> : null
-      }
       <>
         {
           question.options.map((option, idx) => (

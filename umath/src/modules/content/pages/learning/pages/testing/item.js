@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {createRef, useEffect} from 'react';
 import {View, Text, TouchableHighlight} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import MathJax from '../../../../../../components/math_jax';
@@ -10,6 +10,23 @@ let scrollView = null;
 
 const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, showAnswer }) => {
   if (!question) return null;
+
+  const webView = createRef();
+
+  const showSolution = (solution) => {
+    webView.current.injectJavaScript(`
+      (() => {
+        const activeElement = document.getElementById('box-1');
+        alert(activeElement);
+        activeElement.value = ${solution}
+      })();
+    `);
+  };
+
+  useEffect(() => {
+    showSolution(question.answers[0]);
+  }, [showAnswer]);
+
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
@@ -27,6 +44,7 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
             {
               <MathJax
                 html={parseLatex(question.question)}
+                webViewRef={webView}
                 onMessage={onMessage}
               />
             }

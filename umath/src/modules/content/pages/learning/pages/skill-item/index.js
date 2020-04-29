@@ -328,7 +328,7 @@ class SkillItem extends Component {
                 (() => {
                   const activeElement = document.getElementById('box-' + '${
                     +sub + 1
-                  }');             
+                  }');
                   if (activeElement) {
                     activeElement.value = '${stepAnswers[index][sub]}';
                     const idNum = +activeElement.id.replace('box-', '');

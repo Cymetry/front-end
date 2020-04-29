@@ -119,7 +119,7 @@ class Topics extends PureComponent {
                 disabledStyle={{ opacity: 0.3 }}
                 title={
                   <View style={LocalStyles.title}>
-                    <Text style={Styles.text.smallestSize}>{item.name}</Text>
+                    <Text style={Styles.text.smallSize}>{item.name}</Text>
                     <Text style={LocalStyles.completeText}>
                       {item.complete}/{item.total}
                     </Text>

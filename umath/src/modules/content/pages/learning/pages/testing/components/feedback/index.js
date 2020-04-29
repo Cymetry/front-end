@@ -5,6 +5,7 @@ import { Button } from "react-native-elements";
 import FeedbackPageStyles from "./styles";
 import Section from "../../../../../../../../components/section";
 import Results from "./results";
+import Variables from "../../../../../../../../../assets/styles/variables";
 
 const percentToSentiment = (percent) => {
   if (percent >= 90) return 'excellent!';
@@ -31,6 +32,7 @@ const FeedBackPage = ({
       <Section style={FeedbackPageStyles.buttonContainer}>
         <Button
           style={FeedbackPageStyles.button}
+          buttonStyle={{ backgroundColor: Variables.blue }}
           onPress={resumeTest}
           title={
             round === 'round1'

@@ -180,6 +180,7 @@ const Testing = ({ route, navigation }) => {
             setSelectedAnswer={setSelectedAnswer}
             question={questions[currentQuestion]}
             onMessage={questions[currentQuestion]?.fillIn ? handleFillinAnswer : null}
+            showAnswer={solutionShown}
           />
           <View style={LocalStyles.buttonWrapper}>
             <View

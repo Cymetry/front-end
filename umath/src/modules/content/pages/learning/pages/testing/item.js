@@ -8,9 +8,8 @@ import LocalStyles from './styles';
 
 let scrollView = null;
 
-const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage }) => {
+const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, showAnswer }) => {
   if (!question) return null;
-
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
@@ -34,6 +33,9 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage })
           </View>
         </View>
       </View>
+      {
+        question.fillIn && showAnswer ? <Text>{question.answers[0]}</Text> : null
+      }
       <>
         {
           question.options.map((option, idx) => (

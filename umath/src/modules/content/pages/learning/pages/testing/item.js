@@ -14,7 +14,7 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
   const webView = createRef();
 
   const showSolution = (solution) => {
-    if (!showAnswer)
+    if (!showAnswer || !question.fillIn)
       return;
     webView.current.injectJavaScript(`
       (() => {

@@ -8,7 +8,7 @@ import LocalStyles from './styles';
 
 let scrollView = null;
 
-const TestingItem = ({ question, selectedAnswer, setSelectedAnswer }) => {
+const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage }) => {
   if (!question) return null;
 
   return (
@@ -28,6 +28,7 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer }) => {
             {
               <MathJax
                 html={parseLatex(question.question)}
+                onMessage={onMessage}
               />
             }
           </View>

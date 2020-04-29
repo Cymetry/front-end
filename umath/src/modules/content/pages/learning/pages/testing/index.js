@@ -27,6 +27,7 @@ const Testing = ({ route, navigation }) => {
   const [videos, setVideos] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
+  const [fillInAnswer, setFillinAnswer] = useState(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [solutionShown, setSolutionShown] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -49,7 +50,6 @@ const Testing = ({ route, navigation }) => {
       );
       return;
     }
-
     if (weakSet && weakSet.length) {
       const {body} = await VideoController.getVideos(weakSet);
       setVideos(body);
@@ -61,6 +61,7 @@ const Testing = ({ route, navigation }) => {
     setUserAnswers([]);
     setQuestions(body);
     setCurrentQuestion(0);
+    setFillinAnswer(null);
     setShowFeedback(false);
     setSelectedAnswer(null);
     setSolutionShown(false);
@@ -81,11 +82,15 @@ const Testing = ({ route, navigation }) => {
   }, [id]);
 
   const nextStep = () => {
+    const answer = questions[currentQuestion].fillIn ? fillInAnswer : numToLetter[selectedAnswer];
+    const isRight = questions[currentQuestion].answers.includes(answer);
+
     setUserAnswers([...userAnswers, {
       id: currentQuestion,
       uid: questions[currentQuestion].id,
-      isRight: !solutionShown ? questions[currentQuestion].answers[0] === numToLetter[selectedAnswer] : false,
+      isRight: !solutionShown ? isRight : false,
     }]);
+    setFillinAnswer(null);
     setSelectedAnswer(null);
 
     const isLastPage = !questions[currentQuestion + 1];
@@ -116,11 +121,21 @@ const Testing = ({ route, navigation }) => {
 
   const showSolution = () => {
     setSolutionShown(true);
-    setSelectedAnswer(letterToNum[questions[currentQuestion].answers[0]]);
+    if (questions[currentQuestion].fillIn) {
+      setFillinAnswer(questions[currentQuestion].answers[0]);
+    }
+    else {
+      setSelectedAnswer(letterToNum[questions[currentQuestion].answers[0]]);
+    }
   };
 
   const clearVideos = () => {
     setVideos([]);
+  };
+
+  const handleFillinAnswer = (data) => {
+    const {value} = JSON.parse(data);
+    setFillinAnswer(value);
   };
 
   if (showFeedback) {
@@ -164,11 +179,12 @@ const Testing = ({ route, navigation }) => {
             selectedAnswer={selectedAnswer}
             setSelectedAnswer={setSelectedAnswer}
             question={questions[currentQuestion]}
+            onMessage={questions[currentQuestion]?.fillIn ? handleFillinAnswer : null}
           />
           <View style={LocalStyles.buttonWrapper}>
             <View
               style={
-                selectedAnswer !== null ?
+                (selectedAnswer !== null || fillInAnswer !== null) ?
                 {
                 ...LocalStyles.button,
                 ...LocalStyles.lastButtons,
@@ -182,8 +198,8 @@ const Testing = ({ route, navigation }) => {
               <Button
                 title="Next"
                 type="clear"
-                onPress={ selectedAnswer !== null ? nextStep : null }
-                titleStyle={ selectedAnswer !== null ? LocalStyles.buttonTitle : LocalStyles.disabledButtonTitle }
+                onPress={ (selectedAnswer !== null || fillInAnswer !== null) ? nextStep : null }
+                titleStyle={ (selectedAnswer !== null || fillInAnswer !== null) ? LocalStyles.buttonTitle : LocalStyles.disabledButtonTitle }
               />
             </View>
 

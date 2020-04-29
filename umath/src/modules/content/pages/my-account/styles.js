@@ -20,8 +20,8 @@ const LocalStyles = StyleSheet.create({
     marginBottom: "1%",
     borderColor: "#F8F8F8",
     backgroundColor: "gray",
-    marginTop: "10%",
-    marginBottom: "10%",
+    marginTop: "8%",
+    marginBottom: "8%",
   },
 
   fullName: {

@@ -12,6 +12,7 @@ import TestingItem from "./item";
 import FeedBackPage from "./components/feedback";
 import Videos from './components/videos';
 import ROUTES from "../../../../../../platform/constants/routes";
+import { ScrollView } from "react-native-gesture-handler";
 
 const numToLetter = ['a', 'b', 'c', 'd'];
 const letterToNum = {
@@ -174,7 +175,7 @@ const Testing = ({ route, navigation }) => {
   return (
     <View stlye={Styles.page}>
       <DismissKeyboard>
-        <>
+        <ScrollView>
           <TestingItem
             selectedAnswer={selectedAnswer}
             setSelectedAnswer={setSelectedAnswer}
@@ -215,7 +216,7 @@ const Testing = ({ route, navigation }) => {
               </View>
             }
           </View>
-        </>
+        </ScrollView>
       </DismissKeyboard>
     </View>
   );

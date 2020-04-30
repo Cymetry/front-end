@@ -118,13 +118,18 @@ class Topics extends PureComponent {
                 key={item.id}
                 disabledStyle={{ opacity: 0.3 }}
                 title={
-                  <View style={LocalStyles.title}>
-                    <Text style={Styles.text.smallSize}>{item.name}</Text>
-                    <Text style={LocalStyles.completeText}>
-                      {item.complete}/{item.total}
-                    </Text>
-                  </View>
+                  // <View style={LocalStyles.title}>
+                  //   <Text style={Styles.text.smallSize}>{item.name}</Text>
+                  //   <Text style={LocalStyles.completeText}>
+                  //     {item.complete}/{item.total}
+                  //   </Text>
+                  // </View>
+                  item.name
                 }
+                rightTitle={item.complete + "/" + item.total}
+                rightTitleStyle={LocalStyles.completeText}
+                contentContainerStyle={{ flex: 1 }}
+                rightContentContainerStyle={{ flex: 0 }}
                 containerStyle={LocalStyles.listItem}
                 leftAvatar={{ source: { uri: item.logo }, ...Styles.avatar }}
                 onPress={() => this.onTopicPress(item)}

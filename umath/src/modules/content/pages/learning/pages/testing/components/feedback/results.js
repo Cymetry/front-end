@@ -15,8 +15,8 @@ const Results = ({ answers }) => {
           {answer.isRight ? (
             <CheckMark height={10} />
           ) : (
-            <WrongIcon height={10} />
-          )}
+              <WrongIcon height={10} />
+            )}
         </View>
       );
     });

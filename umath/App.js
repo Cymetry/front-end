@@ -1,7 +1,7 @@
 import { useFonts } from "@use-expo/font";
 import React, { Component, createRef } from "react";
 // import { createAppContainer } from 'react-navigation';
-import { StatusBar } from "react-native";
+import { StatusBar, AsyncStorage } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -9,6 +9,7 @@ import {
 } from "@react-navigation/stack";
 
 import * as SplashScreen from "expo-splash-screen";
+import * as InAppPurchases from 'expo-in-app-purchases'
 
 import Modules from "./src/modules";
 import ROUTES from "./src/platform/constants/routes";
@@ -19,7 +20,7 @@ import {
 } from "./src/platform/services/navigation";
 import Constants from "./src/platform/constants";
 import { ForgotEmail, ResetPass, Verification } from "./src/modules/forgot";
-import { initializeInAppPurchases } from "./src/platform/services/payments";
+import { initializeInAppPurchases, checkAndTryToRestorePurchase } from "./src/platform/services/payments";
 
 // const MainNavigator = createStackNavigator({
 //   [ROUTES.HOME]: Modules.Home,
@@ -43,6 +44,16 @@ class App extends Component {
 
   navigationRef = createRef();
 
+  initPurchases = async () => {
+    const history = await initializeInAppPurchases();
+    if (history.responseCode === InAppPurchases.IAPResponseCode.OK) {
+      console.log(history)
+      if (history.results[history.results.length - 1].acknowledged) {
+        AsyncStorage.setItem("isPremium", "true")
+      }
+    }
+  }
+
   componentDidMount() {
     // Hide splashscreen after component was mounted
     SplashScreen.hideAsync();
@@ -58,7 +69,7 @@ class App extends Component {
      * but it should be always called *before* any in payment actions
      */
 
-    initializeInAppPurchases();
+    this.initPurchases();
   }
 
   render() {

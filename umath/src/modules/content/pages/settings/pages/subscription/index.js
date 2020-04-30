@@ -104,12 +104,12 @@ const SubscriptionScreen = (props) => {
               <ActivityIndicator size="large" color={Variables.blue} />
             </View>
           ) : (
-            <SubscriptionInfo
-              subscriptionData={subscriptionData}
-              activeItem={activeItem}
-              setActiveItem={setActiveItem}
-            />
-          )}
+              <SubscriptionInfo
+                subscriptionData={subscriptionData}
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            )}
         </View>
         <Button
           onPress={activeItem == null ? null : _onSubmitPress}

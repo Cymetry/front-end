@@ -64,7 +64,7 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
             {
               <MathJax
                 html={question.graphs.length
-                  ? parseLatex(question.question)
+                  ? prepareGraphs(question.question)
                   : parseLatex(question.question)}
                 webViewRef={webView}
                 onMessage={onMessage}

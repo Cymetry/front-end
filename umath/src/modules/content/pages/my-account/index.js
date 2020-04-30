@@ -3,7 +3,7 @@ import { View, ScrollView, Text, Image } from "react-native";
 import { Bar } from "react-native-progress";
 import {
   createStackNavigator,
-  HeaderBackButton,
+  HeaderBackButton
 } from "@react-navigation/stack";
 import { Button } from "react-native-elements";
 
@@ -28,6 +28,11 @@ const SVGIcon = ({ SVG }) => (
   </View>
 );
 
+const parseName = name => {
+  const [, ...rest] = name.split(" ");
+  return rest.join(" ");
+};
+
 class MyAccount extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
     title: "My Account",
@@ -35,7 +40,7 @@ class MyAccount extends PureComponent {
       <HeaderBackButton
         onPress={() => navigationWrapper.navigation.navigate(ROUTES.HOME)}
       />
-    ),
+    )
   });
 
   state = {
@@ -45,7 +50,7 @@ class MyAccount extends PureComponent {
     details: {},
     chapters: null,
     questions: null,
-    progress: { revision: 0, learning: 0 },
+    progress: { revision: 0, learning: 0 }
   };
 
   handleSkillClick = () =>
@@ -53,16 +58,16 @@ class MyAccount extends PureComponent {
       ? this.handleTopicClick()
       : navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
           screen: ROUTES.CONTENT_LEARNING_SKILL_ITEM,
-          params: this.state.skill,
+          params: this.state.skill
         });
 
   handleTopicClick = () =>
     navigationWrapper.navigation.navigate(ROUTES.CONTENT_LEARNING, {
       screen: ROUTES.CONTENT_LEARNING_SKILLS,
-      params: this.state.topic,
+      params: this.state.topic
     });
 
-  getPercentage = (num) => Math.round(num * 100);
+  getPercentage = num => Math.round(num * 100);
 
   BarItem = ({ percent }) => (
     <Bar
@@ -79,7 +84,7 @@ class MyAccount extends PureComponent {
 
   updateState = async () => {
     const {
-      progress: { learning, revision },
+      progress: { learning, revision }
     } = this.state;
     const result = await AccountController.Details();
 
@@ -89,19 +94,19 @@ class MyAccount extends PureComponent {
 
     if (result.recent?.lastSkill) {
       const {
-        lastSkill: { skillId, topicId },
+        lastSkill: { skillId, topicId }
       } = result.recent;
 
       const [topics, skills] = await Promise.all([
         TopicController.List(1),
-        SkillController.List(topicId),
+        SkillController.List(topicId)
       ]);
 
       const topic = topics.find(({ id }) => id === Number(topicId));
 
       const retrieveSkill = () => {
         const skillIndex = skills.findIndex(
-          (skill) => skill.id === Number(skillId)
+          skill => skill.id === Number(skillId)
         );
 
         if (!skills[skillIndex].complete)
@@ -117,7 +122,7 @@ class MyAccount extends PureComponent {
 
       this.setState({
         skill,
-        topic,
+        topic
       });
     } else {
       const topics = await TopicController.List(1);
@@ -128,7 +133,7 @@ class MyAccount extends PureComponent {
 
       this.setState({
         skill,
-        topic,
+        topic
       });
     }
 
@@ -136,8 +141,8 @@ class MyAccount extends PureComponent {
       details: result?.user || null,
       progress: {
         revision: result?.revision || revision,
-        learning: result?.learning || learning,
-      },
+        learning: result?.learning || learning
+      }
     });
   };
 
@@ -154,7 +159,7 @@ class MyAccount extends PureComponent {
       details,
       chapters,
       progress,
-      questions,
+      questions
     } = this.state;
 
     return (
@@ -180,9 +185,9 @@ class MyAccount extends PureComponent {
               <Button
                 type="solid"
                 key={topic.id}
-                title={truncate(topic.name)}
                 onPress={this.handleTopicClick}
                 buttonStyle={LocalStyles.button}
+                title={truncate(parseName(topic.name))}
                 titleStyle={Styles.button.myAccountButtonTitle}
               />
             </View>
@@ -250,7 +255,7 @@ const MyAccountScreens = () => (
       name={ROUTES.CONTENT_MY_ACCOUNT}
       options={{ title: "My Account" }}
     >
-      {(props) => <MyAccount {...props} />}
+      {props => <MyAccount {...props} />}
     </Stack.Screen>
   </Stack.Navigator>
 );

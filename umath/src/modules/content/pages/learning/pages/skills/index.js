@@ -13,12 +13,12 @@ import { withNavigation } from "react-navigation";
 
 class Skills extends PureComponent {
   state = {
-    skills: []
+    skills: [],
   };
 
   get completePercent() {
     const { skills } = this.state;
-    const completeCount = skills.filter(item => item.complete).length;
+    const completeCount = skills.filter((item) => item.complete).length;
     return Math.floor((100 * completeCount) / skills.length);
   }
 
@@ -27,7 +27,7 @@ class Skills extends PureComponent {
     this.fetchSkills(id);
   }
 
-  fetchSkills = async id => {
+  fetchSkills = async (id) => {
     const result = await SkillController.List(id);
     result && result.length && this.setState({ skills: result });
   };
@@ -36,19 +36,31 @@ class Skills extends PureComponent {
     const { skills } = this.state;
 
     const noCompleteSkills = Object.values(skills).filter(
-      skill => !skill.complete
+      (skill) => !skill.complete
     );
 
-    this.props.navigation.navigate(
-      ROUTES.CONTENT_LEARNING_TESTING,
-      { id: this.props.route.params.id }
-    );
-    return;
+    const navigate = () =>
+      this.props.navigation.navigate(ROUTES.CONTENT_LEARNING_TESTING, {
+        id: this.props.route.params.id,
+      });
+
+    const cancelObj = {
+      text: "Cancel",
+      style: "cancel",
+    };
+
+    const navigateObj = {
+      text: "Continue",
+      onPress: navigate,
+    };
 
     if (noCompleteSkills.length) {
-      Alert.alert("Please complete all the skills to proceed to the Test", "");
+      Alert.alert("Please complete all the skills to proceed to the Test", "", [
+        navigateObj,
+        cancelObj,
+      ]);
     } else {
-      //
+      navigate();
     }
   };
 
@@ -66,7 +78,6 @@ class Skills extends PureComponent {
             <View
               style={{
                 ...LocalStyles.button,
-                ...(this.completePercent < 100 ? Styles.button.disabled : {})
               }}
             >
               <Button
@@ -81,7 +92,7 @@ class Skills extends PureComponent {
 
         <View style={LocalStyles.container}>
           <View style={Styles.list.container}>
-            {skills.map(item => (
+            {skills.map((item) => (
               <ListItem
                 key={item.id}
                 title={item.name}
@@ -95,7 +106,7 @@ class Skills extends PureComponent {
                             ? "ios-checkmark-circle"
                             : "md-checkmark-circle",
                         type: "ionicon",
-                        color: "#bcbec1"
+                        color: "#bcbec1",
                       }
                     : {}
                 }

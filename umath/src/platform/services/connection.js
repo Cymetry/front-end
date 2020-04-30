@@ -5,7 +5,7 @@ import ROUTES from '../constants/routes';
 
 class Connection {
 
-  static BASE_URL = 'http://68.183.47.174:8080';
+  static BASE_URL = 'http://node-express-env.eba-t25vpyqr.us-east-1.elasticbeanstalk.com';
 
   static queryFromObject = obj => {
     const str = [];

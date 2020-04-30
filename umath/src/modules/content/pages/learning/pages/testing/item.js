@@ -7,6 +7,7 @@ import Styles from '../../../../../../../assets/styles';
 import LocalStyles from './styles';
 
 let scrollView = null;
+const numToLetter = ['a', 'b', 'c', 'd'];
 
 const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, showAnswer }) => {
   if (!question) return null;
@@ -85,7 +86,7 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
                   idx === selectedAnswer
                     ? `color: green`
                     : ""
-                }">(${idx}) ${parseLatex(option)}</span>`}
+                }">(${numToLetter[idx]}) ${parseLatex(option)}</span>`}
                 style={{ width: "100%" }}
               />
             </TouchableHighlight>

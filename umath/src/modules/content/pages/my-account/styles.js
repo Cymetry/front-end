@@ -1,13 +1,15 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 import Variables from "../../../../../assets/styles/variables";
+
+const { height } = Dimensions.get("window");
 
 const LocalStyles = StyleSheet.create({
   container: {
     paddingVertical: 0,
     paddingHorizontal: 0,
-    alignItems: 'center',
-    marginVertical: '5%',
+    alignItems: "center",
+    marginVertical: "5%",
   },
 
   image: {
@@ -15,20 +17,21 @@ const LocalStyles = StyleSheet.create({
     height: 110,
     borderWidth: 12,
     borderRadius: 90,
-    marginBottom: '1%',
+    marginBottom: "1%",
     borderColor: "#F8F8F8",
     backgroundColor: "gray",
+    marginTop: "8%",
   },
 
   fullName: {
     width: "100%",
     textAlign: "center",
-    marginVertical: '1%',
+    marginVertical: "1%",
     fontSize: Variables.smallFontSize,
   },
 
   progressItem: {
-    width: '100%',
+    width: "100%",
     marginTop: 10,
     alignItems: "center",
     flexDirection: "row",
@@ -40,16 +43,24 @@ const LocalStyles = StyleSheet.create({
   },
 
   button: {
-    width: 250,
-    padding: 15,
+    minWidth: "60%",
+    height: height / 14,
+    marginVertical: 5,
     borderRadius: 8,
+    marginHorizontal: "20%",
+  },
+
+  buttonTitle: {
+    padding: 5,
+    color: "white",
+    fontSize: 1,
   },
 
   progress: {
     width: "100%",
-    height: "22%",
     alignItems: "center",
     justifyContent: "space-around",
+    marginTop: 25,
   },
 
   divider: {
@@ -64,6 +75,7 @@ const LocalStyles = StyleSheet.create({
     marginVertical: 30,
     flexDirection: "row",
     justifyContent: "center",
+    marginTop: "10%",
   },
 
   achievementItem: {

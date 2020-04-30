@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import Variables from "../variables";
+import { scale } from "../../../src/utils/sacling";
 
 export default StyleSheet.create({
   classic: {
@@ -21,6 +22,12 @@ export default StyleSheet.create({
 
   title: {
     color: "white",
+  },
+
+  myAccountButtonTitle: {
+    color: "white",
+    padding: 10,
+    fontSize: scale(15),
   },
 
   disabledTitle: {

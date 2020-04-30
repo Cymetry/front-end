@@ -180,7 +180,7 @@ class MyAccount extends PureComponent {
                 onPress={this.handleSkillClick}
                 buttonStyle={LocalStyles.button}
                 titleStyle={Styles.button.myAccountButtonTitle}
-                title={truncate(`${skill.name} ${skill.step}`)}
+                title={truncate(skill.name)}
               />
               <Button
                 type="solid"

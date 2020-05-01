@@ -69,11 +69,7 @@ class SignUp extends Component {
         password: form.password,
       });
       if (authResult) {
-        await AsyncStorage.multiSet([
-          ["token", authResult.jwt],
-          ["isPremium", authResult.isPremium ? "true" : ""],
-        ]);
-
+        await AsyncStorage.setItem("token", authResult.jwt);
         navigation.navigate(
           lastPath || ROUTES.CONTENT,
           lastParams || { loggedIn: true }

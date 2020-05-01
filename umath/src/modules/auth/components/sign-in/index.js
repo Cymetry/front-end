@@ -42,10 +42,7 @@ class SignIn extends Component {
       const { form } = this.state;
       const result = await AuthController.Login(form);
       if (result) {
-        await AsyncStorage.multiSet([
-          ["token", result.jwt],
-          ["isPremium", result.isPremium ? "true" : ""],
-        ]);
+        await AsyncStorage.setItem("token", result.jwt);
         this.props.navigation.dispatch(
           CommonActions.reset({
             index: 0,

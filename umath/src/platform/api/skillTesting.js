@@ -16,6 +16,13 @@ class SkillTestingController {
 
   static Resume = async id => {
     const request = await Connection.GET(controller, 'resume', { topicId: id });
+
+    if (typeof request !== 'string') {
+      const {body, round, weakSet, message} = request;
+      if (!body && !round && !weakSet && !message)
+        return { message: "Failed to find coverable skills for test" };
+    }
+
     return JSON.parse(request);
   };
 

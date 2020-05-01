@@ -8,6 +8,11 @@ class UserController {
     const request = Connection.POST(controller, '', form);
     return request;
   }
+
+  static Edit = (form) => {
+    const request = Connection.PATCH(controller, '', form)
+    return request
+  }
 };
 
 export default UserController;

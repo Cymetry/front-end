@@ -101,13 +101,13 @@ class Skills extends PureComponent {
                 rightIcon={
                   item.complete
                     ? {
-                        name:
-                          Platform.OS === "ios"
-                            ? "ios-checkmark-circle"
-                            : "md-checkmark-circle",
-                        type: "ionicon",
-                        color: "#bcbec1",
-                      }
+                      name:
+                        Platform.OS === "ios"
+                          ? "ios-checkmark-circle"
+                          : "md-checkmark-circle",
+                      type: "ionicon",
+                      color: "#bcbec1",
+                    }
                     : {}
                 }
                 onPress={() =>

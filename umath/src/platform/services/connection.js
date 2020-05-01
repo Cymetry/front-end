@@ -16,7 +16,7 @@ class Connection {
         str.push(string);
       }
     }
-  
+
     return str.join("&");
   }
 
@@ -76,6 +76,21 @@ class Connection {
     window.pendingRequest = false;
     return await Connection.responseRestructure(response);
   }
+
+  static PATCH = async (controllerName, actionName, body, queryConfig) => {
+    const onlyQuery = !actionName && queryConfig;
+    const HEADERS = await Connection.createHeaders();
+    window.pendingRequest = true;
+    const response = await fetch(`${Connection.BASE_URL}/${controllerName}${!onlyQuery ? '/' : ''}${actionName}${queryConfig ? `?${Connection.queryFromObject(queryConfig)}` : ''}`, {
+      body: JSON.stringify(body),
+      method: 'PATCH',
+      headers: HEADERS,
+    })
+
+    window.pendingRequest = false;
+    return await Connection.responseRestructure(response);
+  }
+
 
   static DELETE = async (controllerName, actionName, queryConfig) => {
     const onlyQuery = !actionName && queryConfig;

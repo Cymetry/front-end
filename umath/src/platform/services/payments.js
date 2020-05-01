@@ -1,6 +1,8 @@
 import React, { AsyncStorage } from "react-native";
 
 import * as InAppPurchases from "expo-in-app-purchases";
+import UserController from "../api/user";
+import { navigationWrapper } from "./navigation";
 
 const initializeInAppPurchases = async () => {
   const history = await InAppPurchases.connectAsync();
@@ -8,7 +10,12 @@ const initializeInAppPurchases = async () => {
 };
 
 const changeOrPurchase = async (newSubscription, oldSubscription) => {
-  await InAppPurchases.purchaseItemAsync(newSubscription, oldSubscription);
+  try {
+    await InAppPurchases.purchaseItemAsync(newSubscription, oldSubscription);
+    await UserController.Edit({ "isPremium": true })
+  } catch (e) {
+    console.warn(e)
+  }
 };
 
 const getPurchaseHistory = async () => {
@@ -38,6 +45,7 @@ const checkAndTryToRestorePurchase = async () => {
   if (_lastPurchase) {
     if (_lastPurchase.acknowledged) {
       await AsyncStorage.setItem("isPremium", "true");
+      await AsyncStorage.setItem("subscriptionDate", `${_lastPurchase.purchaseTime}`);
     } else {
       try {
         await finishTransactionAsync(_lastPurchase);

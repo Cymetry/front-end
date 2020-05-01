@@ -55,8 +55,8 @@ export const useSubscriptionChangeListener = () => {
             if (!purchase.acknowledged) {
               console.log(`Successfully purchased ${purchase.productId}`);
               InAppPurchases.finishTransactionAsync(purchase, true);
-              AsyncStorage.setItem("isPremium", "true");
               setStatus(InAppPurchases.IAPResponseCode.OK);
+              AsyncStorage.setItem("isPremium", "true");
             }
           });
         }
@@ -73,7 +73,7 @@ export const useSubscriptionChangeListener = () => {
         }
       }
     );
-  });
+  }, [status]);
 
   return status;
 };

@@ -12,6 +12,16 @@ class AccountController {
     const request = Connection.GET(controller, 'FAQ');
     return request;
   };
+
+  static Help = ({ name, telephone, school, email, text }) => {
+    return Connection.POST(controller, 'help', {
+      name,
+      text,
+      email,
+      school,
+      telephone,
+    });
+  };
 }
 
 export default AccountController;

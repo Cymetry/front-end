@@ -55,7 +55,7 @@ class Skills extends PureComponent {
     };
 
     if (noCompleteSkills.length) {
-      Alert.alert("Please complete all the skills to proceed to the Test", "", [
+      Alert.alert("It is recommended to complete all the skills to proceed to the test", "", [
         navigateObj,
         cancelObj,
       ]);

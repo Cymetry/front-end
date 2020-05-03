@@ -31,7 +31,6 @@ class SignUp extends Component {
   get disabled() {
     const { emailValid, form } = this.state;
     return (
-      !form.dob ||
       !form.name ||
       !emailValid ||
       !form.email ||
@@ -146,7 +145,7 @@ class SignUp extends Component {
           showIcon={false}
           cancelBtnText="Cancel"
           confirmBtnText="Confirm"
-          placeholder="Date of Birth"
+          placeholder="Date of Birth (optional)"
           onDateChange={(value) => this.change("dob", value)}
         />
         <Input

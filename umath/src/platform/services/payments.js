@@ -1,8 +1,6 @@
-import React, { AsyncStorage } from "react-native";
+import { AsyncStorage, Alert } from "react-native";
 
 import * as InAppPurchases from "expo-in-app-purchases";
-import UserController from "../api/user";
-import { navigationWrapper } from "./navigation";
 
 const initializeInAppPurchases = async () => {
   const history = await InAppPurchases.connectAsync();
@@ -45,13 +43,15 @@ const checkAndTryToRestorePurchase = async () => {
   if (_lastPurchase) {
     if (_lastPurchase.acknowledged) {
       await AsyncStorage.setItem("isPremium", "true");
-      await AsyncStorage.setItem("subscriptionDate", `${_lastPurchase.purchaseTime}`);
+      Alert.alert("Susbrciption has been restored")
     } else {
       try {
         await finishTransactionAsync(_lastPurchase);
         AsyncStorage.setItem("isPremium", "true");
+        Alert.alert("Subscription has been restored and transaction has been finished")
       } catch (e) {
         AsyncStorage.setItem("isPremium", "false");
+        Alert.alert("Something went wrong while restoring subscription")
       }
     }
   }

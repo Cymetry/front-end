@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, AsyncStorage, Alert } from "react-native";
+import { View, Text, AsyncStorage, Alert, Button } from "react-native";
 import { ListItem } from "react-native-elements";
 import {
   createStackNavigator,
@@ -30,8 +30,11 @@ import HelpAndFeedback from "./pages/help-and-feedback";
 import FAQ from "./pages/faq";
 import TermsAndConditions from "./pages/terms-and-conditions";
 import PrivacyPolicy from "./pages/privacy-policy";
-import SubscriptionPage from "./pages/subscription";
+import SubscriptionScreen from "./pages/subscription";
 import PaymentPage from "./pages/payments";
+import { checkAndTryToRestorePurchase } from "../../../../platform/services/payments";
+import Variables from "../../../../../assets/styles/variables";
+import HeaderButton from "../../../../components/headerButton";
 
 const Stack = createStackNavigator();
 
@@ -104,31 +107,31 @@ const Settings = ({ navigation }) => {
       onPress: () =>
         token
           ? navigation.navigate(
-              isPremium
-                ? ROUTES.CONTENT_SETTINGS_PAYMENT
-                : ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
-            )
+            isPremium
+              ? ROUTES.CONTENT_SETTINGS_PAYMENT
+              : ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
+          )
           : Alert.alert("Please sign in to be able to subscribe", "", [
-              {
-                text: "Sign in",
-                onPress: () =>
-                  navigationWrapper.navigation.navigate(ROUTES.AUTH),
-              },
-              {
-                text: "Cancel",
-                style: "cancel",
-              },
-            ]),
+            {
+              text: "Sign in",
+              onPress: () =>
+                navigationWrapper.navigation.navigate(ROUTES.AUTH),
+            },
+            {
+              text: "Cancel",
+              style: "cancel",
+            },
+          ]),
       avatar_source: SubscriptionIcon,
     },
     ...(token
       ? [
-          {
-            name: "Sign out",
-            onPress: onSignOutPress,
-            avatar_source: SignOutIcon,
-          },
-        ]
+        {
+          name: "Sign out",
+          onPress: onSignOutPress,
+          avatar_source: SignOutIcon,
+        },
+      ]
       : []),
   ];
 
@@ -195,10 +198,11 @@ const MyAccountScreens = ({ route }) => (
       name={ROUTES.CONTENT_SETTINGS_PRIVACY}
     />
     <Stack.Screen
-      component={SubscriptionPage}
+      component={SubscriptionScreen}
       name={ROUTES.CONTENT_SETTINGS_SUBSCRIPTION}
       options={{
         title: "Subscription",
+        headerRight: () => <HeaderButton onPress={checkAndTryToRestorePurchase} title="Restore" />
       }}
     />
     <Stack.Screen

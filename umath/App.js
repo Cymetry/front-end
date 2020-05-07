@@ -44,16 +44,6 @@ class App extends Component {
 
   navigationRef = createRef();
 
-  initPurchases = async () => {
-    const history = await initializeInAppPurchases();
-    if (history.responseCode === InAppPurchases.IAPResponseCode.OK) {
-      console.log(history)
-      if (history.results[history.results.length - 1].acknowledged) {
-        AsyncStorage.setItem("isPremium", "true")
-      }
-    }
-  }
-
   componentDidMount() {
     // Hide splashscreen after component was mounted
     SplashScreen.hideAsync();
@@ -69,7 +59,7 @@ class App extends Component {
      * but it should be always called *before* any in payment actions
      */
 
-    this.initPurchases();
+    initializeInAppPurchases();
   }
 
   render() {

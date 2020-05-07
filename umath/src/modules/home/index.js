@@ -10,7 +10,6 @@ import ProgramController from "../../platform/api/program";
 import Styles from "../../../assets/styles";
 import ROUTES from "../../platform/constants/routes";
 import { withNavigation } from "react-navigation";
-import { checkAndTryToRestorePurchase } from "../../platform/services/payments";
 
 class Home extends Component {
   state = {
@@ -28,7 +27,6 @@ class Home extends Component {
       );
     }
     this.setState({ loggedIn });
-    checkAndTryToRestorePurchase();
   }
 
   // fetchPrograms = async () => {

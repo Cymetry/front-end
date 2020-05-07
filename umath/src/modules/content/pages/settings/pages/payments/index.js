@@ -74,7 +74,7 @@ const PaymentPage = ({ navigation }) => {
       onPress: () =>
         navigation.dispatch(
           StackActions.replace(ROUTES.CONTENT_SETTINGS_SUBSCRIPTION, {
-            oldSubscription: subscription,
+            oldSubscription: subscription ?? "",
           })
         ),
     },
@@ -90,7 +90,7 @@ const PaymentPage = ({ navigation }) => {
     <>
       <Section style={LocalStyles.headerWrapper}>
         <Text style={LocalStyles.planTitle}> Subscription plan: {description} </Text>
-        <Text style={LocalStyles.infoText}> Auto-Renewed on: {renewDate.toDateString()} </Text>
+        <Text style={LocalStyles.infoText}> Auto-Renewed on: {renewDate?.toDateString()} </Text>
       </Section>
       <Section style={LocalStyles.itemsWrapper} title={"Settings"}>
         {_itemData.map((item) => (

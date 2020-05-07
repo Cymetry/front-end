@@ -269,7 +269,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 35J78P7N4C;
 				INFOPLIST_FILE = umath/Info.plist;
@@ -291,9 +291,9 @@
 			baseConfigurationReference = 723356363546E1972BCAB084 /* Pods-umath.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 35J78P7N4C;
 				INFOPLIST_FILE = umath/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -304,7 +304,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.umath.umath;
 				PRODUCT_NAME = umath;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = umath1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

@@ -53,6 +53,7 @@ const SubscriptionScreen = (props) => {
     } else {
       Alert.alert("Something went wrong while fetching subscription data");
     }
+    setSubscriptionData(products.results);
   };
 
   const _onContentSizeChange = (_, contentHeight) => {

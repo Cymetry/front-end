@@ -192,12 +192,7 @@ const MyAccountScreens = ({ route }) => (
         title: "Subscription",
         headerRight: () => (
           <HeaderButton
-            onPress={() => {
-              checkAndTryToRestorePurchase();
-              navigationWrapper.navigation.dispatch(
-                StackActions.replace(ROUTES.CONTENT_SETTINGS_PAYMENT)
-              );
-            }}
+            onPress={checkAndTryToRestorePurchase}
             title="Restore"
           />
         ),

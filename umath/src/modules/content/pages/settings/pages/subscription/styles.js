@@ -6,7 +6,7 @@ import Styles from "../../../../../../../assets/styles";
 const styles = StyleSheet.create({
   content_wrapper: {
     flex: 1,
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     alignItems: "center",
     backgroundColor: "white",
     paddingVertical: 20,
@@ -15,10 +15,17 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   text: {
-    fontSize: 24,
-    color: Variables.textGray,
+    fontSize: 18,
+    color: 'black',
     textAlign: "center",
     paddingHorizontal: 50,
+  },
+  subtext: {
+    fontSize: 10,
+    color: 'black',
+    textAlign: "center",
+    paddingHorizontal: 50,
+    paddingVertical: 20,
   },
   card_wrapper: {
     alignItems: "center",

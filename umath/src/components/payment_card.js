@@ -41,9 +41,9 @@ const styles = StyleSheet.create({
     paddingVertical: 20
   },
   description: {
-    color: Variables.gray,
+    color: "black",
     fontSize: 18,
-    textAlign: "center"
+    textAlign: 'center'
   }
 });
 

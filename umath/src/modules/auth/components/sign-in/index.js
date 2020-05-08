@@ -11,6 +11,7 @@ import Styles from "../../../../../assets/styles";
 import { navigationWrapper } from "../../../../platform/services/navigation";
 
 import isEmailValid from "../../../../utils/validateEmail";
+import UserController from "../../../../platform/api/user";
 
 class SignIn extends Component {
   state = {
@@ -43,6 +44,10 @@ class SignIn extends Component {
       const result = await AuthController.Login(form);
       if (result) {
         await AsyncStorage.setItem("token", result.jwt);
+        const isPremium = await AsyncStorage.getItem("isPremium");
+        if (isPremium === "true" && !result.isPremium) {
+          UserController.Edit({ isPremium: true });
+        }
         this.props.navigation.dispatch(
           CommonActions.reset({
             index: 0,

@@ -5,7 +5,7 @@ import {
   createStackNavigator,
   HeaderBackButton,
 } from "@react-navigation/stack";
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, StackActions } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 
 import FaqIcon from "../../../../../assets/images/faq_icon.png";
@@ -61,7 +61,7 @@ const Settings = ({ navigation }) => {
               name: ROUTES.HOME,
             },
           ],
-        }),
+        })
       );
     } catch (e) {
       console.warn(e);
@@ -105,23 +105,11 @@ const Settings = ({ navigation }) => {
     {
       name: "Subscription",
       onPress: () =>
-        token
-          ? navigation.navigate(
-            isPremium
-              ? ROUTES.CONTENT_SETTINGS_PAYMENT
-              : ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
-          )
-          : Alert.alert("Please sign in to be able to subscribe", "", [
-            {
-              text: "Sign in",
-              onPress: () =>
-                navigationWrapper.navigation.navigate(ROUTES.AUTH),
-            },
-            {
-              text: "Cancel",
-              style: "cancel",
-            },
-          ]),
+        navigation.navigate(
+          isPremium
+            ? ROUTES.CONTENT_SETTINGS_PAYMENT
+            : ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
+        ),
       avatar_source: SubscriptionIcon,
     },
     ...(token
@@ -202,7 +190,17 @@ const MyAccountScreens = ({ route }) => (
       name={ROUTES.CONTENT_SETTINGS_SUBSCRIPTION}
       options={{
         title: "Subscription",
-        headerRight: () => <HeaderButton onPress={checkAndTryToRestorePurchase} title="Restore" />
+        headerRight: () => (
+          <HeaderButton
+            onPress={() => {
+              checkAndTryToRestorePurchase();
+              navigationWrapper.navigation.dispatch(
+                StackActions.replace(ROUTES.CONTENT_SETTINGS_PAYMENT)
+              );
+            }}
+            title="Restore"
+          />
+        ),
       }}
     />
     <Stack.Screen

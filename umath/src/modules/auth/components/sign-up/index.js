@@ -69,6 +69,10 @@ class SignUp extends Component {
       });
       if (authResult) {
         await AsyncStorage.setItem("token", authResult.jwt);
+        const isPremium = await AsyncStorage.getItem('isPremium')
+        if (isPremium === "true" && !result.isPremium) {
+          UserController.Edit({ isPremium: true })
+        }
         navigation.navigate(
           lastPath || ROUTES.CONTENT,
           lastParams || { loggedIn: true }

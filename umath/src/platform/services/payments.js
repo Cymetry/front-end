@@ -10,7 +10,6 @@ const initializeInAppPurchases = async () => {
 const changeOrPurchase = async (newSubscription, oldSubscription) => {
   try {
     await InAppPurchases.purchaseItemAsync(newSubscription, oldSubscription);
-    await UserController.Edit({ "isPremium": true })
   } catch (e) {
     console.warn(e)
   }

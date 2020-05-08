@@ -21,6 +21,7 @@ import ROUTES from "../../../../../../platform/constants/routes";
 import { useSubscriptionChangeListener } from "../../../../../../utils/hooks_util";
 import { changeOrPurchase } from "../../../../../../platform/services/payments";
 import Variables from "../../../../../../../assets/styles/variables";
+import UserController from "../../../../../../platform/api/user";
 
 const _products = {
   ios: ["umathapp01", "umathapp02", "umathapp03", "umathapp04"],
@@ -75,8 +76,11 @@ const SubscriptionScreen = (props) => {
     setLoading(true);
 
     const { oldSubscription } = props.route.params || {};
+    const isLoggedIn = await AsyncStorage.getItem('token')
 
     await changeOrPurchase(activeItem, oldSubscription);
+
+    if (isLoggedIn && isLoggedIn !== '') UserController.Edit({ isPremium: true })
 
     AsyncStorage.setItem("subscriptionId", activeItem);
 

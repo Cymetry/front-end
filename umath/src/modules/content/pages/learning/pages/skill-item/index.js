@@ -207,9 +207,9 @@ class SkillItem extends Component {
       if (typeof result.body.content.content === "string") {
         result.body.content.videoUrl = result.body.content.content;
       } else {
-        // fullFinished
-        //   ? await AsyncAlert(AlertMessage.completeSkill)
-        //   : await AsyncAlert(AlertMessage.nextSkill);
+        correctCount === stepsData.length
+          ? await AsyncAlert(AlertMessage.completeSkill)
+          : await AsyncAlert(AlertMessage.nextSkill(correctCount+1));
       }
 
       result.body.content.steps = result.body.content.steps

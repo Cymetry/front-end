@@ -88,6 +88,7 @@ class SignIn extends Component {
           placeholder="Email"
           autoCapitalize="none"
           containerStyle={Styles.input.classic}
+          placeholderTextColor={Styles.input.placeholder.color}
           onChangeText={(value) => this.change("email", value)}
           errorMessage={!emailValid ? "invalid email" : undefined}
         />
@@ -95,6 +96,7 @@ class SignIn extends Component {
           secureTextEntry
           placeholder="Password"
           containerStyle={Styles.input.classic}
+          placeholderTextColor={Styles.input.placeholder.color}
           onChangeText={(value) => this.change("password", value)}
         />
         <Text
@@ -119,7 +121,7 @@ class SignIn extends Component {
             <Button
               type="clear"
               accessibilityRole="button"
-              title="Sign Up"
+              title="Sign up"
               titleStyle={LocalStyles.signUpTitle}
               onPress={() => changeViewType(ViewTypeEnum.SignUp)}
             />

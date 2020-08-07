@@ -106,12 +106,15 @@ class SignUp extends Component {
           value={form.name}
           onChangeText={(value) => this.change("name", value)}
           containerStyle={Styles.input.classic}
+          placeholderTextColor={Styles.input.placeholder.color}
           placeholder="Name"
         />
         <Input
           value={form.surname}
           onChangeText={(value) => this.change("surname", value)}
           containerStyle={Styles.input.classic}
+          // customStyles={Styles.input.placeholder}
+          placeholderTextColor={Styles.input.placeholder.color}
           placeholder="Surname"
         />
         <Input
@@ -119,6 +122,7 @@ class SignUp extends Component {
           value={form.email}
           onChangeText={(value) => this.change("email", value)}
           containerStyle={Styles.input.classic}
+          placeholderTextColor={Styles.input.placeholder.color}
           autoCapitalize="none"
           placeholder="Email"
         />
@@ -126,6 +130,7 @@ class SignUp extends Component {
           value={form.password}
           onChangeText={(value) => this.change("password", value)}
           containerStyle={Styles.input.classic}
+          placeholderTextColor={Styles.input.placeholder.color}
           autoCapitalize="none"
           placeholder="Password"
           errorMessage={passwordValid ? "" : "Password too short!"}
@@ -135,7 +140,7 @@ class SignUp extends Component {
         <DatePicker
           style={{ ...Styles.input.classic, width: "100%" }}
           customStyles={{
-            placeholderText: Styles.text.smallSize,
+            placeholderText: Styles.input.placeholder,
             dateInput: LocalStyles.datePicker,
             dateText: Styles.text.smallSize,
           }}
@@ -152,7 +157,8 @@ class SignUp extends Component {
           value={form.school}
           onChangeText={(value) => this.change("school", value)}
           containerStyle={Styles.input.classic}
-          placeholder="School"
+          placeholderTextColor={Styles.input.placeholder.color}
+          placeholder="School (optional)"
         />
         <View style={LocalStyles.signUpPromptWrapper}>
           <Text style={LocalStyles.suggestionText}>
@@ -160,7 +166,7 @@ class SignUp extends Component {
           </Text>
           <Button
             type="clear"
-            title="Sign In"
+            title="Sign in"
             titleStyle={LocalStyles.signUpTitle}
             onPress={() => changeViewType(ViewTypeEnum.SignIn)}
           />

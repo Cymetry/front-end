@@ -13,6 +13,7 @@ export default {
   headerTitleStyle: {
     fontWeight: 'normal',
     marginBottom: 7,
+    textAlign: 'center',
     ...text.normalSize,
   }
 };

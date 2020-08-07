@@ -34,7 +34,7 @@ const Intro = ({ skip }) => (
         <View style={LocalStyles.button}>
             <Button
                 titleStyle={Styles.button.title}
-                title="Sign Up"
+                title="Sign up"
                 type="clear"
                 onPress={() => navigationWrapper.navigation.navigate(ROUTES.AUTH, { signUp: true, lastPath: ROUTES.HOME })} 
             />

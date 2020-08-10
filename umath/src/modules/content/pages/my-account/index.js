@@ -1,11 +1,14 @@
 import React, { PureComponent } from "react";
 import { View, ScrollView, Text, Image } from "react-native";
+import { WebView } from "react-native-webview";
 import { Bar } from "react-native-progress";
 import {
   createStackNavigator,
   HeaderBackButton
 } from "@react-navigation/stack";
 import { Button } from "react-native-elements";
+import RadarChart from 'react-svg-radar-chart';
+import { renderToString } from 'react-dom/server'
 
 import truncate from "../../../../utils/truncate";
 
@@ -28,10 +31,43 @@ const SVGIcon = ({ SVG }) => (
   </View>
 );
 
-const parseName = name => {
-  const [, ...rest] = name.split(" ");
-  return rest.join(" ");
+const data = [{
+  data: {
+    knowledge: 0.75,
+    memory: .85,
+    quickMaths: 0,
+    accuracy: 0.6,
+    conceptsReusal: 0.9,
+    speed: 0.8
+  },
+  meta: { color: '#32C5FF' }
+}];
+
+const captions = {
+  knowledge: 'Knowledge',
+  memory: 'Memory',
+  quickMaths: 'Quick Maths',
+  accuracy: 'Accuracy',
+  conceptsReusal: 'Concepts Reusal',
+  speed: 'Speed',
 };
+
+const options = {
+  chartSize: 30,
+  axes: true,
+  scales: 4,
+  captions: true,
+  dots: true,
+  captionMargin: 80,
+  scaleProps: () => ({ fill: "#FFF", stroke: "#999" }),
+  axisProps: () => ({ stroke: '#999', strokeWidth: 1.2 }),
+  shapeProps: () => ({ fillOpacity: 0.7 }),
+  captionProps: () => ({
+    textAnchor: 'middle',
+    fontSize: 45,
+    fontFamily: 'Futura-PT',
+  })
+}
 
 class MyAccount extends PureComponent {
   static navigationOptions = ({ navigation }) => ({
@@ -52,6 +88,8 @@ class MyAccount extends PureComponent {
     questions: null,
     progress: { revision: 0, learning: 0 }
   };
+
+  
 
   handleSkillClick = () =>
     this.state.skill.redirectToTopic
@@ -172,26 +210,22 @@ class MyAccount extends PureComponent {
           <Text style={LocalStyles.fullName}>
             {details.name} {details.surname}
           </Text>
-          {skill.id && topic.id && (
-            <View style={LocalStyles.progress}>
-              <Button
-                type="solid"
-                key={skill.id}
-                onPress={this.handleSkillClick}
-                buttonStyle={LocalStyles.button}
-                titleStyle={Styles.button.myAccountButtonTitle}
-                title={truncate(skill.name)}
-              />
-              <Button
-                type="solid"
-                key={topic.id}
-                onPress={this.handleTopicClick}
-                buttonStyle={LocalStyles.button}
-                title={truncate(parseName(topic.name))}
-                titleStyle={Styles.button.myAccountButtonTitle}
-              />
-            </View>
-          )}
+          <View style={{height: 350, width: 350, marginTop: 10, marginLeft: 20}}>
+            <WebView
+              originWhitelist={["*"]}
+              scrollEnabled={true}
+              useWebKit={true}
+              source={{ html: renderToString(
+                <RadarChart 
+                  captions={captions}
+                  options={options} 
+                  data={data} 
+                  size={900}
+                />), 
+                baseUrl: "" 
+              }} 
+            />
+          </View>
           <View style={LocalStyles.divider} />
           <Text style={Styles.text.normalSize}>Progress:</Text>
           <View style={LocalStyles.progressItem}>

@@ -19,6 +19,7 @@
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
+    "react-native-charts-wrapper": "^0.5.7",
     "react-native-collapsible": "^1.5.2",
     "react-native-confirmation-code-input": "^1.0.4",
     "react-native-datepicker": "^1.7.2",
@@ -40,7 +41,8 @@
     "react-native-webview": "7.4.3",
     "react-navigation": "^4.0.10",
     "react-navigation-stack": "^1.10.3",
-    "react-navigation-tabs": "^2.5.6"
+    "react-navigation-tabs": "^2.5.6",
+    "react-svg-radar-chart": "^1.2.0"
   },
   "devDependencies": {
     "@react-navigation/native": "^5.0.8",

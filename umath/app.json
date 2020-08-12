@@ -19,7 +19,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "io.umath.umath"
+      "bundleIdentifier": "com.umath.umath"
     },
     "android": {
       "package": "com.umath.umath"

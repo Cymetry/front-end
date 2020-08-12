@@ -58,13 +58,13 @@ const options = {
   scales: 4,
   captions: true,
   dots: true,
-  captionMargin: 80,
+  captionMargin: 120,
   scaleProps: () => ({ fill: "#FFF", stroke: "#999" }),
   axisProps: () => ({ stroke: '#999', strokeWidth: 1.2 }),
   shapeProps: () => ({ fillOpacity: 0.7 }),
   captionProps: () => ({
     textAnchor: 'middle',
-    fontSize: 45,
+    fontSize: 60,
     fontFamily: 'Futura-PT',
   })
 }

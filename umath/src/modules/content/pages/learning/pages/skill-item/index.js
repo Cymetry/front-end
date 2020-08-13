@@ -98,8 +98,8 @@ class SkillItem extends Component {
   nextStep = async () => {
     if (this.state.data.videoUrl) {
       const dialogResult = await AsyncAlert(
+        "Great job!",
         AlertMessage.videoRedirectWarning,
-        "",
         {
           confirmText: "Continue",
           cancelText: "Cancel",
@@ -200,16 +200,20 @@ class SkillItem extends Component {
       if (result && result.message) Alert.alert(result.message, '', [{
         text: 'Back',
         onPress: () => navigationWrapper.navigation.goBack(),
-      }]); else if (data && !data.videoUrl) Alert.alert(AlertMessage.stepRedirectWarning, '', [{
-        text: 'Continue',
-      }]);
+      }]); else if (data && !data.videoUrl) {
+        body.correctCount < stepsData.length ? Alert.alert('Too many mistakes. Don’t worry!', AlertMessage.stepRedirectIncorrect(body.correctCount + 1), [{
+          text: 'Continue',
+        }]) : Alert.alert('Great job!', AlertMessage.stepRedirectCorrect, [{
+          text: 'Ok',
+        }])
+      };
 
       if (typeof result.body.content.content === "string") {
         result.body.content.videoUrl = result.body.content.content;
       } else {
-        correctCount === stepsData.length
-          ? await AsyncAlert(AlertMessage.completeSkill)
-          : await AsyncAlert(AlertMessage.nextSkill(correctCount+1));
+        // fullFinished
+        //   ? await AsyncAlert(AlertMessage.completeSkill)
+        //   : await AsyncAlert(AlertMessage.nextSkill);
       }
 
       result.body.content.steps = result.body.content.steps

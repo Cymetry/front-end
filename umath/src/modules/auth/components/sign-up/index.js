@@ -113,7 +113,6 @@ class SignUp extends Component {
           value={form.surname}
           onChangeText={(value) => this.change("surname", value)}
           containerStyle={Styles.input.classic}
-          // customStyles={Styles.input.placeholder}
           placeholderTextColor={Styles.input.placeholder.color}
           placeholder="Surname"
         />
@@ -142,7 +141,7 @@ class SignUp extends Component {
           customStyles={{
             placeholderText: Styles.input.placeholder,
             dateInput: LocalStyles.datePicker,
-            dateText: Styles.text.smallSize,
+            dateText: Styles.text.normalSize,
           }}
           mode="date"
           date={form.dob}

@@ -8,6 +8,6 @@ export default StyleSheet.create({
 
   placeholder: {
     color: Variables.textGray,
-    fontSize: Variables.smallFontSize,
+    fontSize: 18,
   }
 });

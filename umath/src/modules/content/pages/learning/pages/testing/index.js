@@ -43,7 +43,7 @@ const Testing = ({ route, navigation }) => {
   const resumeTesting = async (id) => {
     const {body, round, weakSet, message} = await TestingController.Resume(id);
 
-    if ("Failed to find coverable skills for test" === message) {
+    if ("Failed to find coverable skills for test" === message || !body || body.length === 0) {
       navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id });
       Alert.alert(
         'Skill Testing',

@@ -24,7 +24,15 @@ class Skills extends PureComponent {
 
   componentDidMount() {
     const { id } = this.props.route.params || {};
-    this.fetchSkills(id);
+
+    if (id === 7 || id === 57 || id === 58 ) {
+        Alert.alert('', 'Coming soon', [{
+        text: 'Back',
+        onPress: () => navigationWrapper.navigation.goBack(),
+      }]);
+    } else {
+      this.fetchSkills(id);
+    }
   }
 
   fetchSkills = async (id) => {

@@ -34,11 +34,11 @@ const SVGIcon = ({ SVG }) => (
 const data = [{
   data: {
     knowledge: 0.75,
-    memory: .85,
-    quickMaths: 0,
-    accuracy: 0.6,
-    conceptsReusal: 0.9,
-    speed: 0.8
+    memory: 0.75,
+    quickMaths: 0.75,
+    accuracy: 0.75,
+    conceptsReusal: 0.75,
+    speed: 0.75
   },
   meta: { color: '#32C5FF' }
 }];

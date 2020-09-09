@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { View, Text, AsyncStorage, Image, Alert } from "react-native";
 import { Input, Button } from "react-native-elements";
 import DatePicker from "react-native-datepicker";
+import { CommonActions } from "@react-navigation/native";
 
 import ROUTES from "../../../../platform/constants/routes";
 import UserController from "../../../../platform/api/user";
@@ -11,6 +12,7 @@ import { ViewTypeEnum } from "../../constants/enums";
 import Styles from "../../../../../assets/styles";
 
 import isEmailValid from "../../../../utils/validateEmail";
+import isNameValid from "../../../../utils/validateName";
 
 class SignUp extends Component {
   state = {
@@ -26,13 +28,17 @@ class SignUp extends Component {
     },
     emailValid: true,
     passwordValid: true,
+    nameValid: true,
+    surnameValid: true,
   };
 
   get disabled() {
-    const { emailValid, form } = this.state;
+    const { emailValid, nameValid, surnameValid, form } = this.state;
     return (
       !form.name ||
       !emailValid ||
+      !nameValid ||
+      !surnameValid ||
       !form.email ||
       !form.surname ||
       !form.password
@@ -43,6 +49,16 @@ class SignUp extends Component {
     const { form } = this.state;
     form[name] = value;
     this.setState({ form });
+
+    if (name == "name") {
+      const nameValid = isNameValid(value)
+      this.setState({ nameValid })
+    }
+
+    if (name == "surname") {
+      const surnameValid = isNameValid(value)
+      this.setState({ surnameValid })
+    }
 
     if (name == "email") {
       const emailValid = isEmailValid(value);
@@ -73,9 +89,16 @@ class SignUp extends Component {
           ["isPremium", authResult.isPremium ? "true" : ""],
         ]);
 
-        navigation.navigate(
-          lastPath || ROUTES.CONTENT,
-          lastParams || { loggedIn: true }
+        this.props.navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              {
+                name: ROUTES.CONTENT,
+                params: { loggedIn: true },
+              },
+            ],
+          })
         );
       } else {
         Alert.alert("Something is wrong!!");
@@ -86,7 +109,7 @@ class SignUp extends Component {
   };
 
   render() {
-    const { form, emailValid, passwordValid } = this.state;
+    const { form, emailValid, nameValid, surnameValid, passwordValid } = this.state;
     const { changeViewType } = this.props;
 
     return (
@@ -103,6 +126,7 @@ class SignUp extends Component {
           Register an account
         </Text>
         <Input
+          errorMessage={!nameValid ? "Name too short" : undefined}
           value={form.name}
           onChangeText={(value) => this.change("name", value)}
           containerStyle={Styles.input.classic}
@@ -110,6 +134,7 @@ class SignUp extends Component {
           placeholder="Name"
         />
         <Input
+          errorMessage={!surnameValid ? "Surname too short" : undefined}
           value={form.surname}
           onChangeText={(value) => this.change("surname", value)}
           containerStyle={Styles.input.classic}
@@ -117,7 +142,7 @@ class SignUp extends Component {
           placeholder="Surname"
         />
         <Input
-          errorMessage={!emailValid ? "invalid email" : undefined}
+          errorMessage={!emailValid ? "Invalid email" : undefined}
           value={form.email}
           onChangeText={(value) => this.change("email", value)}
           containerStyle={Styles.input.classic}

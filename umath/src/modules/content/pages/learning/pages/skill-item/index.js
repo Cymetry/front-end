@@ -1,9 +1,10 @@
 import React, { Component, createRef } from "react";
-import { View, Text, TouchableHighlight, Keyboard, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableHighlight, Keyboard, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Video } from "expo-av";
 import { withNavigation } from "react-navigation";
+import SignatureCapture from 'react-native-signature-capture';
 // import { Html5Entities } from "html-entities";
 // import KeyboardAccessory from "react-native-sticky-keyboard-accessory";
 
@@ -20,6 +21,19 @@ import ExpandContent from "./components/expand-content";
 import { navigationWrapper } from "../../../../../../platform/services/navigation";
 
 // const htmlEntities = new Html5Entities();
+
+const styles = StyleSheet.create({
+  signature: {
+      flex: 1,
+      borderColor: '#000033',
+      borderWidth: 1,
+  },
+  buttonStyle: {
+      flex: 1, justifyContent: "center", alignItems: "center", height: 50,
+      backgroundColor: "#eeeeee",
+      margin: 10
+  }
+})
 
 class SkillItem extends Component {
   state = {
@@ -349,6 +363,24 @@ class SkillItem extends Component {
     });
   };
 
+  saveSign = () => {
+    this.refs["sign"].saveImage();
+  }
+
+  resetSign = () => {
+      this.refs["sign"].resetImage();
+  }
+
+  onSaveEvent = (result) => {
+      //result.encoded - for the base64 encoded png
+      //result.pathName - for the file path name
+      console.log(result.pathName);
+  }
+  onDragEvent = () => {
+      // This callback will be called when the user enters signature
+      console.log("dragged");
+  }
+
   render() {
     const { data, erroredChoices, expandOpened, expandData, currentStep, stepAnswers, showSolution } = this.state;
     const stepsData = data && data.steps.slice(0, currentStep + 1);
@@ -519,43 +551,68 @@ class SkillItem extends Component {
                 </View>
               </View>
             </KeyboardAccessory> */}
-            <View style={LocalStyles.buttonWrapper}>
-              <View
-                style={{
-                  ...LocalStyles.button,
-                  ...LocalStyles.lastButtons,
-                  ...(this.nextDisabled ? Styles.button.disabled : {}),
-                }}
-              >
-                <Button
-                  titleStyle={
-                    this.nextDisabled
-                      ? LocalStyles.disabledButtonTitle
-                      : LocalStyles.buttonTitle
-                  }
-                  title={
-                    !stepsData.length || currentStep === data.steps.length - 1
-                      ? "Done"
-                      : "Next step"
-                  }
-                  onPress={this.nextStep}
-                  type="clear"
-                />
-              </View>
+            {/* <View style={{ flex: 3, flexDirection: "column" }}>
+                <Text style={{alignItems:"center",justifyContent:"center"}}>Write the answer here </Text>
+                <SignatureCapture
+                    style={[{flex:1},styles.signature]}
+                    ref="sign"
+                    onSaveEvent={this.onSaveEvent}
+                    onDragEvent={this.onDragEvent}
+                    saveImageFileInExtStorage={false}
+                    showNativeButtons={false}
+                    showTitleLabel={false}
+                    viewMode={"portrait"}/>
 
-              {!!showSolution && (
+                <View style={{ flex: 1, flexDirection: "row" }}>
+                    <TouchableHighlight style={styles.buttonStyle}
+                        onPress={() => { this.saveSign() } } >
+                        <Text>Save</Text>
+                    </TouchableHighlight>
+
+                    <TouchableHighlight style={styles.buttonStyle}
+                        onPress={() => { this.resetSign() } } >
+                        <Text>Reset</Text>
+                    </TouchableHighlight>
+
+                </View>
+
+            </View> */}
+              <View style={LocalStyles.buttonWrapper}>
                 <View
-                  style={{ ...LocalStyles.button, ...LocalStyles.lastButtons }}
+                  style={{
+                    ...LocalStyles.button,
+                    ...LocalStyles.lastButtons,
+                    ...(this.nextDisabled ? Styles.button.disabled : {}),
+                  }}
                 >
                   <Button
-                    titleStyle={LocalStyles.buttonTitle}
-                    title="Solution"
-                    onPress={this.showSolution}
+                    titleStyle={
+                      this.nextDisabled
+                        ? LocalStyles.disabledButtonTitle
+                        : LocalStyles.buttonTitle
+                    }
+                    title={
+                      !stepsData.length || currentStep === data.steps.length - 1
+                        ? "Done"
+                        : "Next step"
+                    }
+                    onPress={this.nextStep}
                     type="clear"
                   />
                 </View>
-              )}
-            </View>
+                {!!showSolution && (
+                  <View
+                    style={{ ...LocalStyles.button, ...LocalStyles.lastButtons }}
+                  >
+                    <Button
+                      titleStyle={LocalStyles.buttonTitle}
+                      title="Solution"
+                      onPress={this.showSolution}
+                      type="clear"
+                    />
+                  </View>
+                )}
+              </View>
           </>
         </DismissKeyboard>
       </View>

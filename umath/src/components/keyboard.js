@@ -2,11 +2,17 @@ import React, { Component } from "react";
 import { View } from "react-native";
 import { WebView } from "react-native-webview";
 
-const wrapKeyboard = ({content}) => (
+const wrapKeyboard = () => (
     `
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.9.1/mathquill.min.js"></script>
+    <body>
+    <div className="wrap">
+        <textarea className="keyboard"></textarea>
+        <br></br>
+        <div className="mathquill"></div>
+    </div>
     <script>
     $(function() {
 
@@ -72,20 +78,12 @@ const wrapKeyboard = ({content}) => (
       
       });
     </script>
-    ${content}
+    </body>
     `
-)  
-
-const content = `
-    <div className="wrap">
-        <textarea className="keyboard"></textarea>
-        <br></br>
-        <div className="mathquill"></div>
-    </div>
-`
+) 
 
 const Keyboard = () => {
-    const html = wrapKeyboard(content);
+    const html = wrapKeyboard();
     
     return (
         <View style={{ height: this.state.height, ...props.style }}>

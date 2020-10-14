@@ -34,7 +34,7 @@ class Learning extends PureComponent {
           </View>
           <MathJax
             // style={{ flex: 1, flexDirection: 'column' }}
-            html={`${latex}`}
+            html={`$${latex}$`}
           />
         </View> : <View style={LocalStyles.container}>
           <Input

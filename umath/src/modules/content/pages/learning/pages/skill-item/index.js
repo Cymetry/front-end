@@ -4,7 +4,6 @@ import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Video } from "expo-av";
 import { withNavigation } from "react-navigation";
-import SignatureCapture from 'react-native-signature-capture';
 // import { Html5Entities } from "html-entities";
 // import KeyboardAccessory from "react-native-sticky-keyboard-accessory";
 
@@ -51,6 +50,8 @@ class SkillItem extends Component {
   mistakeCount = 0;
 
   async componentDidMount() {
+    this.keyboardType();
+
     const { id } = this.props.route.params || {};
 
     let response = await SkillLearningController.Resume(id);
@@ -299,28 +300,23 @@ class SkillItem extends Component {
     }
   });
 
-  // keyboardType = (content) => {
-  //   const currents = this.webViews
-  //     .filter((item) => item.current)
-  //     .map((item) => item.current);
+  keyboardType = () => {
+    const currents = this.webViews
+      .filter((item) => item.current)
+      .map((item) => item.current);
 
-  //   currents.map((item) =>
-  //     item.injectJavaScript(`
-  //       (() => {
-  //         if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-  //           const { activeElement } = document;
-  //           const splitted = activeElement.value.split('');
-  //           splitted[activeElement.selectionStart] = '${content}' + (splitted[activeElement.selectionStart] || '');
-  //           activeElement.value = splitted.join('');
-  //           const idNum = +activeElement.id.replace('box-', '');
-  //           window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
-  //         }
-
-  //         return;
-  //       })(); 
-  //     `)
-  //   );
-  // };
+    currents.map((item) =>
+      item.injectJavaScript(`
+        (() => {
+          if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+            const { activeElement } = document;
+            activeElement.type = 'number' 
+          }
+          return;
+        })(); 
+      `)
+    );
+  };
 
   showSolution = () => {
     const { data } = this.state;
@@ -438,7 +434,7 @@ class SkillItem extends Component {
                     <View style={Styles.latexWrapper}>
                       <MathJax
                         html={
-                          item.graphs.length
+                          item?.graphs?.length
                             ? this.prepareGraphs(index, item.instruction)
                             : parseLatex(item.instruction)
                         }
@@ -474,109 +470,6 @@ class SkillItem extends Component {
                 </View>
               ))}
             </KeyboardAwareScrollView>
-            {/* <KeyboardAccessory>
-              <View
-                style={{
-                  flexDirection: "row",
-                  height: 50,
-                  bottom: -60,
-                  flex: 1,
-                  backgroundColor: "transparent",
-                }}
-              >
-                <View
-                  style={{
-                    ...LocalStyles.button,
-                    width: Dimensions.get("window").width / 5,
-                  }}
-                >
-                  <Button
-                    titleStyle={Styles.button.title}
-                    title={htmlEntities.decode("&radic;")}
-                    onPress={() => this.keyboardType("√()")}
-                    type="clear"
-                  />
-                </View>
-                <View
-                  style={{
-                    ...LocalStyles.button,
-                    width: Dimensions.get("window").width / 5,
-                  }}
-                >
-                  <Button
-                    titleStyle={Styles.button.title}
-                    title="sin"
-                    onPress={() => this.keyboardType("sin()")}
-                    type="clear"
-                  />
-                </View>
-                <View
-                  style={{
-                    ...LocalStyles.button,
-                    width: Dimensions.get("window").width / 5,
-                  }}
-                >
-                  <Button
-                    titleStyle={Styles.button.title}
-                    title="cos"
-                    onPress={() => this.keyboardType("cos()")}
-                    type="clear"
-                  />
-                </View>
-                <View
-                  style={{
-                    ...LocalStyles.button,
-                    width: Dimensions.get("window").width / 5,
-                  }}
-                >
-                  <Button
-                    titleStyle={Styles.button.title}
-                    title="tan"
-                    onPress={() => this.keyboardType("tan()")}
-                    type="clear"
-                  />
-                </View>
-                <View
-                  style={{
-                    ...LocalStyles.button,
-                    width: Dimensions.get("window").width / 5,
-                  }}
-                >
-                  <Button
-                    titleStyle={Styles.button.title}
-                    title="kot"
-                    onPress={() => this.keyboardType("kot()")}
-                    type="clear"
-                  />
-                </View>
-              </View>
-            </KeyboardAccessory> */}
-            {/* <View style={{ flex: 3, flexDirection: "column" }}>
-                <Text style={{alignItems:"center",justifyContent:"center"}}>Write the answer here </Text>
-                <SignatureCapture
-                    style={[{flex:1},styles.signature]}
-                    ref="sign"
-                    onSaveEvent={this.onSaveEvent}
-                    onDragEvent={this.onDragEvent}
-                    saveImageFileInExtStorage={false}
-                    showNativeButtons={false}
-                    showTitleLabel={false}
-                    viewMode={"portrait"}/>
-
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                    <TouchableHighlight style={styles.buttonStyle}
-                        onPress={() => { this.saveSign() } } >
-                        <Text>Save</Text>
-                    </TouchableHighlight>
-
-                    <TouchableHighlight style={styles.buttonStyle}
-                        onPress={() => { this.resetSign() } } >
-                        <Text>Reset</Text>
-                    </TouchableHighlight>
-
-                </View>
-
-            </View> */}
               <View style={LocalStyles.buttonWrapper}>
                 <View
                   style={{

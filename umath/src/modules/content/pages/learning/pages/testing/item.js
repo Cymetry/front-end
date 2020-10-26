@@ -43,8 +43,21 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
     `);
   };
 
+  const keyboardType = () => {
+    webView.current.injectJavaScript(`
+      (() => {
+        if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+          const { activeElement } = document;
+          activeElement.type = 'number' 
+        }
+        return;
+      })();
+    `);
+  }
+
   useEffect(() => {
     showSolution(question.answers[0]);
+    keyboardType();
   }, [showAnswer]);
 
   return (

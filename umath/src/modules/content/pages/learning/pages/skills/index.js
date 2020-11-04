@@ -25,7 +25,7 @@ class Skills extends PureComponent {
   componentDidMount() {
     const { id } = this.props.route.params || {};
 
-    if (id === 7 || id === 57 || id === 58 || id === 56) {
+    if (id === 7 || id === 57) {
         Alert.alert('', 'Coming soon', [{
         text: 'Back',
         onPress: () => navigationWrapper.navigation.goBack(),

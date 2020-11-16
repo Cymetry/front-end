@@ -50,7 +50,7 @@ class SkillItem extends Component {
   mistakeCount = 0;
 
   async componentDidMount() {
-    this.keyboardType();
+    // this.keyboardType();
 
     const { id } = this.props.route.params || {};
 
@@ -300,23 +300,20 @@ class SkillItem extends Component {
     }
   });
 
-  keyboardType = () => {
-    const currents = this.webViews
-      .filter((item) => item.current)
-      .map((item) => item.current);
+  // keyboardType = () => {
+  //   const currents = this.webViews
+  //     .filter((item) => item.current)
+  //     .map((item) => item.current);
 
-    currents.map((item) =>
-      item.injectJavaScript(`
-        (() => {
-          if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-            const { activeElement } = document;
-            activeElement.type = 'number' 
-          }
-          return;
-        })(); 
-      `)
-    );
-  };
+  //   currents.map((item) =>
+  //     item.injectJavaScript(`
+  //       (() => {
+  //         const inputs = document.getElementsByTagName;
+
+  //       })(); 
+  //     `)
+  //   );
+  // };
 
   showSolution = () => {
     const { data } = this.state;
@@ -388,10 +385,14 @@ class SkillItem extends Component {
             <KeyboardAwareScrollView
               enableOnAndroid
               keyboardShouldPersistTaps="handled"
+              extraHeight={height => height}
               innerRef={(ref) => (this.scrollView = ref)}
               onPress={() => Keyboard.dismiss()}
-              onContentSizeChange={(width, height) =>
+              onContentSizeChange={(width, height) => {
                 !expandOpened && this.scrollView.scrollTo({ y: height })
+              }}
+              scrollToPosition={(width, height) => 
+                !expandOpened && this.scrollView.scrollToPosition({ y: height })
               }
             >
               {expandOpened && expandData && <ExpandContent data={expandData} />}

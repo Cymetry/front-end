@@ -46,11 +46,7 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
   const keyboardType = () => {
     webView.current.injectJavaScript(`
       (() => {
-        if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-          const { activeElement } = document;
-          activeElement.type = 'number' 
-        }
-        return;
+        const activeElement = document.getElementById('box-1');
       })();
     `);
   }

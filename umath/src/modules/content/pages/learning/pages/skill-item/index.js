@@ -385,15 +385,13 @@ class SkillItem extends Component {
             <KeyboardAwareScrollView
               enableOnAndroid
               keyboardShouldPersistTaps="handled"
-              extraHeight={height => height}
+              enableResetScrollToCoords={false}
+              // extraHeight={height => height}
               innerRef={(ref) => (this.scrollView = ref)}
               onPress={() => Keyboard.dismiss()}
               onContentSizeChange={(width, height) => {
                 !expandOpened && this.scrollView.scrollTo({ y: height })
               }}
-              scrollToPosition={(width, height) => 
-                !expandOpened && this.scrollView.scrollToPosition({ y: height })
-              }
             >
               {expandOpened && expandData && <ExpandContent data={expandData} />}
               {expandData && <TouchableOpacity

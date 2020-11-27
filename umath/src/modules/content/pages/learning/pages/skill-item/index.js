@@ -50,7 +50,6 @@ class SkillItem extends Component {
   mistakeCount = 0;
 
   async componentDidMount() {
-    // this.keyboardType();
 
     const { id } = this.props.route.params || {};
 
@@ -300,21 +299,6 @@ class SkillItem extends Component {
     }
   });
 
-  // keyboardType = () => {
-  //   const currents = this.webViews
-  //     .filter((item) => item.current)
-  //     .map((item) => item.current);
-
-  //   currents.map((item) =>
-  //     item.injectJavaScript(`
-  //       (() => {
-  //         const inputs = document.getElementsByTagName;
-
-  //       })(); 
-  //     `)
-  //   );
-  // };
-
   showSolution = () => {
     const { data } = this.state;
     const stepAnswers = data.steps.map((item) => {
@@ -355,24 +339,6 @@ class SkillItem extends Component {
       }, 1500);
     });
   };
-
-  saveSign = () => {
-    this.refs["sign"].saveImage();
-  }
-
-  resetSign = () => {
-      this.refs["sign"].resetImage();
-  }
-
-  onSaveEvent = (result) => {
-      //result.encoded - for the base64 encoded png
-      //result.pathName - for the file path name
-      console.log(result.pathName);
-  }
-  onDragEvent = () => {
-      // This callback will be called when the user enters signature
-      console.log("dragged");
-  }
 
   render() {
     const { data, erroredChoices, expandOpened, expandData, currentStep, stepAnswers, showSolution } = this.state;

@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "umath",
+    "slug": "umath",
+    "privacy": "public",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.umath.umath"
+    },
+    "android": {
+      "package": "com.umath.umath"
+    },
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "assetExts": [
+        "png"
+      ],
+      "sourceExts": [
+        "js",
+        "jsx",
+        "svg",
+        "ts",
+        "tsx"
+      ]
+    },
+    "sdkVersion": "39.0.0"
+  }
+}

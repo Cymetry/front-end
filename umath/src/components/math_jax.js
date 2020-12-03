@@ -42,17 +42,21 @@ class MathJax extends Component {
 
     return `
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-			<script type="text/x-mathjax-config">
+      <script type="text/x-mathjax-config">
 				MathJax.Hub.Config(${options});
 				MathJax.Hub.Queue(function() {
 					var height = document.documentElement.scrollHeight;
-					window.ReactNativeWebView.postMessage(String(height));
+          window.ReactNativeWebView.postMessage(String(height));
+          Array.from(document.getElementsByTagName("INPUT")).map(function(item) {
+            item.style.width = item.size * 10;
+            item.type = "number";
+          });
 					Array.from(document.querySelectorAll("[id^='box-']")).map(function(item) {
 						item.onkeyup = item.keyup || function(e) {
 							const idNum = +e.target.id.replace('box-', '');
 							window.ReactNativeWebView.postMessage(JSON.stringify({ value: e.target.value, input: idNum - 1 }));
 						};
-					});
+          });
 				});
 			</script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js"></script>

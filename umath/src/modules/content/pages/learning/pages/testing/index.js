@@ -41,9 +41,9 @@ const Testing = ({ route, navigation }) => {
   };
 
   const resumeTesting = async (id) => {
-    const {body, round, weakSet, message} = await TestingController.Resume(id);
+    const {body, round, weakSet, message, solution} = await TestingController.Resume(id) || {};
 
-    if ("Failed to find coverable skills for test" === message || !body || body.length === 0) {
+    if ("Failed to find coverable skills for test" === message) {
       navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id });
       Alert.alert(
         'Skill Testing',
@@ -52,7 +52,7 @@ const Testing = ({ route, navigation }) => {
       return;
     }
 
-    if (["SkillTest has been completed", "SkillTest Complete!"].includes(message)) {
+    if (["SkillTest Complete!"].includes(message)) {
       navigation.navigate(ROUTES.CONTENT_LEARNING_SKILLS, { id });
       Alert.alert(
         'Skill Testing',
@@ -74,7 +74,7 @@ const Testing = ({ route, navigation }) => {
     setFillinAnswer(null);
     setShowFeedback(false);
     setSelectedAnswer(null);
-    setSolutionShown(false);
+    setSolutionShown(solution);
   };
 
   const testAction = async (id) => {
@@ -98,7 +98,7 @@ const Testing = ({ route, navigation }) => {
     setUserAnswers([...userAnswers, {
       id: currentQuestion,
       uid: questions[currentQuestion].id,
-      isRight: !solutionShown ? isRight : false,
+      isRight,
     }]);
     setFillinAnswer(null);
     setSelectedAnswer(null);
@@ -111,7 +111,6 @@ const Testing = ({ route, navigation }) => {
     }
 
     setCurrentQuestion(currentQuestion + 1);
-    setSolutionShown(false);
   };
 
   useEffect(() => {
@@ -129,8 +128,28 @@ const Testing = ({ route, navigation }) => {
     return Math.floor(percent);
   };
 
+  const submitAnswer = () => {
+    if (questions[currentQuestion].fillIn) {
+      setFillinAnswer(questions[currentQuestion].answers[0]);
+    }
+    else {
+      setSelectedAnswer(letterToNum[questions[currentQuestion].answers[0]]);
+    }
+    
+    const answer = questions[currentQuestion].fillIn ? fillInAnswer : numToLetter[selectedAnswer];
+    const isRight = questions[currentQuestion].answers.includes(answer);
+
+    if(solutionShown && !isRight) {
+      return Alert.alert(
+        'Try again',
+        'You have answered the question incorrectly. Please retry or click ‘Solution’ to see the right answer.',
+      );
+    } else {
+      return (selectedAnswer !== null || fillInAnswer !== null) ? nextStep() : null
+    }  
+  }
+
   const showSolution = () => {
-    setSolutionShown(true);
     if (questions[currentQuestion].fillIn) {
       setFillinAnswer(questions[currentQuestion].answers[0]);
     }
@@ -209,12 +228,12 @@ const Testing = ({ route, navigation }) => {
               <Button
                 title="Next"
                 type="clear"
-                onPress={ (selectedAnswer !== null || fillInAnswer !== null) ? nextStep : null }
+                onPress={submitAnswer}
                 titleStyle={ (selectedAnswer !== null || fillInAnswer !== null) ? LocalStyles.buttonTitle : LocalStyles.disabledButtonTitle }
               />
             </View>
 
-            { round === 'round1' ? null :
+            { !solutionShown ? null :
               <View style={{ ...LocalStyles.button, ...LocalStyles.lastButtons }}>
                 <Button
                   onPress={showSolution}

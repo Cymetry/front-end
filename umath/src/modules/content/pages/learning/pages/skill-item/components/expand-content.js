@@ -165,7 +165,7 @@ class ExpandContent extends Component {
                     <View style={Styles.latexWrapper}>
                       <MathJax
                         html={
-                          item.graphs.length
+                          item?.graphs?.length
                             ? this.prepareGraphs(index, item.instruction)
                             : parseLatex(item.instruction)
                         }

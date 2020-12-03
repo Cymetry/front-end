@@ -1,5 +1,5 @@
 import React, { Component, createRef } from "react";
-import { View, Text, TouchableHighlight, Keyboard, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableHighlight, Keyboard, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { Button } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Video } from "expo-av";
@@ -21,6 +21,19 @@ import { navigationWrapper } from "../../../../../../platform/services/navigatio
 
 // const htmlEntities = new Html5Entities();
 
+const styles = StyleSheet.create({
+  signature: {
+      flex: 1,
+      borderColor: '#000033',
+      borderWidth: 1,
+  },
+  buttonStyle: {
+      flex: 1, justifyContent: "center", alignItems: "center", height: 50,
+      backgroundColor: "#eeeeee",
+      margin: 10
+  }
+})
+
 class SkillItem extends Component {
   state = {
     data: null,
@@ -37,6 +50,7 @@ class SkillItem extends Component {
   mistakeCount = 0;
 
   async componentDidMount() {
+
     const { id } = this.props.route.params || {};
 
     let response = await SkillLearningController.Resume(id);
@@ -285,29 +299,6 @@ class SkillItem extends Component {
     }
   });
 
-  // keyboardType = (content) => {
-  //   const currents = this.webViews
-  //     .filter((item) => item.current)
-  //     .map((item) => item.current);
-
-  //   currents.map((item) =>
-  //     item.injectJavaScript(`
-  //       (() => {
-  //         if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-  //           const { activeElement } = document;
-  //           const splitted = activeElement.value.split('');
-  //           splitted[activeElement.selectionStart] = '${content}' + (splitted[activeElement.selectionStart] || '');
-  //           activeElement.value = splitted.join('');
-  //           const idNum = +activeElement.id.replace('box-', '');
-  //           window.postMessage(JSON.stringify({ value: activeElement.value, input: idNum - 1 }));
-  //         }
-
-  //         return;
-  //       })(); 
-  //     `)
-  //   );
-  // };
-
   showSolution = () => {
     const { data } = this.state;
     const stepAnswers = data.steps.map((item) => {
@@ -360,11 +351,13 @@ class SkillItem extends Component {
             <KeyboardAwareScrollView
               enableOnAndroid
               keyboardShouldPersistTaps="handled"
+              enableResetScrollToCoords={false}
+              // extraHeight={height => height}
               innerRef={(ref) => (this.scrollView = ref)}
               onPress={() => Keyboard.dismiss()}
-              onContentSizeChange={(width, height) =>
+              onContentSizeChange={(width, height) => {
                 !expandOpened && this.scrollView.scrollTo({ y: height })
-              }
+              }}
             >
               {expandOpened && expandData && <ExpandContent data={expandData} />}
               {expandData && <TouchableOpacity
@@ -406,7 +399,7 @@ class SkillItem extends Component {
                     <View style={Styles.latexWrapper}>
                       <MathJax
                         html={
-                          item.graphs.length
+                          item?.graphs?.length
                             ? this.prepareGraphs(index, item.instruction)
                             : parseLatex(item.instruction)
                         }
@@ -442,120 +435,42 @@ class SkillItem extends Component {
                 </View>
               ))}
             </KeyboardAwareScrollView>
-            {/* <KeyboardAccessory>
-              <View
-                style={{
-                  flexDirection: "row",
-                  height: 50,
-                  bottom: -60,
-                  flex: 1,
-                  backgroundColor: "transparent",
-                }}
-              >
+              <View style={LocalStyles.buttonWrapper}>
                 <View
                   style={{
                     ...LocalStyles.button,
-                    width: Dimensions.get("window").width / 5,
+                    ...LocalStyles.lastButtons,
+                    ...(this.nextDisabled ? Styles.button.disabled : {}),
                   }}
                 >
                   <Button
-                    titleStyle={Styles.button.title}
-                    title={htmlEntities.decode("&radic;")}
-                    onPress={() => this.keyboardType("√()")}
+                    titleStyle={
+                      this.nextDisabled
+                        ? LocalStyles.disabledButtonTitle
+                        : LocalStyles.buttonTitle
+                    }
+                    title={
+                      !stepsData.length || currentStep === data.steps.length - 1
+                        ? "Done"
+                        : "Next step"
+                    }
+                    onPress={this.nextStep}
                     type="clear"
                   />
                 </View>
-                <View
-                  style={{
-                    ...LocalStyles.button,
-                    width: Dimensions.get("window").width / 5,
-                  }}
-                >
-                  <Button
-                    titleStyle={Styles.button.title}
-                    title="sin"
-                    onPress={() => this.keyboardType("sin()")}
-                    type="clear"
-                  />
-                </View>
-                <View
-                  style={{
-                    ...LocalStyles.button,
-                    width: Dimensions.get("window").width / 5,
-                  }}
-                >
-                  <Button
-                    titleStyle={Styles.button.title}
-                    title="cos"
-                    onPress={() => this.keyboardType("cos()")}
-                    type="clear"
-                  />
-                </View>
-                <View
-                  style={{
-                    ...LocalStyles.button,
-                    width: Dimensions.get("window").width / 5,
-                  }}
-                >
-                  <Button
-                    titleStyle={Styles.button.title}
-                    title="tan"
-                    onPress={() => this.keyboardType("tan()")}
-                    type="clear"
-                  />
-                </View>
-                <View
-                  style={{
-                    ...LocalStyles.button,
-                    width: Dimensions.get("window").width / 5,
-                  }}
-                >
-                  <Button
-                    titleStyle={Styles.button.title}
-                    title="kot"
-                    onPress={() => this.keyboardType("kot()")}
-                    type="clear"
-                  />
-                </View>
+                {!!showSolution && (
+                  <View
+                    style={{ ...LocalStyles.button, ...LocalStyles.lastButtons }}
+                  >
+                    <Button
+                      titleStyle={LocalStyles.buttonTitle}
+                      title="Solution"
+                      onPress={this.showSolution}
+                      type="clear"
+                    />
+                  </View>
+                )}
               </View>
-            </KeyboardAccessory> */}
-            <View style={LocalStyles.buttonWrapper}>
-              <View
-                style={{
-                  ...LocalStyles.button,
-                  ...LocalStyles.lastButtons,
-                  ...(this.nextDisabled ? Styles.button.disabled : {}),
-                }}
-              >
-                <Button
-                  titleStyle={
-                    this.nextDisabled
-                      ? LocalStyles.disabledButtonTitle
-                      : LocalStyles.buttonTitle
-                  }
-                  title={
-                    !stepsData.length || currentStep === data.steps.length - 1
-                      ? "Done"
-                      : "Next step"
-                  }
-                  onPress={this.nextStep}
-                  type="clear"
-                />
-              </View>
-
-              {!!showSolution && (
-                <View
-                  style={{ ...LocalStyles.button, ...LocalStyles.lastButtons }}
-                >
-                  <Button
-                    titleStyle={LocalStyles.buttonTitle}
-                    title="Solution"
-                    onPress={this.showSolution}
-                    type="clear"
-                  />
-                </View>
-              )}
-            </View>
           </>
         </DismissKeyboard>
       </View>

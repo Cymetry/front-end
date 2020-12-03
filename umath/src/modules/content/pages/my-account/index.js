@@ -34,22 +34,18 @@ const SVGIcon = ({ SVG }) => (
 const data = [{
   data: {
     knowledge: 0.75,
-    memory: 0.75,
-    quickMaths: 0.75,
     accuracy: 0.75,
-    conceptsReusal: 0.75,
-    speed: 0.75
+    logics: 0.75,
+    speed: 0.75,
   },
   meta: { color: '#32C5FF' }
 }];
 
 const captions = {
   knowledge: 'Knowledge',
-  memory: 'Memory',
-  quickMaths: 'Quick Maths',
+  logics: "Logics",
   accuracy: 'Accuracy',
-  conceptsReusal: 'Concepts Reusal',
-  speed: 'Speed',
+  speed: "Speed"
 };
 
 const options = {

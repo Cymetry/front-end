@@ -38,12 +38,26 @@ const TestingItem = ({ question, selectedAnswer, setSelectedAnswer, onMessage, s
     webView.current.injectJavaScript(`
       (() => {
         const activeElement = document.getElementById('box-1');
+        // activeElement.type = 'type';
         activeElement.value = ${solution}
       })();
     `);
   };
 
+  // const keyboardType = () => {
+  //   webView.current.injectJavaScript(`
+  //     (() => {
+  //       if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+  //         const { activeElement } = document;
+  //         activeElement.type = 'type' 
+  //       }
+  //       return;
+  //     })();
+  //   `);
+  // }
+
   useEffect(() => {
+    // keyboardType()
     showSolution(question.answers[0]);
   }, [showAnswer]);
 

@@ -107,7 +107,7 @@ class TermsAndConditions extends PureComponent {
           viruses, worms, Trojan horses or other code or defects that manifest contaminating or
           destructive properties.
         </Text>
-        <Text style={LocalStyles.headingText}>Purchases</Text>
+        {/* <Text style={LocalStyles.headingText}>Purchases</Text>
         <Text style={LocalStyles.text}>
           If you wish to purchase any product or service made available through the Service
           ("Purchase"), you may be asked to supply certain information relevant to your Purchase
@@ -128,7 +128,7 @@ class TermsAndConditions extends PureComponent {
           corresponding invoice to the Customer's email address.
           The Service Provider considers the Service fee to be paid the day on which the service
           fee is received by the Service Provider's account.
-        </Text>
+        </Text> */}
         <Text style={LocalStyles.headingText}>Links to Third Party Websites</Text>
         <Text style={LocalStyles.text}>
           The application & website may contain links and pointers to other websites operated by

@@ -48,8 +48,8 @@ class MathJax extends Component {
 					var height = document.documentElement.scrollHeight;
           window.ReactNativeWebView.postMessage(String(height));
           Array.from(document.getElementsByTagName("INPUT")).map(function(item) {
-            item.style.width = item.size * 10;
-            item.type = "number";
+            item.autocapitalize="none";
+            item.autocorrect="off";
           });
 					Array.from(document.querySelectorAll("[id^='box-']")).map(function(item) {
 						item.onkeyup = item.keyup || function(e) {

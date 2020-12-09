@@ -8,6 +8,7 @@ import Styles from "../../../../../../../assets/styles";
 import DismissKeyboard from "../../../../../../components/dismiss-keyboard";
 import TestingController from "../../../../../../platform/api/skillTesting";
 import VideoController from "../../../../../../platform/api/video";
+import StatisticsController from "../../../../../../platform/api/statistics";
 import TestingItem from "./item";
 import FeedBackPage from "./components/feedback";
 import Videos from './components/videos';
@@ -21,6 +22,11 @@ const letterToNum = {
   c: 2,
   d: 3
 };
+
+let skillsComplete = 0;
+let skillAttempts = 0;
+let correctAnswers = 0;
+let wrongAnswers = 0;
 
 const Testing = ({ route, navigation }) => {
   const { id } = route.params;
@@ -81,9 +87,11 @@ const Testing = ({ route, navigation }) => {
     const result = await TestingController.CheckStatus(id);
     if (result.task === 'start') {
       startTesting(id);
+      skillsComplete = skillsComplete + 1;
     }
     else {
       resumeTesting(id);
+      skillAttempts = skillAttempts + 1;
     }
   }
 
@@ -91,7 +99,7 @@ const Testing = ({ route, navigation }) => {
     testAction(id);
   }, [id]);
 
-  const nextStep = () => {
+  const nextStep = async () => {
     const answer = questions[currentQuestion].fillIn ? fillInAnswer : numToLetter[selectedAnswer];
     const isRight = questions[currentQuestion].answers.includes(answer);
 
@@ -103,6 +111,12 @@ const Testing = ({ route, navigation }) => {
     setFillinAnswer(null);
     setSelectedAnswer(null);
 
+    if (isRight) {
+      correctAnswers = correctAnswers + 1;
+    } else {
+      wrongAnswers = wrongAnswers + 1;
+    }
+
     const isLastPage = !questions[currentQuestion + 1];
 
     if (isLastPage) {
@@ -111,6 +125,8 @@ const Testing = ({ route, navigation }) => {
     }
 
     setCurrentQuestion(currentQuestion + 1);
+    await StatisticsController.updateSpeed(skillsComplete, skillAttempts);
+    await StatisticsController.updateLogics(correctAnswers, wrongAnswers);
   };
 
   useEffect(() => {

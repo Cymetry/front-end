@@ -58,10 +58,10 @@ class Topics extends PureComponent {
         item
       );
 
-    const navigateToSubscribe = () =>
-      navigationWrapper.navigation.navigate(ROUTES.CONTENT_SETTINGS, {
-        initialRouteName: ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
-      });
+    // const navigateToSubscribe = () =>
+    //   navigationWrapper.navigation.navigate(ROUTES.CONTENT_SETTINGS, {
+    //     initialRouteName: ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
+    //   });
 
     const navigateToLogin = () =>
       navigationWrapper.navigation.navigate(ROUTES.AUTH);
@@ -74,10 +74,10 @@ class Topics extends PureComponent {
       text: "Back",
       style: "cancel"
     };
-    const purchaseObj = {
-      text: "Purchase",
-      onPress: navigateToSubscribe
-    };
+    // const purchaseObj = {
+    //   text: "Purchase",
+    //   onPress: navigateToSubscribe
+    // };
     const continueObj = {
       text: "Continue",
       onPress: navigateToSkill
@@ -89,18 +89,18 @@ class Topics extends PureComponent {
 
     if (!loggedIn) {
       Alert.alert("Please sign in to proceed", "", [signInObj, cancelObj]);
-    } else if (!userPremium && item.id !== 2) {
-      Alert.alert(
-        "To proceed to the topic, please purchase a subscription",
-        "",
-        [purchaseObj, backObj]
-      );
-    } else if (!userPremium) {
-      Alert.alert(
-        "This is a trial topic available for everyone to get a taste what umath is about. We hope you enjoy the learning.",
-        "",
-        [purchaseObj, continueObj]
-      );
+    // } else if (!userPremium && item.id !== 2) {
+    //   Alert.alert(
+    //     "To proceed to the topic, please purchase a subscription",
+    //     "",
+    //     [purchaseObj, backObj]
+    //   );
+    // } else if (!userPremium) {
+    //   Alert.alert(
+    //     "This is a trial topic available for everyone to get a taste what umath is about. We hope you enjoy the learning.",
+    //     "",
+    //     [purchaseObj, continueObj]
+    //   );
     } else {
       navigateToSkill();
     }

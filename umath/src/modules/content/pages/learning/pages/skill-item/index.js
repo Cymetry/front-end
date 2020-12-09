@@ -12,6 +12,7 @@ import * as AlertMessage from "../../../../../../const/alert";
 import MathJax from "../../../../../../components/math_jax";
 import DismissKeyboard from "../../../../../../components/dismiss-keyboard";
 import SkillLearningController from "../../../../../../platform/api/skillLearning";
+import StatisticsController from "../../../../../../platform/api/statistics";
 import Styles from "../../../../../../../assets/styles";
 import LocalStyles from "./styles";
 import { parseLatex } from "../../../../../../platform/services/latex";
@@ -109,6 +110,25 @@ class SkillItem extends Component {
     });
   }
 
+  // keyboardType = () => {
+  //   const currents = this.webViews
+  //     .filter((item) => item.current)
+  //     .map((item) => item.current);
+  //     console.log(currents)
+
+  //   currents.map((item) =>
+  //     item.injectJavaScript(`
+  //       (() => {
+  //         if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+  //           const { activeElement } = document;
+  //           activeElement.type = 'text'
+  //         }
+  //         return;
+  //       })(); 
+  //     `)
+  //   );
+  // };
+
   nextStep = async () => {
     if (this.state.data.videoUrl) {
       const dialogResult = await AsyncAlert(
@@ -181,6 +201,7 @@ class SkillItem extends Component {
             this.finish(true);
           } else {
             this.webViews.push(createRef());
+            // this.keyboardType();
             this.setState({ currentStep: currentStep + 1 });
           }
         }
@@ -200,6 +221,8 @@ class SkillItem extends Component {
     };
 
     await SkillLearningController.SaveProgress(body);
+    await StatisticsController.updateAccuracy(body.mistakeCount, data.steps.lenght);
+    await StatisticsController.updateKnowledge(body.correctCount, data.steps.length);
 
     const response = await SkillLearningController.Resume(id);
 

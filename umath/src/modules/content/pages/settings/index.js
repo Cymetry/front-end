@@ -30,8 +30,8 @@ import HelpAndFeedback from "./pages/help-and-feedback";
 import FAQ from "./pages/faq";
 import TermsAndConditions from "./pages/terms-and-conditions";
 import PrivacyPolicy from "./pages/privacy-policy";
-import SubscriptionPage from "./pages/subscription";
-import PaymentPage from "./pages/payments";
+// import SubscriptionPage from "./pages/subscription";
+// import PaymentPage from "./pages/payments";
 
 const Stack = createStackNavigator();
 
@@ -99,28 +99,28 @@ const Settings = ({ navigation }) => {
       url: ROUTES.CONTENT_SETTINGS_PRIVACY,
       avatar_source: PrivacyPolicyIcon,
     },
-    {
-      name: "Subscription",
-      onPress: () =>
-        token
-          ? navigation.navigate(
-              isPremium
-                ? ROUTES.CONTENT_SETTINGS_PAYMENT
-                : ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
-            )
-          : Alert.alert("Please sign in to be able to subscribe", "", [
-              {
-                text: "Sign in",
-                onPress: () =>
-                  navigationWrapper.navigation.navigate(ROUTES.AUTH),
-              },
-              {
-                text: "Cancel",
-                style: "cancel",
-              },
-            ]),
-      avatar_source: SubscriptionIcon,
-    },
+    // {
+    //   name: "Subscription",
+    //   onPress: () =>
+    //     token
+    //       ? navigation.navigate(
+    //           isPremium
+    //             ? ROUTES.CONTENT_SETTINGS_PAYMENT
+    //             : ROUTES.CONTENT_SETTINGS_SUBSCRIPTION
+    //         )
+    //       : Alert.alert("Please sign in to be able to subscribe", "", [
+    //           {
+    //             text: "Sign in",
+    //             onPress: () =>
+    //               navigationWrapper.navigation.navigate(ROUTES.AUTH),
+    //           },
+    //           {
+    //             text: "Cancel",
+    //             style: "cancel",
+    //           },
+    //         ]),
+    //   avatar_source: SubscriptionIcon,
+    // },
     ...(token
       ? [
           {
@@ -194,20 +194,20 @@ const MyAccountScreens = ({ route }) => (
       component={PrivacyPolicy}
       name={ROUTES.CONTENT_SETTINGS_PRIVACY}
     />
-    <Stack.Screen
+    {/* <Stack.Screen
       component={SubscriptionPage}
       name={ROUTES.CONTENT_SETTINGS_SUBSCRIPTION}
       options={{
         title: "Subscription",
       }}
-    />
-    <Stack.Screen
+    /> */}
+    {/* <Stack.Screen
       component={PaymentPage}
       name={ROUTES.CONTENT_SETTINGS_PAYMENT}
       options={{
         title: "Payment",
       }}
-    />
+    /> */}
   </Stack.Navigator>
 );
 

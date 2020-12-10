@@ -16,6 +16,7 @@ import ROUTES from "../../../../platform/constants/routes";
 import SkillController from "../../../../platform/api/skill";
 import TopicController from "../../../../platform/api/topic";
 import AccountController from "../../../../platform/api/account";
+import StatisticsController from "../../../../platform/api/statistics";
 import { navigationWrapper } from "../../../../platform/services/navigation";
 
 import LocalStyles from "./styles";
@@ -30,16 +31,6 @@ const SVGIcon = ({ SVG }) => (
     <SVG width={50} height={50} style={LocalStyles.icon} />
   </View>
 );
-
-const data = [{
-  data: {
-    knowledge: 0.75,
-    accuracy: 0.75,
-    logics: 0.75,
-    speed: 0.75,
-  },
-  meta: { color: '#32C5FF' }
-}];
 
 const captions = {
   knowledge: 'Knowledge',
@@ -82,7 +73,16 @@ class MyAccount extends PureComponent {
     details: {},
     chapters: null,
     questions: null,
-    progress: { revision: 0, learning: 0 }
+    progress: { revision: 0, learning: 0 },
+    data: [{
+      data: {
+      knowledge: 0.75,
+      accuracy: 0.75,
+      logics: 0.75,
+      speed: 0.75,
+      },
+      meta: { color: '#32C5FF' }
+    }]
   };
 
   
@@ -115,6 +115,30 @@ class MyAccount extends PureComponent {
       unfilledColor={Variables.lightGray}
     />
   );
+
+  statsAction = async () => {
+    const stats = await StatisticsController.getStatistics();
+
+    if (stats.userId) {
+
+      const meta = this.state.data[0].meta;
+      // const data = this.state.data[0].data;
+
+      const { knowledge, accuracy, logics, speed } = stats;
+
+      const statsData = {
+        knowledge,
+        accuracy,
+        logics,
+        speed,
+      }
+
+      await this.setState({data: [{data: statsData, meta: meta}]})
+
+    } else {
+      await StatisticsController.createStatistics();
+    }
+  }
 
   updateState = async () => {
     const {
@@ -181,8 +205,15 @@ class MyAccount extends PureComponent {
   };
 
   async componentDidMount() {
+    this.statsAction();
     this.updateState();
     this.props.navigation.addListener("focus", this.updateState);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.data !== this.state.data) {
+      this.statsAction();
+    }
   }
 
   render() {
@@ -193,7 +224,8 @@ class MyAccount extends PureComponent {
       details,
       chapters,
       progress,
-      questions
+      questions, 
+      data,
     } = this.state;
 
     return (

@@ -20,8 +20,8 @@ const ROUTES = {
   CONTENT_SETTINGS_HELP: "content/settings/help",
   CONTENT_SETTINGS_TERMS: "content/settings/terms",
   CONTENT_SETTINGS_PRIVACY: "content/settings/privacy",
-  CONTENT_SETTINGS_SUBSCRIPTION: "content/settings/subscription",
-  CONTENT_SETTINGS_PAYMENT: "content/settings/payment",
+  // CONTENT_SETTINGS_SUBSCRIPTION: "content/settings/subscription",
+  // CONTENT_SETTINGS_PAYMENT: "content/settings/payment",
 
   CONTENT_MY_ACCOUNT: "content/my-account"
 };

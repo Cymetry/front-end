@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -25,12 +25,12 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.umath.umath</string>
+				<string>io.umath.umath</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -46,8 +46,28 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Allow umath to access your calendar</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow umath to use the camera</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Allow umath experiences to access your contacts</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allow umath to use your location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Allow umath to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Allow umath to use your location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow umath to access your microphone</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Allow umath to access your device's accelerometer</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Give umath periences permission to save photos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Give umath periences permission to access your photos</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Allow umath to access your reminders</string>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

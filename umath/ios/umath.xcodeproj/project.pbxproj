@@ -322,12 +322,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.umath.umath;
+				PRODUCT_BUNDLE_IDENTIFIER = io.umath.umath;
 				PRODUCT_NAME = umath;
 				PROVISIONING_PROFILE_SPECIFIER = umath1;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -356,12 +357,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.umath.umath;
+				PRODUCT_BUNDLE_IDENTIFIER = io.umath.umath;
 				PRODUCT_NAME = umath;
 				PROVISIONING_PROFILE_SPECIFIER = umath1;
 				SWIFT_VERSION = 5.0;
